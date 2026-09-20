@@ -1,0 +1,5 @@
+{
+  "platform": "docker",
+  "port": 8000,
+  "app": "teb-ai"
+}
