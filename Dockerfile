@@ -1,5 +1,3 @@
-# Force rebuild v4
-
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -7,6 +5,13 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# کپی صریح تمام فایل‌های پایتون برای جلوگیری از مشکل کش داکر
+COPY main.py .
+COPY database.py .
+COPY diagnosis.py .
+COPY knowledge.py .
+
+# کپی بقیه فایل‌ها
 COPY . .
 
 EXPOSE 8000
