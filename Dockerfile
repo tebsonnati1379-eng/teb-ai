@@ -5,14 +5,13 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# کپی صریح تمام فایل‌های پایتون برای جلوگیری از مشکل کش داکر
-COPY main.py .
-COPY database.py .
-COPY diagnosis.py .
-COPY knowledge.py .
+# ⭐ این خط جادویی باعث می‌شود داکر کش خود را پاک کند و از صفر بسازد
+ARG CACHEBUST=1
 
-# کپی بقیه فایل‌ها
 COPY . .
+
+# این خط برای دیباگ است تا در لاگ‌های ساخت ببینیم فایل‌ها کجا هستند
+RUN ls -la /app
 
 EXPOSE 8000
 
