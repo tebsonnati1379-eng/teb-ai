@@ -181,6 +181,58 @@ body {
     flex-wrap: wrap;
     margin-bottom: 16px;
 }
+
+/* ⭐ استایل بهبودیافته کادر پاسخ */
+#q-input {
+    width: 100%;
+    padding: 18px 20px;
+    border: 3px solid #1a6b52;
+    border-radius: 14px;
+    font-size: 17px;
+    font-family: inherit;
+    outline: none;
+    background: #f0f9f4;
+    transition: all 0.2s;
+    direction: rtl;
+    text-align: right;
+    font-weight: 600;
+    color: #0f4c3a;
+    box-shadow: 0 4px 12px rgba(26,107,82,0.1);
+}
+#q-input:focus {
+    border-color: #0f4c3a;
+    background: #ffffff;
+    box-shadow: 0 0 0 5px rgba(26,107,82,0.2);
+    transform: scale(1.01);
+}
+#q-input::placeholder {
+    color: #7aa896;
+    font-size: 15px;
+    font-weight: 400;
+}
+.hint-text {
+    font-size: 13px;
+    color: #1a6b52;
+    margin-top: 10px;
+    text-align: right;
+    padding: 10px 14px;
+    background: #f0f9f4;
+    border-radius: 10px;
+    border-right: 3px solid #4ade80;
+    line-height: 1.6;
+}
+.input-icon {
+    position: relative;
+}
+.input-icon::before {
+    content: '✏️';
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    font-size: 20px;
+    pointer-events: none;
+}
 </style>
 </head>
 <body>
@@ -227,7 +279,7 @@ body {
                 <div class="info-badge">🎁 ویزیت بعدی شما رایگان خواهد بود</div>
                 <button class="btn" id="btn-pay">💳 پرداخت آنلاین</button>
                 <p style="font-size:12px;color:#888;margin-top:12px;">
-                    در حال حاضر امکان پرداخت آنلاین فعال نیست. لطفاً با پشتیبانی تماس بگیرید.
+                    در حال حاضر امکان پرداخت آنلاین فعال نیست.
                 </p>
             </div>
         </div>
@@ -269,7 +321,7 @@ body {
 // ============================================================
 // متغیرهای سراسری
 // ============================================================
-const API = window.location.origin; // همان دامنه فعلی
+const API = window.location.origin;
 let state = {
     userId: null,
     visitId: null,
@@ -332,7 +384,6 @@ document.getElementById('btn-register').addEventListener('click', async () => {
         state.visitId = data.visit_id;
         state.referralCode = data.referral_code;
 
-        // اگر ویزیت پرداخت‌دار است، صفحه پرداخت
         if (data.must_pay && data.payment_status !== 'paid') {
             document.getElementById('pay-name').textContent = `👋 ${data.name} عزیز، خوش آمدید`;
             show('screen-payment');
@@ -347,10 +398,10 @@ document.getElementById('btn-register').addEventListener('click', async () => {
 });
 
 // ============================================================
-// پرداخت (فعلاً غیرفعال)
+// پرداخت (موقتاً غیرفعال)
 // ============================================================
 document.getElementById('btn-pay').addEventListener('click', () => {
-    alert('درگاه پرداخت هنوز فعال نشده است. لطفاً بعداً تلاش کنید.');
+    alert('درگاه پرداخت هنوز فعال نشده است.');
 });
 
 // ============================================================
@@ -364,10 +415,9 @@ async function loadQuestions() {
         state.currentIndex = 0;
         state.answers = {};
 
-        // نمایش بج‌های ویزیت
         const badges = document.getElementById('visit-badges');
         badges.innerHTML = `
-            <span class="info-badge">📍 ویزیت شماره ${toPersianNum(data.total ? 1 : 1)}</span>
+            <span class="info-badge">📍 ویزیت شماره ۱</span>
             <span class="info-badge free-badge">🌿 تحلیل رایگان</span>
         `;
 
@@ -379,7 +429,7 @@ async function loadQuestions() {
 }
 
 // ============================================================
-// نمایش سوال فعلی
+// نمایش سوال فعلی با استایل بهبودیافته
 // ============================================================
 function renderQuestion() {
     const q = state.questions[state.currentIndex];
@@ -395,19 +445,34 @@ function renderQuestion() {
 
     if (q.type === 'text') {
         const input = document.createElement('textarea');
-        input.rows = 3;
-        input.placeholder = 'پاسخ خود را بنویسید...';
+        input.rows = 4;
+        input.placeholder = '👈 پاسخ خود را اینجا بنویسید...';
         input.id = 'q-input';
-        input.style.cssText = 'width:100%;padding:14px 16px;border:2px solid #e0e0e0;border-radius:12px;font-size:15px;font-family:inherit;outline:none;resize:vertical;';
         if (state.answers[q.id]) input.value = state.answers[q.id];
         area.appendChild(input);
+
+        if (q.id === 'complaint') {
+            const hint = document.createElement('div');
+            hint.className = 'hint-text';
+            hint.innerHTML = '💡 <b>راهنما:</b> لطفاً مشکل خود را با کلمات کلیدی بنویسید.<br>مثال: «کبد چرب دارم»، «قند خونم بالاست»، «یبوست دارم»، «سردرد و میگرن»، «اضطراب و استرس»، «فشار خون بالا».';
+            area.appendChild(hint);
+        }
     } else if (q.type === 'number') {
         const input = document.createElement('input');
         input.type = 'number';
-        input.placeholder = 'عدد را وارد کنید';
+        input.placeholder = '👈 عدد را وارد کنید';
         input.id = 'q-input';
+        input.min = '0';
         if (state.answers[q.id]) input.value = state.answers[q.id];
         area.appendChild(input);
+
+        const hint = document.createElement('div');
+        hint.className = 'hint-text';
+        if (q.id === 'weight') hint.innerHTML = '💡 مثال: اگر وزن شما ۸۵ کیلوگرم است، عدد <b>85</b> را وارد کنید.';
+        else if (q.id === 'height') hint.innerHTML = '💡 مثال: اگر قد شما ۱۷۵ سانتی‌متر است، عدد <b>175</b> را وارد کنید.';
+        else if (q.id === 'age') hint.innerHTML = '💡 مثال: اگر ۳۵ سال دارید، عدد <b>35</b> را وارد کنید.';
+        else hint.innerHTML = '💡 لطفاً یک عدد معتبر وارد کنید.';
+        area.appendChild(hint);
     } else if (q.type === 'choice') {
         const div = document.createElement('div');
         div.className = 'options';
@@ -426,6 +491,12 @@ function renderQuestion() {
         });
         area.appendChild(div);
     }
+
+    // فوکوس خودکار روی کادر ورودی (اختیاری)
+    setTimeout(() => {
+        const inp = document.getElementById('q-input');
+        if (inp) inp.focus();
+    }, 300);
 }
 
 // ============================================================
@@ -443,13 +514,20 @@ document.getElementById('btn-next').addEventListener('click', async () => {
     }
 
     if (!answer) {
-        alert('لطفاً پاسخ دهید');
+        alert('⚠️ لطفاً به این سوال پاسخ دهید.');
         return;
+    }
+
+    if (q.type === 'number') {
+        const num = parseFloat(answer);
+        if (isNaN(num) || num <= 0) {
+            alert('⚠️ لطفاً یک عدد معتبر وارد کنید.');
+            return;
+        }
     }
 
     state.answers[q.id] = answer;
 
-    // ارسال به سرور
     try {
         await fetch(`${API}/visits/${state.visitId}/answer`, {
             method: 'POST',
@@ -463,7 +541,6 @@ document.getElementById('btn-next').addEventListener('click', async () => {
     state.currentIndex++;
 
     if (state.currentIndex >= state.questions.length) {
-        // تمام سوالات پاسخ داده شد
         await completeVisit();
     } else {
         renderQuestion();
