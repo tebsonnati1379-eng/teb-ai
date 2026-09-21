@@ -2,6 +2,7 @@
 """
 ربات طب سنتی و اسلامی — کد کامل یکپارچه
 """
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
@@ -20,9 +21,13 @@ from passlib.hash import bcrypt
 # ============================================================
 # ۱. تنظیمات دیتابیس
 # ============================================================
-# ⚠️ موقتاً فقط SQLite (تا ارتقای پلن لیارا)
-DATABASE_URL = "sqlite:///./teb_local.db"
-connect_args = {"check_same_thread": False}
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL and DATABASE_URL.startswith("postgresql"):
+    connect_args = {}
+else:
+    DATABASE_URL = "sqlite:///./teb_local.db"
+    connect_args = {"check_same_thread": False}
 
 engine = create_engine(DATABASE_URL, connect_args=connect_args, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
@@ -399,10 +404,19 @@ manager = ConnectionManager()
 def on_startup():
     init_db()
 
+@app.get("/chat", response_class=HTMLResponse)
+def chat_page():
+    """صفحه چت کاربران"""
+    try:
+        with open("chat.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>صفحه یافت نشد</h1>", status_code=404)
+
 
 @app.get("/")
 def root():
-    return {"status": "ok", "message": "ربات طب سنتی و اسلامی آماده به کار است 🌿"}
+    return RedirectResponse(url="/chat")
 
 
 @app.get("/health")

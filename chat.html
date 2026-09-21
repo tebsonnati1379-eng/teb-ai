@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دکتر حکیم — طب سنتی و اسلامی</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tahoma', 'Vazirmatn', sans-serif; }
+body {
+    background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    direction: rtl;
+}
+.container {
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 560px;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.header {
+    background: linear-gradient(135deg, #0f4c3a, #1a6b52);
+    color: white;
+    padding: 28px 24px;
+    text-align: center;
+}
+.header h1 { font-size: 24px; margin-bottom: 6px; }
+.header p { font-size: 13px; opacity: 0.9; }
+.body { padding: 28px 24px; }
+.field { margin-bottom: 18px; }
+.field label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+.field input, .field textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: all 0.2s;
+    outline: none;
+}
+.field input:focus, .field textarea:focus {
+    border-color: #1a6b52;
+    box-shadow: 0 0 0 4px rgba(26,107,82,0.1);
+}
+.btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #1a6b52, #0f4c3a);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+}
+.btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15,76,58,0.4);
+}
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.progress-bar {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1a6b52, #4ade80);
+    transition: width 0.4s ease;
+    border-radius: 4px;
+}
+.question {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f4c3a;
+    margin-bottom: 24px;
+    line-height: 1.6;
+    animation: slideIn 0.4s ease;
+}
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option {
+    padding: 14px 18px;
+    background: #f5f7f6;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.2s;
+    font-family: inherit;
+    text-align: right;
+}
+.option:hover { background: #e8f0ed; border-color: #1a6b52; }
+.option.selected {
+    background: linear-gradient(135deg, #1a6b52, #0f4c3a);
+    color: white;
+    border-color: #0f4c3a;
+}
+.status {
+    text-align: center;
+    padding: 40px 20px;
+}
+.spinner {
+    width: 48px; height: 48px;
+    border: 4px solid #e0e0e0;
+    border-top-color: #1a6b52;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.report {
+    background: #f5f7f6;
+    border-right: 4px solid #1a6b52;
+    padding: 20px;
+    border-radius: 12px;
+    line-height: 2;
+    white-space: pre-wrap;
+    font-size: 14px;
+    color: #333;
+    max-height: 500px;
+    overflow-y: auto;
+    text-align: right;
+}
+.hidden { display: none; }
+.error {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-bottom: 16px;
+    display: none;
+}
+.error.show { display: block; }
+.info-badge {
+    display: inline-block;
+    background: #fef3c7;
+    color: #92400e;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+.free-badge {
+    background: #d1fae5;
+    color: #065f46;
+}
+.badge-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🌿 دکتر حکیم</h1>
+        <p>دستیار هوشمند طب سنتی و اسلامی</p>
+    </div>
+
+    <div class="body">
+        <!-- صفحه ۱: ثبت‌نام -->
+        <div id="screen-register">
+            <div class="error" id="reg-error"></div>
+            <div class="field">
+                <label>👤 نام و نام خانوادگی</label>
+                <input type="text" id="reg-name" placeholder="مثال: علی محمدی">
+            </div>
+            <div class="field">
+                <label>📱 شماره موبایل</label>
+                <input type="tel" id="reg-phone" placeholder="09xxxxxxxxx" maxlength="11">
+            </div>
+            <div class="field">
+                <label>🎁 کد معرفی (اختیاری)</label>
+                <input type="text" id="reg-ref" placeholder="اگر کسی شما را معرفی کرده">
+            </div>
+            <button class="btn" id="btn-register">🚀 شروع مشاوره</button>
+            <p style="text-align:center;font-size:12px;color:#888;margin-top:16px;">
+                ⚠️ این ربات جایگزین پزشک نیست
+            </p>
+        </div>
+
+        <!-- صفحه ۲: پرداخت -->
+        <div id="screen-payment" class="hidden">
+            <div style="text-align:center;padding:20px 0;">
+                <div style="font-size:48px;margin-bottom:16px;">💳</div>
+                <h2 style="color:#0f4c3a;margin-bottom:12px;">پرداخت هزینه ویزیت</h2>
+                <p id="pay-name" style="color:#666;margin-bottom:24px;"></p>
+                <div style="background:#f5f7f6;padding:20px;border-radius:12px;margin-bottom:20px;">
+                    <div style="font-size:14px;color:#666;margin-bottom:8px;">مبلغ قابل پرداخت</div>
+                    <div style="font-size:32px;font-weight:900;color:#0f4c3a;">۵۰۰,۰۰۰</div>
+                    <div style="font-size:14px;color:#666;">تومان</div>
+                </div>
+                <div class="info-badge">🎁 ویزیت بعدی شما رایگان خواهد بود</div>
+                <button class="btn" id="btn-pay">💳 پرداخت آنلاین</button>
+                <p style="font-size:12px;color:#888;margin-top:12px;">
+                    در حال حاضر امکان پرداخت آنلاین فعال نیست. لطفاً با پشتیبانی تماس بگیرید.
+                </p>
+            </div>
+        </div>
+
+        <!-- صفحه ۳: سوالات -->
+        <div id="screen-questions" class="hidden">
+            <div class="badge-row" id="visit-badges"></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress" style="width:0%"></div>
+            </div>
+            <div style="text-align:center;font-size:13px;color:#888;margin-bottom:16px;" id="progress-text"></div>
+            <div class="question" id="question-text"></div>
+            <div id="answer-area"></div>
+            <button class="btn" id="btn-next">تأیید و ادامه ←</button>
+        </div>
+
+        <!-- صفحه ۴: پردازش -->
+        <div id="screen-loading" class="hidden">
+            <div class="status">
+                <div class="spinner"></div>
+                <p style="color:#0f4c3a;font-weight:700;">در حال تحلیل پاسخ‌های شما...</p>
+                <p style="color:#888;font-size:13px;margin-top:8px;">لطفاً چند لحظه صبر کنید</p>
+            </div>
+        </div>
+
+        <!-- صفحه ۵: نتیجه -->
+        <div id="screen-result" class="hidden">
+            <div style="text-align:center;margin-bottom:20px;">
+                <div style="font-size:48px;">✅</div>
+                <h2 style="color:#0f4c3a;">تحلیل شما آماده شد</h2>
+            </div>
+            <div class="report" id="report-text"></div>
+            <button class="btn" id="btn-restart" style="margin-top:20px;">🔄 مشاوره جدید</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// متغیرهای سراسری
+// ============================================================
+const API = window.location.origin; // همان دامنه فعلی
+let state = {
+    userId: null,
+    visitId: null,
+    questions: [],
+    currentIndex: 0,
+    answers: {},
+    referralCode: null
+};
+
+// ============================================================
+// توابع کمکی
+// ============================================================
+function show(screenId) {
+    ['screen-register', 'screen-payment', 'screen-questions', 'screen-loading', 'screen-result']
+        .forEach(id => document.getElementById(id).classList.add('hidden'));
+    document.getElementById(screenId).classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showError(elId, msg) {
+    const el = document.getElementById(elId);
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 6000);
+}
+
+function toPersianNum(n) {
+    return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+}
+
+// ============================================================
+// ثبت‌نام
+// ============================================================
+document.getElementById('btn-register').addEventListener('click', async () => {
+    const name = document.getElementById('reg-name').value.trim();
+    const phone = document.getElementById('reg-phone').value.trim();
+    const ref = document.getElementById('reg-ref').value.trim();
+
+    if (!name || name.length < 3) return showError('reg-error', 'لطفاً نام معتبر وارد کنید');
+    if (!/^09\d{9}$/.test(phone)) return showError('reg-error', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود');
+
+    const btn = document.getElementById('btn-register');
+    btn.disabled = true;
+    btn.textContent = 'در حال ثبت...';
+
+    try {
+        const res = await fetch(`${API}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, phone, referral_code: ref })
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail || 'خطا در ثبت‌نام');
+        }
+
+        const data = await res.json();
+        state.userId = data.user_id;
+        state.visitId = data.visit_id;
+        state.referralCode = data.referral_code;
+
+        // اگر ویزیت پرداخت‌دار است، صفحه پرداخت
+        if (data.must_pay && data.payment_status !== 'paid') {
+            document.getElementById('pay-name').textContent = `👋 ${data.name} عزیز، خوش آمدید`;
+            show('screen-payment');
+        } else {
+            await loadQuestions();
+        }
+    } catch (e) {
+        showError('reg-error', e.message);
+        btn.disabled = false;
+        btn.textContent = '🚀 شروع مشاوره';
+    }
+});
+
+// ============================================================
+// پرداخت (فعلاً غیرفعال)
+// ============================================================
+document.getElementById('btn-pay').addEventListener('click', () => {
+    alert('درگاه پرداخت هنوز فعال نشده است. لطفاً بعداً تلاش کنید.');
+});
+
+// ============================================================
+// بارگذاری سوالات
+// ============================================================
+async function loadQuestions() {
+    try {
+        const res = await fetch(`${API}/visits/${state.visitId}/questions`);
+        const data = await res.json();
+        state.questions = data.questions;
+        state.currentIndex = 0;
+        state.answers = {};
+
+        // نمایش بج‌های ویزیت
+        const badges = document.getElementById('visit-badges');
+        badges.innerHTML = `
+            <span class="info-badge">📍 ویزیت شماره ${toPersianNum(data.total ? 1 : 1)}</span>
+            <span class="info-badge free-badge">🌿 تحلیل رایگان</span>
+        `;
+
+        renderQuestion();
+        show('screen-questions');
+    } catch (e) {
+        alert('خطا در دریافت سوالات: ' + e.message);
+    }
+}
+
+// ============================================================
+// نمایش سوال فعلی
+// ============================================================
+function renderQuestion() {
+    const q = state.questions[state.currentIndex];
+    const total = state.questions.length;
+    const idx = state.currentIndex;
+
+    document.getElementById('progress').style.width = `${(idx / total) * 100}%`;
+    document.getElementById('progress-text').textContent = `سوال ${toPersianNum(idx + 1)} از ${toPersianNum(total)}`;
+    document.getElementById('question-text').textContent = `❓ ${q.text}`;
+
+    const area = document.getElementById('answer-area');
+    area.innerHTML = '';
+
+    if (q.type === 'text') {
+        const input = document.createElement('textarea');
+        input.rows = 3;
+        input.placeholder = 'پاسخ خود را بنویسید...';
+        input.id = 'q-input';
+        input.style.cssText = 'width:100%;padding:14px 16px;border:2px solid #e0e0e0;border-radius:12px;font-size:15px;font-family:inherit;outline:none;resize:vertical;';
+        if (state.answers[q.id]) input.value = state.answers[q.id];
+        area.appendChild(input);
+    } else if (q.type === 'number') {
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.placeholder = 'عدد را وارد کنید';
+        input.id = 'q-input';
+        if (state.answers[q.id]) input.value = state.answers[q.id];
+        area.appendChild(input);
+    } else if (q.type === 'choice') {
+        const div = document.createElement('div');
+        div.className = 'options';
+        q.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option';
+            btn.textContent = opt;
+            btn.type = 'button';
+            if (state.answers[q.id] === opt) btn.classList.add('selected');
+            btn.onclick = () => {
+                div.querySelectorAll('.option').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                state.answers[q.id] = opt;
+            };
+            div.appendChild(btn);
+        });
+        area.appendChild(div);
+    }
+}
+
+// ============================================================
+// دکمه بعدی
+// ============================================================
+document.getElementById('btn-next').addEventListener('click', async () => {
+    const q = state.questions[state.currentIndex];
+    let answer = null;
+
+    if (q.type === 'choice') {
+        answer = state.answers[q.id];
+    } else {
+        const input = document.getElementById('q-input');
+        answer = input ? input.value.trim() : '';
+    }
+
+    if (!answer) {
+        alert('لطفاً پاسخ دهید');
+        return;
+    }
+
+    state.answers[q.id] = answer;
+
+    // ارسال به سرور
+    try {
+        await fetch(`${API}/visits/${state.visitId}/answer`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question_id: q.id, answer: String(answer) })
+        });
+    } catch (e) {
+        console.error('خطا در ذخیره پاسخ:', e);
+    }
+
+    state.currentIndex++;
+
+    if (state.currentIndex >= state.questions.length) {
+        // تمام سوالات پاسخ داده شد
+        await completeVisit();
+    } else {
+        renderQuestion();
+    }
+});
+
+// ============================================================
+// تکمیل ویزیت و دریافت گزارش
+// ============================================================
+async function completeVisit() {
+    show('screen-loading');
+
+    try {
+        const res = await fetch(`${API}/visits/${state.visitId}/complete`, {
+            method: 'POST'
+        });
+
+        if (!res.ok) throw new Error('خطا در تحلیل');
+
+        const data = await res.json();
+        document.getElementById('report-text').textContent = data.report;
+        show('screen-result');
+    } catch (e) {
+        alert('خطا در تحلیل: ' + e.message);
+        show('screen-questions');
+    }
+}
+
+// ============================================================
+// شروع مجدد
+// ============================================================
+document.getElementById('btn-restart').addEventListener('click', () => {
+    location.reload();
+});
+</script>
+
+</body>
+</html>
