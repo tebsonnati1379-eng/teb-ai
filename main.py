@@ -2,6 +2,7 @@
 """
 ربات طب سنتی و اسلامی — کد کامل یکپارچه
 """
+from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
 import uuid
@@ -354,6 +355,14 @@ def get_treatment(disease, mizaj):
 # ۶. FastAPI App
 # ============================================================
 app = FastAPI(title="Teb AI - ربات طب سنتی و اسلامی")
+# اضافه کردن CORS برای اجازه دسترسی از مرورگرها و پنل React
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class RegisterInput(BaseModel):
