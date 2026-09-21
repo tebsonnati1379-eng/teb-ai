@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-مدل‌های دیتابیس + اتصال به PostgreSQL
+مدل‌های دیتابیس + اتصال به PostgreSQL / SQLite (نسخه Sync)
 """
 import os
 import uuid
@@ -8,25 +8,33 @@ import secrets
 from datetime import datetime
 from sqlalchemy import (
     create_engine, Column, String, Integer, Boolean, BigInteger,
-    DateTime, ForeignKey, Text, JSON, select
+    DateTime, ForeignKey, Text, JSON
 )
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import declarative_base, sessionmaker
 from passlib.hash import bcrypt
 
 # ---------- اتصال به دیتابیس ----------
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://docbot:pass@localhost:5432/doctor_bot")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-# اگر آدرس با asyncpg شروع می‌شود، به psycopg2 تبدیل کن (برای سادگی)
-DATABASE_URL = DATABASE_URL.replace("postgresql+asyncpg://", "postgresql://")
+if DATABASE_URL and DATABASE_URL.startswith("postgresql"):
+    # حالت آنلاین (روی لیارا) - استفاده از PostgreSQL
+    connect_args = {}
+else:
+    # حالت محلی (روی کامپیوتر شما) - استفاده از SQLite
+    DATABASE_URL = "sqlite:///./teb_local.db"
+    connect_args = {"check_same_thread": False}
 
+# ⭐ این خط بسیار مهم است: استفاده از create_engine (نه async)
 engine = create_engine(
     DATABASE_URL,
-    pool_size=10,
-    max_overflow=20,
+    connect_args=connect_args,
     pool_pre_ping=True,
 )
+
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+
+# ⭐ خط بسیار مهم: تعریف Base
 Base = declarative_base()
 
 
@@ -35,7 +43,7 @@ Base = declarative_base()
 # ============================================================
 class User(Base):
     __tablename__ = "users"
-    id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String(100), nullable=False)
     phone = Column(String(11), unique=True, nullable=False, index=True)
     referral_code = Column(String(20), unique=True, nullable=False, index=True)
@@ -54,8 +62,8 @@ class User(Base):
 
 class Visit(Base):
     __tablename__ = "visits"
-    id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"))
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String(36), ForeignKey("users.id"))
     visit_number = Column(Integer, nullable=False)
     must_pay = Column(Boolean, default=True)
     used_free_credit = Column(Boolean, default=False)
@@ -72,7 +80,7 @@ class Visit(Base):
 
 class Admin(Base):
     __tablename__ = "admins"
-    id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     username = Column(String(50), unique=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
     full_name = Column(String(100))
