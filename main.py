@@ -21,7 +21,7 @@ from passlib.hash import bcrypt
 # ============================================================
 # ۱. تنظیمات دیتابیس
 # ============================================================
- ⚠️ موقتاً فقط SQLite
+# ⚠️ موقتاً فقط SQLite
 DATABASE_URL = "sqlite:///./teb_local.db"
 connect_args = {"check_same_thread": False}
 
