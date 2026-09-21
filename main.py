@@ -442,7 +442,7 @@ async def register(data: RegisterInput):
                 payment_status = "free"
                 amount = 0
             else:
-                must_pay = (visit_number % 2 == 1)
+                must_pay = False  # ⚠️ موقتاً رایگان برای تست
                 used_credit = False
                 payment_status = "pending" if must_pay else "free"
                 amount = VISIT_PRICE if must_pay else 0
