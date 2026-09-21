@@ -21,13 +21,9 @@ from passlib.hash import bcrypt
 # ============================================================
 # ۱. تنظیمات دیتابیس
 # ============================================================
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-if DATABASE_URL and DATABASE_URL.startswith("postgresql"):
-    connect_args = {}
-else:
-    DATABASE_URL = "sqlite:///./teb_local.db"
-    connect_args = {"check_same_thread": False}
+ ⚠️ موقتاً فقط SQLite
+DATABASE_URL = "sqlite:///./teb_local.db"
+connect_args = {"check_same_thread": False}
 
 engine = create_engine(DATABASE_URL, connect_args=connect_args, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
