@@ -21,9 +21,13 @@ from passlib.hash import bcrypt
 # ============================================================
 # ۱. تنظیمات دیتابیس
 # ============================================================
-# ⚠️ موقتاً فقط SQLite
-DATABASE_URL = "sqlite:///./teb_local.db"
-connect_args = {"check_same_thread": False}
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL and DATABASE_URL.startswith("postgresql"):
+    connect_args = {}
+else:
+    DATABASE_URL = "sqlite:///./teb_local.db"
+    connect_args = {"check_same_thread": False}
 
 engine = create_engine(DATABASE_URL, connect_args=connect_args, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
@@ -509,11 +513,17 @@ def submit_answer(visit_id: str, data: AnswerInput):
         if not visit:
             raise HTTPException(404, "ویزیت یافت نشد")
 
-        session_data = visit.session_data or {}
-        answers = session_data.get("answers", {})
+        # ⭐ کپی جدید بساز تا SQLAlchemy تغییر را تشخیص دهد
+        session_data = dict(visit.session_data or {})
+        answers = dict(session_data.get("answers", {}))
         answers[data.question_id] = data.answer
         session_data["answers"] = answers
         visit.session_data = session_data
+
+        # ⭐ خط جادویی: به SQLAlchemy می‌گوید این ستون تغییر کرده
+        from sqlalchemy.orm.attributes import flag_modified
+        flag_modified(visit, "session_data")
+
         visit.progress_step = len(answers)
         db.commit()
         return {"status": "ok", "answered": len(answers)}
