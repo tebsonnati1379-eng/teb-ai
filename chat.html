@@ -518,15 +518,29 @@ document.getElementById('btn-next').addEventListener('click', async () => {
         return;
     }
 
-    if (q.type === 'number') {
+       if (q.type === 'number') {
         const num = parseFloat(answer);
         if (isNaN(num) || num <= 0) {
             alert('⚠️ لطفاً یک عدد معتبر وارد کنید.');
             return;
         }
+        
+        // ⭐ اعتبارسنجی هوشمند بر اساس نوع سوال
+        if (q.id === 'age' && (num < 1 || num > 120)) {
+            alert('⚠️ سن باید بین ۱ تا ۱۲۰ سال باشد. مقدار واردشده: ' + num);
+            return;
+        }
+        if (q.id === 'weight' && (num < 20 || num > 300)) {
+            alert('⚠️ وزن باید بین ۲۰ تا ۳۰۰ کیلوگرم باشد. مقدار واردشده: ' + num + ' کیلوگرم');
+            return;
+        }
+        if (q.id === 'height' && (num < 80 || num > 220)) {
+            alert('⚠️ قد باید بین ۸۰ تا ۲۲۰ سانتی‌متر باشد.\nمقدار واردشده: ' + num + ' سانتی‌متر.\n\nمثال صحیح: اگر قد شما ۱۶۵ سانتی‌متر است، عدد 165 را وارد کنید (نه 265 و نه 1.65).');
+            return;
+        }
     }
 
-    state.answers[q.id] = answer;
+    state.answers[q.id] = answer
 
     try {
         await fetch(`${API}/visits/${state.visitId}/answer`, {
