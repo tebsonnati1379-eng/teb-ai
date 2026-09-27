@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-ربات طب سنتی و اسلامی — کد کامل یکپارچه
+ربات طب سنتی و اسلامی — دکتر حکیم
+کد کامل یکپارچه نسخه نهایی
 """
-from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
 import uuid
 import secrets
 from datetime import datetime
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy import (
     create_engine, Column, String, Integer, Boolean, BigInteger,
@@ -17,17 +18,35 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import declarative_base, sessionmaker
 from passlib.hash import bcrypt
+# ============================================================
+# بارگذاری پایگاه دانش از فایل JSON
+# ============================================================
+import json
+
+KB_PATH = "knowledge.json"
+try:
+    with open(KB_PATH, "r", encoding="utf-8") as f:
+        _knowledge_data = json.load(f)
+        DISEASE_KNOWLEDGE = _knowledge_data.get("diseases", {})
+    DISEASE_KEYWORDS = {
+        name: data.get("keywords", [name])
+        for name, data in DISEASE_KNOWLEDGE.items()
+    }
+    print(f"✅ {len(DISEASE_KNOWLEDGE)} بیماری بارگذاری شد")
+except FileNotFoundError:
+    print("❌ فایل knowledge.json پیدا نشد!")
+    DISEASE_KNOWLEDGE = {}
+    DISEASE_KEYWORDS = {}
+except json.JSONDecodeError as e:
+    print(f"❌ خطا در JSON: {e}")
+    DISEASE_KNOWLEDGE = {}
+    DISEASE_KEYWORDS = {}
 
 # ============================================================
-# ۱. تنظیمات دیتابیس
+# ۱. تنظیمات دیتابیس (موقتاً SQLite)
 # ============================================================
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-if DATABASE_URL and DATABASE_URL.startswith("postgresql"):
-    connect_args = {}
-else:
-    DATABASE_URL = "sqlite:///./teb_local.db"
-    connect_args = {"check_same_thread": False}
+DATABASE_URL = "sqlite:///./teb_local.db"
+connect_args = {"check_same_thread": False}
 
 engine = create_engine(DATABASE_URL, connect_args=connect_args, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
@@ -223,21 +242,31 @@ def calculate_bmi(weight, height_cm):
         return None, "نامشخص"
 
 
-DISEASE_KEYWORDS = {
-    "کبد چرب": ["کبد چرب", "چربی کبد", "کبد"],
-    "دیابت": ["دیابت", "قند خون", "قند بالا"],
-    "فشار خون": ["فشار خون", "پرفشاری"],
-    "چربی خون": ["چربی خون", "کلسترول", "تری گلیسیرید"],
-    "یبوست": ["یبوست", "دفع سخت"],
-    "سردرد": ["سردرد", "میگرن", "سر درد"],
-    "اضطراب": ["اضطراب", "استرس", "نگرانی", "دلشوره"],
-    "افسردگی": ["افسردگی", "غم"],
-    "بی‌خوابی": ["بی‌خوابی", "خواب"],
-    "کم‌خونی": ["کم‌خونی", "آنمی"],
-    "معده": ["معده", "نفخ", "سوزش معده", "رفلاکس"],
-    "مفاصل": ["مفاصل", "درد زانو", "آرتروز"],
-    "ریزش مو": ["ریزش مو", "کم‌پشتی مو"]
-}
+# ============================================================
+# ۴. بارگذاری پایگاه دانش از JSON
+# ============================================================
+import json
+
+# بارگذاری پایگاه دانش
+KB_PATH = "knowledge.json"
+try:
+    with open(KB_PATH, "r", encoding="utf-8") as f:
+        knowledge_data = json.load(f)
+        DISEASE_KNOWLEDGE = knowledge_data.get("diseases", {})
+    # ساخت خودکار DISEASE_KEYWORDS از روی data
+    DISEASE_KEYWORDS = {
+        name: data.get("keywords", [name])
+        for name, data in DISEASE_KNOWLEDGE.items()
+    }
+    print(f"✅ {len(DISEASE_KNOWLEDGE)} بیماری بارگذاری شد")
+except FileNotFoundError:
+    print("❌ فایل knowledge.json پیدا نشد!")
+    DISEASE_KNOWLEDGE = {}
+    DISEASE_KEYWORDS = {}
+except json.JSONDecodeError as e:
+    print(f"❌ خطا در خواندن knowledge.json: {e}")
+    DISEASE_KNOWLEDGE = {}
+    DISEASE_KEYWORDS = {}
 
 
 def detect_disease(complaint_text: str):
@@ -253,90 +282,9 @@ def detect_disease(complaint_text: str):
 
 
 # ============================================================
-# ۵. پایگاه دانش طب سنتی
+# ۵. پایگاه دانش طب سنتی (۲۵ بیماری)
 # ============================================================
-DISEASE_KNOWLEDGE = {
-    "کبد چرب": {
-        "definition": "تجمع چربی در سلول‌های کبد که در طب سنتی معمولاً ناشی از سردی و تری مزاج است.",
-        "general": ["کاهش وزن تدریجی", "پرهیز از غذاهای سرد و تر", "پرهیز از فست‌فود", "مصرف ۸ لیوان آب گرم", "پیاده‌روی روزانه ۳۰ دقیقه"],
-        "herbs": [
-            {"name": "خار مریم", "usage": "دم‌کرده روزی ۲ بار"},
-            {"name": "زردچوبه", "usage": "نصف قاشق با فلفل سیاه"},
-            {"name": "سیر", "usage": "۱-۲ حبه ناشتا"},
-        ],
-        "by_mizaj": {
-            "صفراوی": "پرهیز از سرخ‌کردنی. مصرف کاسنی، شاتره.",
-            "دموی": "حجامت توصیه می‌شود. کاهش گوشت قرمز.",
-            "بلغمی": "مصرف زنجبیل، دارچین. پرهیز از ماست و ترشی.",
-            "سوداوی": "مصرف روغن زیتون، کنجد. ورزش سبک."
-        },
-        "spiritual": ["پیامبر (ص): «معده خانه هر بیماری است»"]
-    },
-    "دیابت": {
-        "definition": "افزایش قند خون که با سردی مزاج مرتبط است.",
-        "general": ["پرهیز از قند ساده", "مصرف نان سبوس‌دار", "تقسیم وعده‌ها", "پیاده‌روی ۴۵ دقیقه"],
-        "herbs": [
-            {"name": "شنبلیله", "usage": "دم‌کرده قبل از غذا"},
-            {"name": "دارچین", "usage": "نصف قاشق روزانه"},
-            {"name": "چای سبز", "usage": "۲-۳ لیوان در روز"},
-        ],
-        "by_mizaj": {
-            "صفراوی": "مصرف کدو حلوایی، خرفه، کاسنی.",
-            "دموی": "حجامت. کاهش گوشت قرمز.",
-            "بلغمی": "مصرف دارچین، زنجبیل، فلفل.",
-            "سوداوی": "مصرف روغن زیتون، کنجد، خرما."
-        },
-        "spiritual": ["پیامبر (ص): «سیاه‌دانه درمان هر دردی است»"]
-    },
-    "فشار خون": {
-        "definition": "افزایش فشار خون که معمولاً ناشی از غلبه گرمی و خشکی است.",
-        "general": ["کاهش نمک", "پرهیز از ترشیجات", "مدیریت استرس", "خواب کافی"],
-        "herbs": [
-            {"name": "سیر", "usage": "۱-۲ حبه ناشتا"},
-            {"name": "چای ترش", "usage": "۱-۲ لیوان روزانه"},
-            {"name": "زرشک", "usage": "آب‌زرشک طبیعی"},
-        ],
-        "by_mizaj": {
-            "صفراوی": "پرهیز از تندی. مصرف کاسنی، شاتره.",
-            "دموی": "حجامت عام. کاهش گوشت قرمز.",
-            "بلغمی": "مصرف زنجبیل، دارچین.",
-            "سوداوی": "مصرف روغن زیتون، ورزش ملایم."
-        },
-        "spiritual": ["قرآن: «و لا تقتلوا انفسکم»"]
-    },
-    "یبوست": {
-        "definition": "سختی دفع که ناشی از خشکی مزاج است.",
-        "general": ["مصرف فیبر", "آب گرم ناشتا", "پیاده‌روی", "پرهیز از نان سفید"],
-        "herbs": [
-            {"name": "سنامکی", "usage": "۱ قاشق چای‌خوری قبل از خواب"},
-            {"name": "گل ختمی", "usage": "دم‌کرده"},
-            {"name": "انجیر", "usage": "۳-۵ عدد خیسانده صبح"},
-        ],
-        "by_mizaj": {
-            "صفراوی": "مصرف خرفه، کاهو، آب‌لیمو.",
-            "دموی": "مصرف آلو، انجیر.",
-            "بلغمی": "مصرف گرمی‌جات و دارچین.",
-            "سوداوی": "مصرف روغن زیتون، انجیر، خرما."
-        },
-        "spiritual": ["پیامبر (ص): «بر شما باد به خوردن انجیر»"]
-    },
-    "اضطراب": {
-        "definition": "حالت نگرانی که ناشی از سودا یا خشکی مغز است.",
-        "general": ["تنفس عمیق", "پیاده‌روی در طبیعت", "کاهش کافئین", "خواب منظم"],
-        "herbs": [
-            {"name": "اسطوخودوس", "usage": "دم‌کرده روزی ۱-۲ لیوان"},
-            {"name": "بابونه", "usage": "دم‌کرده قبل از خواب"},
-            {"name": "گل گاوزبان", "usage": "دم‌کرده با عسل"},
-        ],
-        "by_mizaj": {
-            "صفراوی": "پرهیز از تندی. مصرف کاسنی.",
-            "دموی": "حجامت، کاهش گوشت قرمز.",
-            "بلغمی": "مصرف دارچین، زنجبیل.",
-            "سوداوی": "مصرف زعفران، گاوزبان، ورزش ملایم."
-        },
-        "spiritual": ["قرآن: «الا بذکر الله تطمئن القلوب»"]
-    }
-}
+
 
 
 def get_treatment(disease, mizaj):
@@ -356,7 +304,8 @@ def get_treatment(disease, mizaj):
 # ۶. FastAPI App
 # ============================================================
 app = FastAPI(title="Teb AI - ربات طب سنتی و اسلامی")
-# اضافه کردن CORS برای اجازه دسترسی از مرورگرها و پنل React
+
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -404,6 +353,7 @@ manager = ConnectionManager()
 def on_startup():
     init_db()
 
+
 @app.get("/chat", response_class=HTMLResponse)
 def chat_page():
     """صفحه چت کاربران"""
@@ -446,10 +396,11 @@ async def register(data: RegisterInput):
                 payment_status = "free"
                 amount = 0
             else:
-                must_pay = False  # ⚠️ موقتاً رایگان برای تست
+                # ⚠️ موقتاً رایگان برای تست
+                must_pay = False
                 used_credit = False
-                payment_status = "pending" if must_pay else "free"
-                amount = VISIT_PRICE if must_pay else 0
+                payment_status = "free"
+                amount = 0
 
             visit = Visit(
                 user_id=user.id,
@@ -513,14 +464,14 @@ def submit_answer(visit_id: str, data: AnswerInput):
         if not visit:
             raise HTTPException(404, "ویزیت یافت نشد")
 
-        # ⭐ کپی جدید بساز تا SQLAlchemy تغییر را تشخیص دهد
+        # کپی جدید بساز تا SQLAlchemy تغییر را تشخیص دهد
         session_data = dict(visit.session_data or {})
         answers = dict(session_data.get("answers", {}))
         answers[data.question_id] = data.answer
         session_data["answers"] = answers
         visit.session_data = session_data
 
-        # ⭐ خط جادویی: به SQLAlchemy می‌گوید این ستون تغییر کرده
+        # این خط جادویی: به SQLAlchemy می‌گوید این ستون تغییر کرده
         from sqlalchemy.orm.attributes import flag_modified
         flag_modified(visit, "session_data")
 
@@ -544,7 +495,9 @@ async def complete_visit(visit_id: str):
 
         mizaj_data = detect_mizaj(answers)
         bmi, bmi_cat = calculate_bmi(answers.get("weight"), answers.get("height"))
-        disease, _ = detect_disease(answers.get("complaint", ""))
+        
+        # دریافت لیست تمام بیماری‌های تشخیص داده شده
+        _, all_diseases = detect_disease(answers.get("complaint", ""))
 
         report = []
         report.append(f"سلام {answers.get('name', user.name)} عزیز، تحلیل شما آماده است:\n")
@@ -552,23 +505,30 @@ async def complete_visit(visit_id: str):
         if bmi:
             report.append(f"⚖️ BMI: {bmi} ({bmi_cat})")
 
-        if disease:
-            t = get_treatment(disease, mizaj_data["mizaj"])
-            if t:
-                report.append(f"\n🩺 تشخیص احتمالی: {disease}\n{t['definition']}\n")
-                report.append("✅ توصیه‌های عمومی:")
-                for g in t["general"]:
-                    report.append(f"• {g}")
-                report.append("\n🌱 گیاهان دارویی:")
-                for h in t["herbs"]:
-                    report.append(f"• {h['name']}: {h['usage']}")
-                report.append(f"\n🎯 توصیه اختصاصی مزاج {mizaj_data['mizaj']}: {t['mizaj_advice']}")
-                if t["spiritual"]:
-                    report.append("\n📖 از قرآن و حدیث:")
-                    for s in t["spiritual"]:
-                        report.append(f"• {s}")
+        # بررسی همه بیماری‌ها به جای یکی
+        if all_diseases:
+            report.append(f"\n🩺 تشخیص‌های احتمالی: {', '.join(all_diseases)}\n")
+            
+            for disease in all_diseases:
+                t = get_treatment(disease, mizaj_data["mizaj"])
+                if t:
+                    report.append(f"═══ درمان {disease} ═══")
+                    report.append(f"تعریف: {t['definition']}\n")
+                    report.append("✅ توصیه‌های عمومی:")
+                    for g in t["general"]:
+                        report.append(f"• {g}")
+                    report.append("\n🌱 گیاهان دارویی:")
+                    for h in t["herbs"]:
+                        report.append(f"• {h['name']}: {h['usage']}")
+                    report.append(f"\n🎯 توصیه اختصاصی مزاج {mizaj_data['mizaj']}: {t['mizaj_advice']}")
+                    if t["spiritual"]:
+                        report.append("\n📖 از قرآن و حدیث:")
+                        for s in t["spiritual"]:
+                            report.append(f"• {s}")
+                    report.append("\n")
 
-        report.append("\n⚠️ هشدار: این تحلیل جایگزین تشخیص پزشک نیست.")
+        report.append("\n🌿 این تحلیل بر پایه طب سنتی تهیه شده و مکمل درمان‌های پزشکی است. در کنارش، مشورت با پزشک، بهترین همراه سلامتی‌تان خواهد بود.")
+        report.append("\n📅 حتماً برای ادامه معالجه و بررسی روند بهبودی هر ماه مراجعه کنید.")
 
         visit.status = "completed"
         visit.completed_at = datetime.utcnow()
@@ -617,7 +577,7 @@ async def complete_visit(visit_id: str):
             "report": "\n".join(report),
             "mizaj": mizaj_data,
             "bmi": bmi,
-            "disease": disease,
+            "disease": all_diseases,
             "visit_number": visit.visit_number,
             "referral_reward": referral_reward,
             "loyalty_tier": user.loyalty_tier,
