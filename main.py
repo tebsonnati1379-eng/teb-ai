@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 ربات طب سنتی و اسلامی — دکتر حکیم
-کد کامل یکپارچه نسخه نهایی
+کد کامل یکپارچه نسخه نهایی (با JSON)
 """
 import os
 import json
@@ -17,12 +17,13 @@ from sqlalchemy import (
     DateTime, ForeignKey, Text, JSON
 )
 from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm.attributes import flag_modified
 from passlib.hash import bcrypt
-# ============================================================
-# بارگذاری پایگاه دانش از فایل JSON
-# ============================================================
-import json
 
+
+# ============================================================
+# ۱. بارگذاری پایگاه دانش از فایل JSON
+# ============================================================
 KB_PATH = "knowledge.json"
 try:
     with open(KB_PATH, "r", encoding="utf-8") as f:
@@ -38,12 +39,13 @@ except FileNotFoundError:
     DISEASE_KNOWLEDGE = {}
     DISEASE_KEYWORDS = {}
 except json.JSONDecodeError as e:
-    print(f"❌ خطا در JSON: {e}")
+    print(f"❌ خطا در خواندن knowledge.json: {e}")
     DISEASE_KNOWLEDGE = {}
     DISEASE_KEYWORDS = {}
 
+
 # ============================================================
-# ۱. تنظیمات دیتابیس (موقتاً SQLite)
+# ۲. تنظیمات دیتابیس (موقتاً SQLite)
 # ============================================================
 DATABASE_URL = "sqlite:///./teb_local.db"
 connect_args = {"check_same_thread": False}
@@ -57,7 +59,7 @@ REFERRALS_NEEDED = 5
 
 
 # ============================================================
-# ۲. مدل‌های دیتابیس
+# ۳. مدل‌های دیتابیس
 # ============================================================
 class User(Base):
     __tablename__ = "users"
@@ -108,7 +110,7 @@ class Admin(Base):
 
 
 # ============================================================
-# ۳. توابع کمکی دیتابیس
+# ۴. توابع کمکی دیتابیس
 # ============================================================
 def init_db():
     Base.metadata.create_all(bind=engine)
@@ -166,7 +168,7 @@ def register_user(name, phone, referral_code_used=None):
 
 
 # ============================================================
-# ۴. موتور تشخیص مزاج و بیماری
+# ۵. موتور تشخیص مزاج و بیماری
 # ============================================================
 def detect_mizaj(answers: dict) -> dict:
     score = {"گرم": 0, "سرد": 0, "تر": 0, "خشک": 0}
@@ -242,33 +244,6 @@ def calculate_bmi(weight, height_cm):
         return None, "نامشخص"
 
 
-# ============================================================
-# ۴. بارگذاری پایگاه دانش از JSON
-# ============================================================
-import json
-
-# بارگذاری پایگاه دانش
-KB_PATH = "knowledge.json"
-try:
-    with open(KB_PATH, "r", encoding="utf-8") as f:
-        knowledge_data = json.load(f)
-        DISEASE_KNOWLEDGE = knowledge_data.get("diseases", {})
-    # ساخت خودکار DISEASE_KEYWORDS از روی data
-    DISEASE_KEYWORDS = {
-        name: data.get("keywords", [name])
-        for name, data in DISEASE_KNOWLEDGE.items()
-    }
-    print(f"✅ {len(DISEASE_KNOWLEDGE)} بیماری بارگذاری شد")
-except FileNotFoundError:
-    print("❌ فایل knowledge.json پیدا نشد!")
-    DISEASE_KNOWLEDGE = {}
-    DISEASE_KEYWORDS = {}
-except json.JSONDecodeError as e:
-    print(f"❌ خطا در خواندن knowledge.json: {e}")
-    DISEASE_KNOWLEDGE = {}
-    DISEASE_KEYWORDS = {}
-
-
 def detect_disease(complaint_text: str):
     if not complaint_text:
         return None, []
@@ -281,21 +256,15 @@ def detect_disease(complaint_text: str):
     return (matches[0] if matches else None), matches
 
 
-# ============================================================
-# ۵. پایگاه دانش طب سنتی (۲۵ بیماری)
-# ============================================================
-
-
-
 def get_treatment(disease, mizaj):
     if disease not in DISEASE_KNOWLEDGE:
         return None
     kb = DISEASE_KNOWLEDGE[disease]
     return {
-        "definition": kb["definition"],
-        "general": kb["general"],
-        "herbs": kb["herbs"],
-        "mizaj_advice": kb["by_mizaj"].get(mizaj, "توصیه خاصی ثبت نشده."),
+        "definition": kb.get("definition", ""),
+        "general": kb.get("general", []),
+        "herbs": kb.get("herbs", []),
+        "mizaj_advice": kb.get("by_mizaj", {}).get(mizaj, "توصیه خاصی ثبت نشده."),
         "spiritual": kb.get("spiritual", [])
     }
 
@@ -305,7 +274,6 @@ def get_treatment(disease, mizaj):
 # ============================================================
 app = FastAPI(title="Teb AI - ربات طب سنتی و اسلامی")
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -356,7 +324,6 @@ def on_startup():
 
 @app.get("/chat", response_class=HTMLResponse)
 def chat_page():
-    """صفحه چت کاربران"""
     try:
         with open("chat.html", "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
@@ -464,15 +431,11 @@ def submit_answer(visit_id: str, data: AnswerInput):
         if not visit:
             raise HTTPException(404, "ویزیت یافت نشد")
 
-        # کپی جدید بساز تا SQLAlchemy تغییر را تشخیص دهد
         session_data = dict(visit.session_data or {})
         answers = dict(session_data.get("answers", {}))
         answers[data.question_id] = data.answer
         session_data["answers"] = answers
         visit.session_data = session_data
-
-        # این خط جادویی: به SQLAlchemy می‌گوید این ستون تغییر کرده
-        from sqlalchemy.orm.attributes import flag_modified
         flag_modified(visit, "session_data")
 
         visit.progress_step = len(answers)
@@ -495,8 +458,6 @@ async def complete_visit(visit_id: str):
 
         mizaj_data = detect_mizaj(answers)
         bmi, bmi_cat = calculate_bmi(answers.get("weight"), answers.get("height"))
-        
-        # دریافت لیست تمام بیماری‌های تشخیص داده شده
         _, all_diseases = detect_disease(answers.get("complaint", ""))
 
         report = []
@@ -505,10 +466,8 @@ async def complete_visit(visit_id: str):
         if bmi:
             report.append(f"⚖️ BMI: {bmi} ({bmi_cat})")
 
-        # بررسی همه بیماری‌ها به جای یکی
         if all_diseases:
             report.append(f"\n🩺 تشخیص‌های احتمالی: {', '.join(all_diseases)}\n")
-            
             for disease in all_diseases:
                 t = get_treatment(disease, mizaj_data["mizaj"])
                 if t:
@@ -517,9 +476,10 @@ async def complete_visit(visit_id: str):
                     report.append("✅ توصیه‌های عمومی:")
                     for g in t["general"]:
                         report.append(f"• {g}")
-                    report.append("\n🌱 گیاهان دارویی:")
-                    for h in t["herbs"]:
-                        report.append(f"• {h['name']}: {h['usage']}")
+                    if t["herbs"]:
+                        report.append("\n🌱 گیاهان دارویی:")
+                        for h in t["herbs"]:
+                            report.append(f"• {h['name']}: {h['usage']}")
                     report.append(f"\n🎯 توصیه اختصاصی مزاج {mizaj_data['mizaj']}: {t['mizaj_advice']}")
                     if t["spiritual"]:
                         report.append("\n📖 از قرآن و حدیث:")
