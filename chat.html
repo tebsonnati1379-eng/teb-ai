@@ -81,6 +81,28 @@ body {
     opacity: 0.6;
     cursor: not-allowed;
 }
+/* ⭐ استایل دکمه بازگشت */
+.btn-prev {
+    background: #f0f0f0;
+    color: #555;
+    border: 2px solid #e0e0e0;
+    box-shadow: none;
+}
+.btn-prev:hover:not(:disabled) {
+    background: #e5e5e5;
+    color: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+.btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+.btn-row .btn {
+    flex: 1;
+    margin-top: 0;
+}
 .progress-bar {
     height: 8px;
     background: #e0e0e0;
@@ -221,19 +243,8 @@ body {
     border-right: 3px solid #4ade80;
     line-height: 1.6;
 }
-.input-icon {
-    position: relative;
-}
-.input-icon::before {
-    content: '✏️';
-    position: absolute;
-    top: 50%;
-    right: 16px;
-    transform: translateY(-50%);
-    font-size: 20px;
-    pointer-events: none;
-}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -260,9 +271,9 @@ body {
                 <input type="text" id="reg-ref" placeholder="اگر کسی شما را معرفی کرده">
             </div>
             <button class="btn" id="btn-register">🚀 شروع مشاوره</button>
-            <p style="text-align:center;font-size:12px;color:#888;margin-top:16px;">
-                ⚠️ این ربات جایگزین پزشک نیست
-            </p>
+            <p style="text-align:center;font-size:13px;color:#1a6b52;margin-top:16px;font-weight:600;">
+    🌿 سلامتی شما برای ما ارزشمند است.
+</p>
         </div>
 
         <!-- صفحه ۲: پرداخت -->
@@ -293,7 +304,12 @@ body {
             <div style="text-align:center;font-size:13px;color:#888;margin-bottom:16px;" id="progress-text"></div>
             <div class="question" id="question-text"></div>
             <div id="answer-area"></div>
-            <button class="btn" id="btn-next">تأیید و ادامه ←</button>
+            
+            <!-- ⭐ ردیف دکمه‌ها -->
+            <div class="btn-row">
+                <button class="btn btn-prev" id="btn-prev">→ سوال قبلی</button>
+                <button class="btn" id="btn-next">تأیید و ادامه ←</button>
+            </div>
         </div>
 
         <!-- صفحه ۴: پردازش -->
@@ -312,7 +328,8 @@ body {
                 <h2 style="color:#0f4c3a;">تحلیل شما آماده شد</h2>
             </div>
             <div class="report" id="report-text"></div>
-            <button class="btn" id="btn-restart" style="margin-top:20px;">🔄 مشاوره جدید</button>
+            <button class="btn" id="btn-pdf" style="margin-top:20px; background:linear-gradient(135deg, #dc2626, #b91c1c);">📥 دانلود تحلیل (PDF)</button>
+<button class="btn btn-prev" id="btn-restart" style="margin-top:10px;">🔄 مشاوره جدید</button>
         </div>
     </div>
 </div>
@@ -429,7 +446,7 @@ async function loadQuestions() {
 }
 
 // ============================================================
-// نمایش سوال فعلی با استایل بهبودیافته
+// نمایش سوال فعلی
 // ============================================================
 function renderQuestion() {
     const q = state.questions[state.currentIndex];
@@ -439,6 +456,14 @@ function renderQuestion() {
     document.getElementById('progress').style.width = `${(idx / total) * 100}%`;
     document.getElementById('progress-text').textContent = `سوال ${toPersianNum(idx + 1)} از ${toPersianNum(total)}`;
     document.getElementById('question-text').textContent = `❓ ${q.text}`;
+
+    // ⭐ نمایش/مخفی کردن دکمه بازگشت
+    const btnPrev = document.getElementById('btn-prev');
+    if (idx === 0) {
+        btnPrev.style.display = 'none'; // در سوال اول، دکمه بازگشت مخفی است
+    } else {
+        btnPrev.style.display = 'block';
+    }
 
     const area = document.getElementById('answer-area');
     area.innerHTML = '';
@@ -469,7 +494,7 @@ function renderQuestion() {
         const hint = document.createElement('div');
         hint.className = 'hint-text';
         if (q.id === 'weight') hint.innerHTML = '💡 مثال: اگر وزن شما ۸۵ کیلوگرم است، عدد <b>85</b> را وارد کنید.';
-        else if (q.id === 'height') hint.innerHTML = '💡 مثال: اگر قد شما ۱۷۵ سانتی‌متر است، عدد <b>175</b> را وارد کنید.';
+        else if (q.id === 'height') hint.innerHTML = '💡 مثال: اگر قد شما ۱۶۵ سانتی‌متر است، عدد <b>165</b> را وارد کنید.';
         else if (q.id === 'age') hint.innerHTML = '💡 مثال: اگر ۳۵ سال دارید، عدد <b>35</b> را وارد کنید.';
         else hint.innerHTML = '💡 لطفاً یک عدد معتبر وارد کنید.';
         area.appendChild(hint);
@@ -492,7 +517,7 @@ function renderQuestion() {
         area.appendChild(div);
     }
 
-    // فوکوس خودکار روی کادر ورودی (اختیاری)
+    // فوکوس خودکار روی کادر ورودی
     setTimeout(() => {
         const inp = document.getElementById('q-input');
         if (inp) inp.focus();
@@ -518,14 +543,13 @@ document.getElementById('btn-next').addEventListener('click', async () => {
         return;
     }
 
-       if (q.type === 'number') {
+    if (q.type === 'number') {
         const num = parseFloat(answer);
         if (isNaN(num) || num <= 0) {
             alert('⚠️ لطفاً یک عدد معتبر وارد کنید.');
             return;
         }
         
-        // ⭐ اعتبارسنجی هوشمند بر اساس نوع سوال
         if (q.id === 'age' && (num < 1 || num > 120)) {
             alert('⚠️ سن باید بین ۱ تا ۱۲۰ سال باشد. مقدار واردشده: ' + num);
             return;
@@ -535,12 +559,12 @@ document.getElementById('btn-next').addEventListener('click', async () => {
             return;
         }
         if (q.id === 'height' && (num < 80 || num > 220)) {
-            alert('⚠️ قد باید بین ۸۰ تا ۲۲۰ سانتی‌متر باشد.\nمقدار واردشده: ' + num + ' سانتی‌متر.\n\nمثال صحیح: اگر قد شما ۱۶۵ سانتی‌متر است، عدد 165 را وارد کنید (نه 265 و نه 1.65).');
+            alert('⚠️ قد باید بین ۸۰ تا ۲۲۰ سانتی‌متر باشد.\nمقدار واردشده: ' + num + ' سانتی‌متر.\n\nمثال صحیح: اگر قد شما ۱۶۵ سانتی‌متر است، عدد 165 را وارد کنید.');
             return;
         }
     }
 
-    state.answers[q.id] = answer
+    state.answers[q.id] = answer;
 
     try {
         await fetch(`${API}/visits/${state.visitId}/answer`, {
@@ -557,6 +581,16 @@ document.getElementById('btn-next').addEventListener('click', async () => {
     if (state.currentIndex >= state.questions.length) {
         await completeVisit();
     } else {
+        renderQuestion();
+    }
+});
+
+// ============================================================
+// ⭐ دکمه بازگشت (قبلی)
+// ============================================================
+document.getElementById('btn-prev').addEventListener('click', () => {
+    if (state.currentIndex > 0) {
+        state.currentIndex--;
         renderQuestion();
     }
 });
@@ -582,6 +616,73 @@ async function completeVisit() {
         show('screen-questions');
     }
 }
+
+// ============================================================
+// شروع مجدد
+// ============================================================
+// ============================================================
+// ⭐ دانلود PDF
+// ============================================================
+document.getElementById('btn-pdf').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-pdf');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = '⏳ در حال آماده‌سازی PDF...';
+
+    try {
+        // گرفتن نام و تاریخ
+        const reportText = document.getElementById('report-text').textContent;
+        const today = new Date().toLocaleDateString('fa-IR');
+
+        // ساخت ساختار PDF
+        const pdfContent = document.createElement('div');
+        pdfContent.style.cssText = `
+            font-family: 'Tahoma', sans-serif;
+            direction: rtl;
+            text-align: right;
+            padding: 30px;
+            background: #ffffff;
+            color: #333;
+            line-height: 2;
+            width: 700px;
+        `;
+        pdfContent.innerHTML = `
+            <div style="text-align: center; border-bottom: 3px solid #1a6b52; padding-bottom: 15px; margin-bottom: 20px;">
+                <div style="font-size: 26px; color: #0f4c3a; font-weight: bold;">🌿 دکتر حکیم</div>
+                <div style="font-size: 13px; color: #666; margin-top: 5px;">دستیار هوشمند طب سنتی و اسلامی</div>
+                <div style="font-size: 12px; color: #888; margin-top: 8px;">تاریخ: ${today}</div>
+            </div>
+            <div style="white-space: pre-wrap; font-size: 14px; line-height: 2.2;">${reportText}</div>
+            <div style="margin-top: 30px; padding-top: 15px; border-top: 2px solid #e0e0e0; text-align: center; font-size: 11px; color: #888;">
+                🌿 ربات هوشمند دکتر حکیم — همراه سلامتی شما<br>
+                آدرس: teb-ai.liara.run/chat
+            </div>
+        `;
+
+        // تنظیمات PDF
+        const options = {
+            margin: [10, 10, 10, 10],
+            filename: `Teb-AI-Report-${Date.now()}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        // تولید PDF
+        await html2pdf().set(options).from(pdfContent).save();
+
+        btn.textContent = '✅ دانلود شد!';
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = originalText;
+        }, 2000);
+
+    } catch (e) {
+        alert('خطا در ساخت PDF: ' + e.message);
+        btn.disabled = false;
+        btn.textContent = originalText;
+    }
+});
 
 // ============================================================
 // شروع مجدد
