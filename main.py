@@ -463,6 +463,15 @@ def check_admin_session(token):
 # FastAPI App
 # ============================================================
 app = FastAPI(title="Teb AI - ربات طب سنتی و اسلامی")
+from fastapi.responses import FileResponse
+
+@app.get("/terms")
+def terms_page():
+    return FileResponse("terms.html")
+
+@app.get("/contact")
+def contact_page():
+    return FileResponse("contact.html")
 
 app.add_middleware(
     CORSMiddleware,
