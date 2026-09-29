@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پنل مدیریت — دکتر حکیم</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tahoma', 'Vazirmatn', sans-serif; }
+body { background: #f0f4f8; min-height: 100vh; direction: rtl; color: #333; }
+
+/* صفحه ورود */
+#login-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f4c3a, #1a6b52);
+}
+.login-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    text-align: center;
+}
+.login-box h1 { color: #0f4c3a; margin-bottom: 8px; font-size: 26px; }
+.login-box p { color: #888; font-size: 13px; margin-bottom: 24px; }
+.login-box input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    margin-bottom: 16px;
+    text-align: center;
+    direction: ltr;
+}
+.login-box input:focus { border-color: #1a6b52; }
+.login-box button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #1a6b52, #0f4c3a);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+.login-box button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(15,76,58,0.4); }
+.login-error {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+}
+.login-error.show { display: block; }
+
+/* پنل اصلی */
+#admin-panel { display: none; }
+
+/* هدر */
+.admin-header {
+    background: linear-gradient(135deg, #0f4c3a, #1a6b52);
+    color: #fff;
+    padding: 20px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.admin-header h1 { font-size: 20px; display: flex; align-items: center; gap: 10px; }
+.admin-header .logout {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.3);
+    padding: 8px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+.admin-header .logout:hover { background: rgba(255,255,255,0.25); }
+
+/* تب‌ها */
+.tabs {
+    display: flex;
+    background: #fff;
+    padding: 0 28px;
+    border-bottom: 2px solid #e0e0e0;
+    overflow-x: auto;
+    gap: 4px;
+}
+.tab {
+    padding: 16px 24px;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    color: #666;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.tab:hover { color: #1a6b52; background: #f5f7f6; }
+.tab.active { color: #1a6b52; border-bottom-color: #1a6b52; background: #f5f7f6; }
+
+/* محتوا */
+.content { padding: 28px; max-width: 1400px; margin: 0 auto; }
+
+/* کارت‌های آمار */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    border-right: 4px solid #1a6b52;
+}
+.stat-card .icon { font-size: 28px; margin-bottom: 8px; }
+.stat-card .value { font-size: 28px; font-weight: 900; color: #0f4c3a; margin-bottom: 4px; }
+.stat-card .label { font-size: 13px; color: #666; font-weight: 600; }
+
+/* کارت بخش */
+.section-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    padding: 20px;
+}
+.section-card h2 {
+    color: #0f4c3a;
+    font-size: 18px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.search-box {
+    padding: 10px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    min-width: 220px;
+}
+.search-box:focus { border-color: #1a6b52; }
+
+/* دکمه اکسل */
+.btn-excel {
+    background: linear-gradient(135deg, #217346, #145530);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(33,115,70,0.3);
+}
+.btn-excel:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(33,115,70,0.5); }
+
+/* جدول */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+table th {
+    background: #f5f7f6;
+    color: #0f4c3a;
+    font-weight: 700;
+    padding: 12px 10px;
+    text-align: right;
+    border-bottom: 2px solid #e0e0e0;
+    white-space: nowrap;
+}
+table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+table tr:hover { background: #fafcfb; }
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+.badge-success { background: #d1fae5; color: #065f46; }
+.badge-warning { background: #fef3c7; color: #92400e; }
+.badge-danger { background: #fee2e2; color: #991b1b; }
+.badge-info { background: #dbeafe; color: #1e40af; }
+.badge-gray { background: #f3f4f6; color: #4b5563; }
+
+.btn-detail {
+    background: #1a6b52;
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-detail:hover { background: #0f4c3a; }
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+    font-size: 14px;
+}
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #1a6b52;
+    font-weight: 700;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal-content {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 800px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.modal-content h3 {
+    color: #0f4c3a;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-close {
+    background: #fee2e2;
+    color: #991b1b;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+}
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 13px;
+}
+.info-row strong { color: #0f4c3a; }
+.feedback-item {
+    background: #f5f7f6;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border-right: 4px solid #8b5cf6;
+}
+.feedback-item .meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.feedback-item .text {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #333;
+}
+
+/* باشگاه مشتریان */
+.loyalty-tier-card {
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+.loyalty-tier-card:hover { transform: translateY(-4px); }
+.loyalty-tier-card .tier-bg-icon {
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    font-size: 100px;
+    opacity: 0.15;
+    pointer-events: none;
+}
+.loyalty-tier-card .tier-icon { font-size: 42px; margin-bottom: 10px; }
+.loyalty-tier-card .tier-name {
+    font-size: 20px;
+    font-weight: 900;
+    color: #0f4c3a;
+    margin-bottom: 6px;
+}
+.loyalty-tier-card .tier-min { font-size: 12px; color: #555; margin-bottom: 12px; }
+.loyalty-tier-card .tier-discount {
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 14px;
+}
+.loyalty-tier-card .tier-count {
+    font-size: 38px;
+    font-weight: 900;
+    color: #0f4c3a;
+    line-height: 1;
+}
+.loyalty-tier-card .tier-percent { font-size: 12px; color: #555; margin-top: 6px; }
+.loyalty-tier-card .tier-progress {
+    background: rgba(255,255,255,0.5);
+    height: 8px;
+    border-radius: 4px;
+    margin-top: 14px;
+    overflow: hidden;
+}
+.loyalty-tier-card .tier-progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+}
+
+.hall-of-fame table tr:nth-child(1) { background: #fef3c7 !important; font-weight: 700; }
+.hall-of-fame table tr:nth-child(2) { background: #f3f4f6 !important; }
+.hall-of-fame table tr:nth-child(3) { background: #fef9e7 !important; }
+
+.rank-icon { font-size: 22px; text-align: center; font-weight: 700; }
+
+@media (max-width: 768px) {
+    .admin-header { padding: 16px; flex-direction: column; gap: 12px; }
+    .content { padding: 16px; }
+    .tabs { padding: 0 16px; }
+    .tab { padding: 14px 16px; font-size: 13px; }
+    table { font-size: 12px; }
+    table th, table td { padding: 8px 6px; }
+}
+</style>
+</head>
+<body>
+
+<!-- صفحه ورود -->
+<div id="login-screen">
+    <div class="login-box">
+        <h1>🔐 پنل مدیریت</h1>
+        <p>دکتر حکیم — طب سنتی و اسلامی</p>
+        <div class="login-error" id="login-error"></div>
+        <input type="password" id="admin-password" placeholder="رمز عبور را وارد کنید">
+        <button id="btn-login">ورود</button>
+    </div>
+</div>
+
+<!-- پنل اصلی -->
+<div id="admin-panel">
+    <div class="admin-header">
+        <h1>🌿 پنل مدیریت دکتر حکیم</h1>
+        <button class="logout" id="btn-logout">🚪 خروج</button>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="dashboard">📊 داشبورد</button>
+        <button class="tab" data-tab="users">👥 کاربران</button>
+        <button class="tab" data-tab="visits">📋 ویزیت‌ها</button>
+        <button class="tab" data-tab="feedbacks">💬 نظرات</button>
+        <button class="tab" data-tab="loyalty">🏆 باشگاه مشتریان</button>
+    </div>
+
+    <div class="content">
+        <div id="tab-dashboard" class="tab-content">
+            <div class="loading">در حال بارگذاری...</div>
+        </div>
+
+        <div id="tab-users" class="tab-content hidden">
+            <div class="section-card">
+                <h2>
+                    👥 لیست کاربران
+                    <input type="text" class="search-box" id="user-search" placeholder="🔍 جستجو (نام یا موبایل)...">
+                </h2>
+                <div style="margin-bottom:16px;">
+                    <button class="btn-excel" onclick="exportExcel('users')">📊 دانلود اکسل کاربران</button>
+                </div>
+                <div id="users-list"><div class="loading">در حال بارگذاری...</div></div>
+            </div>
+        </div>
+
+        <div id="tab-visits" class="tab-content hidden">
+            <div class="section-card">
+                <h2>📋 لیست ویزیت‌ها</h2>
+                <div style="margin-bottom:16px;">
+                    <button class="btn-excel" onclick="exportExcel('visits')">📊 دانلود اکسل ویزیت‌ها</button>
+                </div>
+                <div id="visits-list"><div class="loading">در حال بارگذاری...</div></div>
+            </div>
+        </div>
+
+        <div id="tab-feedbacks" class="tab-content hidden">
+            <div class="section-card">
+                <h2>💬 نظرات و پیشنهادات کاربران</h2>
+                <div style="margin-bottom:16px;">
+                    <button class="btn-excel" onclick="exportExcel('feedbacks')">📊 دانلود اکسل نظرات</button>
+                </div>
+                <div id="feedbacks-list"><div class="loading">در حال بارگذاری...</div></div>
+            </div>
+        </div>
+
+        <div id="tab-loyalty" class="tab-content hidden">
+            <div id="loyalty-content"><div class="loading">در حال بارگذاری...</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal جزئیات کاربر -->
+<div class="modal-overlay" id="user-modal">
+    <div class="modal-content">
+        <h3>
+            <span>👤 جزئیات کاربر</span>
+            <button class="modal-close" id="modal-close">✕</button>
+        </h3>
+        <div id="user-modal-body"></div>
+    </div>
+</div>
+
+<script>
+var API = window.location.origin;
+var state = {
+    token: null,
+    users: [],
+    visits: [],
+    feedbacks: []
+};
+
+// ============================================================
+// ورود
+// ============================================================
+var loginScreen = document.getElementById('login-screen');
+var adminPanel = document.getElementById('admin-panel');
+var loginError = document.getElementById('login-error');
+
+function showLoginError(msg) {
+    loginError.textContent = msg;
+    loginError.classList.add('show');
+    setTimeout(function() { loginError.classList.remove('show'); }, 5000);
+}
+
+document.getElementById('btn-login').addEventListener('click', function() {
+    var password = document.getElementById('admin-password').value;
+    if (!password) { showLoginError('رمز عبور را وارد کنید'); return; }
+
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = 'در حال ورود...';
+
+    fetch(API + '/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: password })
+    })
+    .then(function(res) {
+        if (!res.ok) return res.json().then(function(e) { throw new Error(e.detail); });
+        return res.json();
+    })
+    .then(function(data) {
+        state.token = data.token;
+        localStorage.setItem('admin_token', data.token);
+        loginScreen.style.display = 'none';
+        adminPanel.style.display = 'block';
+        loadDashboard();
+    })
+    .catch(function(e) {
+        showLoginError(e.message || 'خطا در ورود');
+        btn.disabled = false;
+        btn.textContent = 'ورود';
+    });
+});
+
+document.getElementById('admin-password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') document.getElementById('btn-login').click();
+});
+
+document.getElementById('btn-logout').addEventListener('click', function() {
+    localStorage.removeItem('admin_token');
+    state.token = null;
+    location.reload();
+});
+
+// ============================================================
+// تب‌ها
+// ============================================================
+document.querySelectorAll('.tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+        var target = this.getAttribute('data-tab');
+        document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+        document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.add('hidden'); });
+        this.classList.add('active');
+        document.getElementById('tab-' + target).classList.remove('hidden');
+
+        if (target === 'dashboard') loadDashboard();
+        else if (target === 'users') loadUsers();
+        else if (target === 'visits') loadVisits();
+        else if (target === 'feedbacks') loadFeedbacks();
+        else if (target === 'loyalty') loadLoyalty();
+    });
+});
+
+// ============================================================
+// فرمت تاریخ
+// ============================================================
+function formatDate(iso) {
+    if (!iso) return '—';
+    try {
+        var d = new Date(iso);
+        var options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+        return d.toLocaleDateString('fa-IR', options);
+    } catch (e) { return '—'; }
+}
+
+// ============================================================
+// داشبورد
+// ============================================================
+function loadDashboard() {
+    var el = document.getElementById('tab-dashboard');
+    el.innerHTML = '<div class="loading">در حال بارگذاری...</div>';
+
+    fetch(API + '/admin/stats?token=' + state.token)
+    .then(function(res) {
+        if (!res.ok) throw new Error('خطا در دریافت آمار');
+        return res.json();
+    })
+    .then(function(data) {
+        el.innerHTML = 
+            '<div class="stats-grid">' +
+                '<div class="stat-card"><div class="icon">👥</div><div class="value">' + data.total_users + '</div><div class="label">کل کاربران</div></div>' +
+                '<div class="stat-card"><div class="icon">📋</div><div class="value">' + data.total_visits + '</div><div class="label">کل ویزیت‌ها</div></div>' +
+                '<div class="stat-card"><div class="icon">✅</div><div class="value">' + data.completed_visits + '</div><div class="label">ویزیت‌های موفق</div></div>' +
+                '<div class="stat-card"><div class="icon">💬</div><div class="value">' + data.total_feedbacks + '</div><div class="label">نظرات کاربران</div></div>' +
+                '<div class="stat-card"><div class="icon">🆕</div><div class="value">' + data.new_users_today + '</div><div class="label">کاربران امروز</div></div>' +
+                '<div class="stat-card"><div class="icon">📅</div><div class="value">' + data.visits_today + '</div><div class="label">ویزیت‌های امروز</div></div>' +
+            '</div>';
+    })
+    .catch(function(e) {
+        el.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div>' + e.message + '</div>';
+    });
+}
+
+// ============================================================
+// کاربران
+// ============================================================
+function loadUsers() {
+    var el = document.getElementById('users-list');
+    el.innerHTML = '<div class="loading">در حال بارگذاری...</div>';
+
+    var search = document.getElementById('user-search').value.trim();
+    var url = API + '/admin/users?token=' + state.token;
+    if (search) url += '&search=' + encodeURIComponent(search);
+
+    fetch(url)
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        state.users = data;
+        if (data.length === 0) {
+            el.innerHTML = '<div class="empty-state"><div class="icon">📭</div>هیچ کاربری یافت نشد</div>';
+            return;
+        }
+        var html = '<table><thead><tr>' +
+            '<th>نام</th><th>موبایل</th><th>کد معرفی</th><th>ویزیت موفق</th><th>سطح</th><th>تاریخ ثبت‌نام</th><th>جزئیات</th>' +
+            '</tr></thead><tbody>';
+        data.forEach(function(u) {
+            html += '<tr>' +
+                '<td><strong>' + u.name + '</strong></td>' +
+                '<td style="direction:ltr;text-align:right;">' + u.phone + '</td>' +
+                '<td><code>' + u.referral_code + '</code></td>' +
+                '<td>' + u.completed_visits + '</td>' +
+                '<td>' + getTierBadge(u.loyalty_tier) + '</td>' +
+                '<td>' + formatDate(u.created_at) + '</td>' +
+                '<td><button class="btn-detail" onclick="showUserDetail(\'' + u.id + '\')">مشاهده</button></td>' +
+            '</tr>';
+        });
+        html += '</tbody></table>';
+        el.innerHTML = html;
+    })
+    .catch(function() {
+        el.innerHTML = '<div class="empty-state">⚠️ خطا در بارگذاری</div>';
+    });
+}
+
+function getTierBadge(tier) {
+    var map = {
+        'newcomer':    '<span class="badge badge-gray">🌱 تازه‌وارد</span>',
+        'herbalist':   '<span class="badge badge-info">🌿 گیاه‌شناس</span>',
+        'young_sage':  '<span class="badge badge-info">🌸 حکیم جوان</span>',
+        'skilled_sage':'<span class="badge badge-warning">🍃 حکیم ماهر</span>',
+        'grand_sage':  '<span class="badge badge-warning">🌟 حکیم بزرگ</span>',
+        'master_sage': '<span class="badge badge-success">💎 استاد حکیم</span>',
+        // سازگاری با نسخه قدیمی
+        'bronze':      '<span class="badge badge-gray">🥉 برنزی</span>',
+        'silver':      '<span class="badge badge-info">🥈 نقره‌ای</span>',
+        'gold':        '<span class="badge badge-warning">🥇 طلایی</span>',
+        'platinum':    '<span class="badge badge-success">💎 پلاتینیوم</span>'
+    };
+    return map[tier] || '<span class="badge badge-gray">' + (tier || '—') + '</span>';
+}
+
+document.getElementById('user-search').addEventListener('input', function() {
+    clearTimeout(window._searchTimer);
+    window._searchTimer = setTimeout(loadUsers, 400);
+});
+
+// ============================================================
+// جزئیات کاربر
+// ============================================================
+function showUserDetail(userId) {
+    var modal = document.getElementById('user-modal');
+    var body = document.getElementById('user-modal-body');
+    body.innerHTML = '<div class="loading">در حال بارگذاری...</div>';
+    modal.classList.add('show');
+
+    fetch(API + '/admin/user/' + userId + '?token=' + state.token)
+    .then(function(res) { return res.json(); })
+    .then(function(u) {
+        var html = 
+            '<div class="info-row"><span>نام:</span><strong>' + u.name + '</strong></div>' +
+            '<div class="info-row"><span>موبایل:</span><strong style="direction:ltr;">' + u.phone + '</strong></div>' +
+            '<div class="info-row"><span>کد معرفی:</span><strong>' + u.referral_code + '</strong></div>' +
+            '<div class="info-row"><span>ویزیت موفق:</span><strong>' + u.completed_visits + '</strong></div>' +
+            '<div class="info-row"><span>تاریخ ثبت‌نام:</span><strong>' + formatDate(u.created_at) + '</strong></div>';
+
+        html += '<h3 style="margin-top:20px;">📋 ویزیت‌های این کاربر</h3>';
+        if (u.visits.length === 0) {
+            html += '<div class="empty-state">هیچ ویزیتی ثبت نشده</div>';
+        } else {
+            u.visits.forEach(function(v) {
+                var statusIcon = v.status === 'completed' ? '✅' : '🔄';
+                html += '<div class="feedback-item" style="border-right-color:#1a6b52;">' +
+                    '<div class="meta">' +
+                        '<span>' + statusIcon + ' ویزیت شماره ' + v.visit_number + '</span>' +
+                        '<span>' + formatDate(v.created_at) + '</span>' +
+                    '</div>' +
+                    '<div style="font-size:13px;color:#666;">' +
+                        'وضعیت: ' + (v.status === 'completed' ? 'تکمیل شده' : 'در جریان') +
+                        ' | پرداخت: ' + v.payment_status +
+                    '</div>' +
+                '</div>';
+            });
+        }
+        body.innerHTML = html;
+    })
+    .catch(function() {
+        body.innerHTML = '<div class="empty-state">⚠️ خطا در بارگذاری</div>';
+    });
+}
+
+document.getElementById('modal-close').addEventListener('click', function() {
+    document.getElementById('user-modal').classList.remove('show');
+});
+
+document.getElementById('user-modal').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('show');
+});
+
+// ============================================================
+// ویزیت‌ها
+// ============================================================
+function loadVisits() {
+    var el = document.getElementById('visits-list');
+    el.innerHTML = '<div class="loading">در حال بارگذاری...</div>';
+
+    fetch(API + '/admin/visits?token=' + state.token)
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        if (data.length === 0) {
+            el.innerHTML = '<div class="empty-state"><div class="icon">📭</div>هیچ ویزیتی ثبت نشده</div>';
+            return;
+        }
+        var html = '<table><thead><tr>' +
+            '<th>کاربر</th><th>موبایل</th><th>شماره ویزیت</th><th>وضعیت</th><th>پرداخت</th><th>تاریخ</th>' +
+            '</tr></thead><tbody>';
+        data.forEach(function(v) {
+            var statusBadge = v.status === 'completed' 
+                ? '<span class="badge badge-success">✅ تکمیل</span>'
+                : '<span class="badge badge-warning">🔄 در جریان</span>';
+            var payBadge = v.payment_status === 'paid'
+                ? '<span class="badge badge-success">💰 پرداخت‌شده</span>'
+                : v.payment_status === 'free'
+                ? '<span class="badge badge-info">🎁 رایگان</span>'
+                : '<span class="badge badge-warning">⏳ در انتظار</span>';
+            html += '<tr>' +
+                '<td><strong>' + v.user_name + '</strong></td>' +
+                '<td style="direction:ltr;text-align:right;">' + v.user_phone + '</td>' +
+                '<td>#' + v.visit_number + '</td>' +
+                '<td>' + statusBadge + '</td>' +
+                '<td>' + payBadge + '</td>' +
+                '<td>' + formatDate(v.created_at) + '</td>' +
+            '</tr>';
+        });
+        html += '</tbody></table>';
+        el.innerHTML = html;
+    })
+    .catch(function() {
+        el.innerHTML = '<div class="empty-state">⚠️ خطا در بارگذاری</div>';
+    });
+}
+
+// ============================================================
+// نظرات
+// ============================================================
+function loadFeedbacks() {
+    var el = document.getElementById('feedbacks-list');
+    el.innerHTML = '<div class="loading">در حال بارگذاری...</div>';
+
+    fetch(API + '/admin/feedbacks?token=' + state.token)
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        if (data.length === 0) {
+            el.innerHTML = '<div class="empty-state"><div class="icon">📭</div>هنوز نظری ثبت نشده است</div>';
+            return;
+        }
+        var html = '';
+        data.forEach(function(f) {
+            var typeIcon = {
+                'پیشنهاد': '💡',
+                'انتقاد': '⚠️',
+                'شکایت': '😞',
+                'تعریف': '👏'
+            }[f.feedback_type] || '💬';
+
+            html += '<div class="feedback-item">' +
+                '<div class="meta">' +
+                    '<span>' + typeIcon + ' <strong>' + f.feedback_type + '</strong> — ' + f.user_name + ' (' + f.user_phone + ')</span>' +
+                    '<span>' + formatDate(f.created_at) + '</span>' +
+                '</div>' +
+                '<div class="text">' + f.feedback_text + '</div>' +
+            '</div>';
+        });
+        el.innerHTML = html;
+    })
+    .catch(function() {
+        el.innerHTML = '<div class="empty-state">⚠️ خطا در بارگذاری</div>';
+    });
+}
+
+// ============================================================
+// ⭐ باشگاه مشتریان (نسخه جذاب)
+// ============================================================
+function loadLoyalty() {
+    var el = document.getElementById('loyalty-content');
+    el.innerHTML = '<div class="loading">در حال بارگذاری...</div>';
+
+    fetch(API + '/admin/loyalty/distribution?token=' + state.token)
+    .then(function(res) {
+        if (!res.ok) throw new Error('خطا در دریافت اطلاعات');
+        return res.json();
+    })
+    .then(function(data) {
+        var html = '';
+
+        // ============================================================
+        // سطوح باشگاه
+        // ============================================================
+        html += '<div class="section-card" style="margin-bottom:20px;">';
+        html += '<h2>🏆 سطوح باشگاه مشتریان</h2>';
+        html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:16px;">';
+
+        var total = 0;
+        data.distribution.forEach(function(t) { total += t.count; });
+
+        data.distribution.forEach(function(t) {
+            var percent = total > 0 ? Math.round((t.count / total) * 100) : 0;
+            html += '<div class="loyalty-tier-card" style="background:linear-gradient(135deg,' + t.color + '25,' + t.color + '50);border:2px solid ' + t.color + ';">';
+            html += '<div class="tier-bg-icon">' + t.icon + '</div>';
+            html += '<div class="tier-icon">' + t.icon + '</div>';
+            html += '<div class="tier-name">' + t.name + '</div>';
+            html += '<div class="tier-min">از ' + t.min_visits + ' ویزیت موفق</div>';
+            html += '<div class="tier-discount" style="background:' + t.color + ';">' + t.discount + '٪ تخفیف دائمی</div>';
+            html += '<div class="tier-count">' + t.count + '</div>';
+            html += '<div class="tier-percent">' + percent + '٪ از کاربران</div>';
+            html += '<div class="tier-progress">';
+            html += '<div class="tier-progress-fill" style="background:' + t.color + ';width:' + percent + '%;"></div>';
+            html += '</div>';
+            html += '</div>';
+        });
+
+        html += '</div>';
+        html += '<div style="text-align:center;margin-top:20px;font-size:16px;color:#0f4c3a;font-weight:700;">📊 مجموع: ' + total + ' کاربر</div>';
+        html += '</div>';
+
+        // ============================================================
+        // تالار افتخارات
+        // ============================================================
+        html += '<div class="section-card hall-of-fame">';
+        html += '<h2>🏅 تالار افتخارات - کاربران برتر</h2>';
+
+        if (data.top_users.length === 0) {
+            html += '<div class="empty-state"><div class="icon">📭</div>هنوز کاربری ویزیت موفقی نداشته</div>';
+        } else {
+            html += '<table><thead><tr>' +
+                '<th style="width:80px;text-align:center;">رتبه</th>' +
+                '<th>نام</th>' +
+                '<th>موبایل</th>' +
+                '<th style="text-align:center;">ویزیت موفق</th>' +
+                '<th>سطح</th>' +
+            '</tr></thead><tbody>';
+
+            data.top_users.forEach(function(u, i) {
+                var rankIcon = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
+                html += '<tr>' +
+                    '<td class="rank-icon">' + rankIcon + '</td>' +
+                    '<td><strong>' + u.name + '</strong></td>' +
+                    '<td style="direction:ltr;text-align:right;">' + u.phone + '</td>' +
+                    '<td style="text-align:center;"><strong style="color:#0f4c3a;font-size:18px;">' + u.completed_visits + '</strong></td>' +
+                    '<td>' + u.tier_icon + ' ' + u.tier_name + '</td>' +
+                '</tr>';
+            });
+            html += '</tbody></table>';
+        }
+        html += '</div>';
+
+        el.innerHTML = html;
+    })
+    .catch(function(e) {
+        el.innerHTML = '<div class="empty-state">⚠️ ' + e.message + '</div>';
+    });
+}
+
+// ============================================================
+// ⭐ خروجی اکسل
+// ============================================================
+function exportExcel(type) {
+    var url = API + '/admin/export/' + type + '?token=' + state.token;
+
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = '';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    var label = { users: 'کاربران', visits: 'ویزیت‌ها', feedbacks: 'نظرات' }[type] || type;
+    var toast = document.createElement('div');
+    toast.textContent = '✅ فایل اکسل ' + label + ' در حال دانلود است...';
+    toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#217346;color:#fff;padding:14px 24px;border-radius:12px;font-family:Tahoma;font-weight:700;z-index:99999;box-shadow:0 8px 24px rgba(0,0,0,0.3);';
+    document.body.appendChild(toast);
+    setTimeout(function() { toast.remove(); }, 3000);
+}
+
+// ============================================================
+// بازیابی نشست
+// ============================================================
+window.addEventListener('load', function() {
+    var savedToken = localStorage.getItem('admin_token');
+    if (savedToken) {
+        state.token = savedToken;
+        fetch(API + '/admin/stats?token=' + savedToken)
+        .then(function(res) {
+            if (res.ok) {
+                loginScreen.style.display = 'none';
+                adminPanel.style.display = 'block';
+                loadDashboard();
+            } else {
+                localStorage.removeItem('admin_token');
+            }
+        })
+        .catch(function() {
+            localStorage.removeItem('admin_token');
+        });
+    }
+});
+</script>
+
+</body>
+</html>

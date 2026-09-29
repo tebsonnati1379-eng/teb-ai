@@ -2,3 +2,7 @@ fastapi
 uvicorn
 sqlalchemy
 passlib
+openai
+python-dotenv
+openpyxl
+jdatetime

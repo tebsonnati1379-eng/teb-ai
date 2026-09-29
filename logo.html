@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>لوگوی دکتر حکیم</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 40px 20px;
+    background: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: Tahoma, sans-serif;
+    gap: 30px;
+  }
+  h1 { color: #0f4c3a; font-size: 22px; }
+  .logo-wrapper {
+    width: 512px;
+    height: 512px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    border-radius: 50%;
+    overflow: hidden;
+    background: #fff;
+    transition: transform 0.3s;
+  }
+  .logo-wrapper:hover { transform: scale(1.02); }
+  .btn-download {
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #1a6b52, #0f4c3a);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 8px 20px rgba(15,76,58,0.3);
+  }
+  .btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(15,76,58,0.4);
+  }
+  .hint {
+    color: #666;
+    font-size: 13px;
+    text-align: center;
+    max-width: 400px;
+    line-height: 1.8;
+  }
+  @media (max-width: 600px) {
+    .logo-wrapper { width: 320px; height: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>🌿 لوگوی دکتر حکیم</h1>
+
+<div class="logo-wrapper" id="logoBox">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+    <defs>
+      <!-- پس‌زمینه گرادیانت -->
+      <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#1a6b52"/>
+        <stop offset="100%" stop-color="#0a3a2b"/>
+      </linearGradient>
+
+      <!-- گرادیانت برگ -->
+      <linearGradient id="leafGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#86efac"/>
+        <stop offset="50%" stop-color="#4ade80"/>
+        <stop offset="100%" stop-color="#16a34a"/>
+      </linearGradient>
+
+      <!-- گرادیانت هلال ماه -->
+      <linearGradient id="crescentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#fef3c7"/>
+        <stop offset="100%" stop-color="#f59e0b"/>
+      </linearGradient>
+
+      <!-- سایه -->
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000" flood-opacity="0.35"/>
+      </filter>
+
+      <!-- درخشش -->
+      <radialGradient id="glow" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="#4ade80" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="#4ade80" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+
+    <!-- پس‌زمینه دایره‌ای سبز -->
+    <circle cx="256" cy="256" r="256" fill="url(#bgGrad)"/>
+
+    <!-- درخشش مرکزی -->
+    <circle cx="256" cy="230" r="200" fill="url(#glow)"/>
+
+    <!-- الگوی هندسی اسلامی (ستاره هشت‌ضلعی) -->
+    <g opacity="0.07" fill="none" stroke="#ffffff" stroke-width="2">
+      <polygon points="256,60 340,140 420,256 340,372 256,452 172,372 92,256 172,140" />
+      <polygon points="256,100 320,180 380,256 320,332 256,412 192,332 132,256 192,180" />
+      <circle cx="256" cy="256" r="220" opacity="0.5"/>
+    </g>
+
+    <!-- برگ مرکزی -->
+    <g filter="url(#shadow)">
+      <!-- بدنه برگ -->
+      <path d="M 256 90
+               C 330 150, 380 230, 380 300
+               C 380 380, 320 440, 256 450
+               C 192 440, 132 380, 132 300
+               C 132 230, 182 150, 256 90 Z"
+            fill="url(#leafGrad)"/>
+
+      <!-- رگ مرکزی برگ -->
+      <path d="M 256 90 L 256 450"
+            stroke="#0a3a2b" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.6"/>
+
+      <!-- رگ‌های کناری سمت راست -->
+      <path d="M 256 160 Q 300 175, 340 220" stroke="#0a3a2b" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.55"/>
+      <path d="M 256 230 Q 310 240, 355 285" stroke="#0a3a2b" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.55"/>
+      <path d="M 256 300 Q 305 305, 345 345" stroke="#0a3a2b" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.55"/>
+
+      <!-- رگ‌های کناری سمت چپ -->
+      <path d="M 256 160 Q 212 175, 172 220" stroke="#0a3a2b" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.55"/>
+      <path d="M 256 230 Q 202 240, 157 285" stroke="#0a3a2b" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.55"/>
+      <path d="M 256 300 Q 207 305, 167 345" stroke="#0a3a2b" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.55"/>
+    </g>
+
+    <!-- هلال ماه در گوشه بالا راست -->
+    <g transform="translate(345, 95)" filter="url(#shadow)">
+      <path d="M 0 0
+               A 42 42 0 1 0 42 42
+               A 32 32 0 1 1 0 0 Z"
+            fill="url(#crescentGrad)"/>
+    </g>
+
+    <!-- ستاره کوچک در گوشه بالا چپ -->
+    <g transform="translate(155, 105)">
+      <path d="M 0 -18 L 5 -5 L 18 0 L 5 5 L 0 18 L -5 5 L -18 0 L -5 -5 Z"
+            fill="#fde68a" opacity="0.9"/>
+    </g>
+
+    <!-- متن دکتر حکیم -->
+    <text x="256" y="480"
+          font-family="Tahoma, Vazirmatn, sans-serif"
+          font-size="32"
+          font-weight="bold"
+          fill="#ffffff"
+          text-anchor="middle"
+          letter-spacing="1">
+      دکتر حکیم
+    </text>
+  </svg>
+</div>
+
+<button class="btn-download" onclick="downloadLogo()">📥 دانلود لوگو (PNG)</button>
+
+<p class="hint">
+  راهنمای استفاده:<br>
+  ۱. روی دکمه بالا کلیک کنید تا لوگو دانلود شود<br>
+  ۲. یا از صفحه اسکرین‌شات بگیرید<br>
+  ۳. تصویر را در BotFather به عنوان عکس پروفایل ربات آپلود کنید
+</p>
+
+<!-- کتابخانه html2canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+function downloadLogo() {
+  var element = document.getElementById('logoBox');
+  html2canvas(element, {
+    scale: 2,
+    backgroundColor: null,
+    useCORS: true
+  }).then(function(canvas) {
+    var link = document.createElement('a');
+    link.download = 'Dr-Hakim-Logo-512x512.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }).catch(function(e) {
+    alert('خطا در دانلود: ' + e.message);
+  });
+}
+</script>
+
+</body>
+</html>
