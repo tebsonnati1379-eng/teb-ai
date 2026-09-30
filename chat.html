@@ -403,6 +403,7 @@ if (userInput === "ZARINPAL-REVIEW-1403") {
     })
     .then(function(data) {
         state.visitId = data.visit_id;
+    sessionStorage.setItem('visitId', data.visit_id);
     // اگر کاربر باید پول بده، صفحه پرداخت رو نشون بده
     if (data.must_pay === true) {
         document.getElementById('screen-payment').classList.remove('hidden');
@@ -559,15 +560,22 @@ document.getElementById('btn-next').addEventListener('click', async function() {
 
     state.answers[q.id] = answer;
 
-    try {
-        var res = await fetch(API + '/visits/' + state.visitId + '/answer', {
+        try {
+        const visitId = state.visitId || sessionStorage.getItem('visitId');
+        if (!visitId || visitId === 'undefined' || visitId === 'null') {
+            alert('⚠️ شناسه ویزیت یافت نشد. لطفاً صفحه را رفرش کنید و دوباره تلاش کنید.');
+            return;
+        }
+        
+        var res = await fetch(API + '/visits/' + visitId + '/answer', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ question_id: q.id, answer: String(answer) })
         });
+        
         if (!res.ok) throw new Error('خطا در ذخیره پاسخ');
     } catch (e) {
-        console.error('خطا در ذخیره پاسخ:', e);
+        console.error('❌ خطا در ذخیره پاسخ:', e.message, '| visitId:', state.visitId);
         alert('خطا در ذخیره پاسخ. لطفاً دوباره تلاش کنید.');
         return;
     }
