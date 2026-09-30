@@ -3,6 +3,7 @@
 ربات طب سنتی و اسلامی — دکتر حکیم
 نسخه نهایی: ۸۸ سوال + هوش مصنوعی + باشگاه مشتریان + پنل مدیریت
 """
+
 import os
 import json
 import uuid
@@ -11,6 +12,7 @@ import io
 import jdatetime
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+
 load_dotenv()
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
@@ -18,8 +20,16 @@ from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy import (
-    create_engine, Column, String, Integer, Boolean, BigInteger,
-    DateTime, ForeignKey, Text, JSON
+    create_engine,
+    Column,
+    String,
+    Integer,
+    Boolean,
+    BigInteger,
+    DateTime,
+    ForeignKey,
+    Text,
+    JSON,
 )
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.orm.attributes import flag_modified
@@ -27,7 +37,6 @@ from passlib.hash import bcrypt
 from openai import OpenAI
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-
 
 # ============================================================
 # اتصال به Metis AI
@@ -57,8 +66,7 @@ try:
         _knowledge_data = json.load(f)
         DISEASE_KNOWLEDGE = _knowledge_data.get("diseases", {})
     DISEASE_KEYWORDS = {
-        name: data.get("keywords", [name])
-        for name, data in DISEASE_KNOWLEDGE.items()
+        name: data.get("keywords", [name]) for name, data in DISEASE_KNOWLEDGE.items()
     }
     print(f"✅ {len(DISEASE_KNOWLEDGE)} بیماری (برای fallback) بارگذاری شد")
 except FileNotFoundError:
@@ -92,37 +100,79 @@ admin_sessions = {}
 # ============================================================
 LOYALTY_TIERS = {
     "newcomer": {
-        "min_visits": 0, "discount": 0, "name": "تازه‌وارد", "icon": "🌱",
-        "color": "#86efac", "description": "اولین قدم را برداشتی!"
+        "min_visits": 0,
+        "discount": 0,
+        "name": "تازه‌وارد",
+        "icon": "🌱",
+        "color": "#86efac",
+        "description": "اولین قدم را برداشتی!",
     },
     "herbalist": {
-        "min_visits": 2, "discount": 10, "name": "گیاه‌شناس", "icon": "🌿",
-        "color": "#4ade80", "description": "قدم در راه حکمت گذاشتی"
+        "min_visits": 2,
+        "discount": 10,
+        "name": "گیاه‌شناس",
+        "icon": "🌿",
+        "color": "#4ade80",
+        "description": "قدم در راه حکمت گذاشتی",
     },
     "young_sage": {
-        "min_visits": 5, "discount": 15, "name": "حکیم جوان", "icon": "🌸",
-        "color": "#22c55e", "description": "دانش تو در حال شکوفایی است"
+        "min_visits": 5,
+        "discount": 15,
+        "name": "حکیم جوان",
+        "icon": "🌸",
+        "color": "#22c55e",
+        "description": "دانش تو در حال شکوفایی است",
     },
     "skilled_sage": {
-        "min_visits": 10, "discount": 25, "name": "حکیم ماهر", "icon": "🍃",
-        "color": "#16a34a", "description": "به استادی نزدیک می‌شوی"
+        "min_visits": 10,
+        "discount": 25,
+        "name": "حکیم ماهر",
+        "icon": "🍃",
+        "color": "#16a34a",
+        "description": "به استادی نزدیک می‌شوی",
     },
     "grand_sage": {
-        "min_visits": 20, "discount": 40, "name": "حکیم بزرگ", "icon": "🌟",
-        "color": "#15803d", "description": "تو یک حکیم واقعی هستی!"
+        "min_visits": 20,
+        "discount": 40,
+        "name": "حکیم بزرگ",
+        "icon": "🌟",
+        "color": "#15803d",
+        "description": "تو یک حکیم واقعی هستی!",
     },
     "master_sage": {
-        "min_visits": 50, "discount": 50, "name": "استاد حکیم", "icon": "💎",
-        "color": "#059669", "description": "افسانه‌ای در عالم حکمت!"
+        "min_visits": 50,
+        "discount": 50,
+        "name": "استاد حکیم",
+        "icon": "💎",
+        "color": "#059669",
+        "description": "افسانه‌ای در عالم حکمت!",
     },
 }
 
 REFERRAL_REWARDS = [
-    {"count": 1,  "type": "credit_10",  "value": 10, "label": "کد تخفیف ۱۰٪"},
-    {"count": 3,  "type": "free_visit", "value": 1,  "label": "۱ ویزیت رایگان"},
-    {"count": 5,  "type": "tier_boost", "value": "young_sage",   "label": "ارتقا به 🌸 حکیم جوان", "extra_free": 1},
-    {"count": 10, "type": "tier_boost", "value": "skilled_sage", "label": "ارتقا به 🍃 حکیم ماهر", "extra_free": 3},
-    {"count": 20, "type": "tier_boost", "value": "master_sage",  "label": "ارتقا به 💎 استاد حکیم", "extra_free": 5},
+    {"count": 1, "type": "credit_10", "value": 10, "label": "کد تخفیف ۱۰٪"},
+    {"count": 3, "type": "free_visit", "value": 1, "label": "۱ ویزیت رایگان"},
+    {
+        "count": 5,
+        "type": "tier_boost",
+        "value": "young_sage",
+        "label": "ارتقا به 🌸 حکیم جوان",
+        "extra_free": 1,
+    },
+    {
+        "count": 10,
+        "type": "tier_boost",
+        "value": "skilled_sage",
+        "label": "ارتقا به 🍃 حکیم ماهر",
+        "extra_free": 3,
+    },
+    {
+        "count": 20,
+        "type": "tier_boost",
+        "value": "master_sage",
+        "label": "ارتقا به 💎 استاد حکیم",
+        "extra_free": 5,
+    },
 ]
 
 
@@ -142,9 +192,12 @@ def next_tier_info(completed_visits):
     for t, info in LOYALTY_TIERS.items():
         if completed_visits < info["min_visits"]:
             return {
-                "tier": t, "name": info["name"], "icon": info["icon"],
+                "tier": t,
+                "name": info["name"],
+                "icon": info["icon"],
                 "visits_needed": info["min_visits"] - completed_visits,
-                "discount": info["discount"], "description": info["description"]
+                "discount": info["discount"],
+                "description": info["description"],
             }
     return None
 
@@ -152,14 +205,22 @@ def next_tier_info(completed_visits):
 def apply_discount(base_amount, tier):
     discount_pct = get_tier_info(tier)["discount"]
     discount = base_amount * discount_pct // 100
-    return {"original": base_amount, "discount_percent": discount_pct,
-            "discount_amount": discount, "final": base_amount - discount}
+    return {
+        "original": base_amount,
+        "discount_percent": discount_pct,
+        "discount_amount": discount,
+        "final": base_amount - discount,
+    }
 
 
 def get_next_referral_milestone(confirmed_count):
     for r in REFERRAL_REWARDS:
         if confirmed_count < r["count"]:
-            return {"count": r["count"], "remaining": r["count"] - confirmed_count, "label": r["label"]}
+            return {
+                "count": r["count"],
+                "remaining": r["count"] - confirmed_count,
+                "label": r["label"],
+            }
     return None
 
 
@@ -169,8 +230,16 @@ def apply_referral_boost(user, confirmed_referrals):
         if r["type"] == "tier_boost" and confirmed_referrals >= r["count"]:
             target_tier = r["value"]
             current_tier = user.loyalty_tier or "newcomer"
-            current_rank = list(LOYALTY_TIERS.keys()).index(current_tier) if current_tier in LOYALTY_TIERS else 0
-            target_rank = list(LOYALTY_TIERS.keys()).index(target_tier) if target_tier in LOYALTY_TIERS else 0
+            current_rank = (
+                list(LOYALTY_TIERS.keys()).index(current_tier)
+                if current_tier in LOYALTY_TIERS
+                else 0
+            )
+            target_rank = (
+                list(LOYALTY_TIERS.keys()).index(target_tier)
+                if target_tier in LOYALTY_TIERS
+                else 0
+            )
             if target_rank > current_rank:
                 user.loyalty_tier = target_tier
                 user.free_credits = (user.free_credits or 0) + r.get("extra_free", 0)
@@ -178,7 +247,7 @@ def apply_referral_boost(user, confirmed_referrals):
                     "tier": target_tier,
                     "tier_name": get_tier_info(target_tier)["name"],
                     "tier_icon": get_tier_info(target_tier)["icon"],
-                    "extra_free": r.get("extra_free", 0)
+                    "extra_free": r.get("extra_free", 0),
                 }
     return boost_applied
 
@@ -192,8 +261,18 @@ def to_shamsi(dt):
     try:
         jd = jdatetime.datetime.fromgregorian(datetime=dt)
         month_names = [
-            "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور",
-            "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
+            "فروردین",
+            "اردیبهشت",
+            "خرداد",
+            "تیر",
+            "مرداد",
+            "شهریور",
+            "مهر",
+            "آبان",
+            "آذر",
+            "دی",
+            "بهمن",
+            "اسفند",
         ]
         return f"{jd.day} {month_names[jd.month - 1]} {jd.year} — {jd.hour:02d}:{jd.minute:02d}"
     except Exception:
@@ -274,7 +353,7 @@ def init_db():
                 username="superadmin",
                 password_hash=bcrypt.hash("change_me_12345"),
                 full_name="مدیر ارشد",
-                role="super_admin"
+                role="super_admin",
             )
             db.add(admin)
             db.commit()
@@ -310,11 +389,17 @@ def register_user(name, phone, referral_code_used=None):
             if referrer and referrer.phone != phone:
                 referred_by = code
 
-        user = User(name=name, phone=phone, referral_code=my_code, referred_by=referred_by)
+        user = User(
+            name=name, phone=phone, referral_code=my_code, referred_by=referred_by
+        )
         db.add(user)
         db.commit()
         db.refresh(user)
-        return {"user": user, "is_returning": False, "referral_applied": referred_by is not None}
+        return {
+            "user": user,
+            "is_returning": False,
+            "referral_applied": referred_by is not None,
+        }
     finally:
         db.close()
 
@@ -326,66 +411,110 @@ def detect_mizaj(answers: dict) -> dict:
     score = {"گرم": 0, "سرد": 0, "تر": 0, "خشک": 0}
 
     temp = answers.get("body_temp", "")
-    if "گرم" in temp: score["گرم"] += 3
-    elif "سرد" in temp: score["سرد"] += 3
+    if "گرم" in temp:
+        score["گرم"] += 3
+    elif "سرد" in temp:
+        score["سرد"] += 3
 
     hands = answers.get("hands_temp", "")
     if "گرم" in hands and "خشک" in hands:
-        score["گرم"] += 2; score["خشک"] += 2
+        score["گرم"] += 2
+        score["خشک"] += 2
     elif "گرم" in hands and "مرطوب" in hands:
-        score["گرم"] += 2; score["تر"] += 2
+        score["گرم"] += 2
+        score["تر"] += 2
     elif "سرد" in hands and "خشک" in hands:
-        score["سرد"] += 2; score["خشک"] += 2
+        score["سرد"] += 2
+        score["خشک"] += 2
     elif "سرد" in hands and "مرطوب" in hands:
-        score["سرد"] += 2; score["تر"] += 2
+        score["سرد"] += 2
+        score["تر"] += 2
 
     thirst = answers.get("thirst", "")
     if "خیلی زیاد" in thirst or thirst == "زیاد":
-        score["گرم"] += 2; score["خشک"] += 1
+        score["گرم"] += 2
+        score["خشک"] += 1
     elif "خیلی کم" in thirst or thirst == "کم":
-        score["سرد"] += 2; score["تر"] += 1
+        score["سرد"] += 2
+        score["تر"] += 1
 
     mood = answers.get("mood", "")
-    if "عصبی" in mood: score["گرم"] += 2; score["خشک"] += 2
-    elif "آرام" in mood: score["سرد"] += 2; score["تر"] += 1
-    elif "مضطرب" in mood: score["خشک"] += 2; score["گرم"] += 1
-    elif "غمگین" in mood: score["سرد"] += 2; score["خشک"] += 2
+    if "عصبی" in mood:
+        score["گرم"] += 2
+        score["خشک"] += 2
+    elif "آرام" in mood:
+        score["سرد"] += 2
+        score["تر"] += 1
+    elif "مضطرب" in mood:
+        score["خشک"] += 2
+        score["گرم"] += 1
+    elif "غمگین" in mood:
+        score["سرد"] += 2
+        score["خشک"] += 2
 
     skin = answers.get("skin_quality", "")
-    if "خشک" in skin: score["خشک"] += 3
-    elif "چرب" in skin: score["تر"] += 3
-    elif "مخلوط" in skin: score["خشک"] += 1; score["تر"] += 1
+    if "خشک" in skin:
+        score["خشک"] += 3
+    elif "چرب" in skin:
+        score["تر"] += 3
+    elif "مخلوط" in skin:
+        score["خشک"] += 1
+        score["تر"] += 1
 
     hair = answers.get("hair", "")
-    if "خشک" in hair: score["خشک"] += 2
-    elif "چرب" in hair: score["تر"] += 2
-    elif "ریزش" in hair: score["خشک"] += 1; score["سرد"] += 1
+    if "خشک" in hair:
+        score["خشک"] += 2
+    elif "چرب" in hair:
+        score["تر"] += 2
+    elif "ریزش" in hair:
+        score["خشک"] += 1
+        score["سرد"] += 1
 
     sleep_type = answers.get("sleep_type", "")
-    if "کم" in sleep_type: score["خشک"] += 2; score["گرم"] += 1
-    elif "زیاد" in sleep_type: score["تر"] += 2; score["سرد"] += 1
-    elif "بی‌خوابی" in sleep_type: score["خشک"] += 3
+    if "کم" in sleep_type:
+        score["خشک"] += 2
+        score["گرم"] += 1
+    elif "زیاد" in sleep_type:
+        score["تر"] += 2
+        score["سرد"] += 1
+    elif "بی‌خوابی" in sleep_type:
+        score["خشک"] += 3
 
     stool_shape = answers.get("stool_shape", "")
-    if "سفت" in stool_shape: score["خشک"] += 3
-    elif "شل" in stool_shape: score["تر"] += 2; score["سرد"] += 1
+    if "سفت" in stool_shape:
+        score["خشک"] += 3
+    elif "شل" in stool_shape:
+        score["تر"] += 2
+        score["سرد"] += 1
 
     energy = answers.get("energy", "")
-    if "بالا" in energy: score["گرم"] += 2
-    elif "پایین" in energy: score["سرد"] += 2
+    if "بالا" in energy:
+        score["گرم"] += 2
+    elif "پایین" in energy:
+        score["سرد"] += 2
 
     appetite = answers.get("appetite", "")
-    if "زیاد" in appetite: score["گرم"] += 2
-    elif "کم" in appetite: score["سرد"] += 2
+    if "زیاد" in appetite:
+        score["گرم"] += 2
+    elif "کم" in appetite:
+        score["سرد"] += 2
 
     digestion = answers.get("digestion", "")
-    if "سریع" in digestion: score["گرم"] += 1; score["خشک"] += 1
-    elif "کند" in digestion: score["سرد"] += 2; score["تر"] += 1
-    elif "متغیر" in digestion: score["تر"] += 2; score["سرد"] += 1
+    if "سریع" in digestion:
+        score["گرم"] += 1
+        score["خشک"] += 1
+    elif "کند" in digestion:
+        score["سرد"] += 2
+        score["تر"] += 1
+    elif "متغیر" in digestion:
+        score["تر"] += 2
+        score["سرد"] += 1
 
     voice = answers.get("voice", "")
-    if "بلند" in voice: score["گرم"] += 2
-    elif "آرام" in voice: score["سرد"] += 2
+    if "بلند" in voice:
+        score["گرم"] += 2
+    elif "آرام" in voice:
+        score["سرد"] += 2
 
     hot_cold = "گرم" if score["گرم"] > score["سرد"] else "سرد"
     wet_dry = "خشک" if score["خشک"] > score["تر"] else "تر"
@@ -394,7 +523,7 @@ def detect_mizaj(answers: dict) -> dict:
         ("گرم", "خشک"): "صفراوی",
         ("گرم", "تر"): "دموی",
         ("سرد", "تر"): "بلغمی",
-        ("سرد", "خشک"): "سوداوی"
+        ("سرد", "خشک"): "سوداوی",
     }
     mizaj = mizaj_map.get((hot_cold, wet_dry), "معتدل")
     return {"mizaj": mizaj, "hot_cold": hot_cold, "wet_dry": wet_dry, "score": score}
@@ -404,10 +533,14 @@ def calculate_bmi(weight, height_cm):
     try:
         h = float(height_cm) / 100
         bmi = float(weight) / (h * h)
-        if bmi < 18.5: cat = "کمبود وزن"
-        elif bmi < 25: cat = "وزن نرمال"
-        elif bmi < 30: cat = "اضافه وزن"
-        else: cat = "چاقی"
+        if bmi < 18.5:
+            cat = "کمبود وزن"
+        elif bmi < 25:
+            cat = "وزن نرمال"
+        elif bmi < 30:
+            cat = "اضافه وزن"
+        else:
+            cat = "چاقی"
         return round(bmi, 1), cat
     except Exception:
         return None, "نامشخص"
@@ -434,7 +567,7 @@ def get_treatment(disease, mizaj):
         "general": kb.get("general", []),
         "herbs": kb.get("herbs", []),
         "mizaj_advice": kb.get("by_mizaj", {}).get(mizaj, "توصیه خاصی ثبت نشده."),
-        "spiritual": kb.get("spiritual", [])
+        "spiritual": kb.get("spiritual", []),
     }
 
 
@@ -465,13 +598,16 @@ def check_admin_session(token):
 app = FastAPI(title="Teb AI - ربات طب سنتی و اسلامی")
 from fastapi.responses import FileResponse
 
+
 @app.get("/terms")
 def terms_page():
     return FileResponse("terms.html")
 
+
 @app.get("/contact")
 def contact_page():
     return FileResponse("contact.html")
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -577,33 +713,28 @@ async def register(data: RegisterInput):
 
     db = SessionLocal()
     try:
-        in_progress = db.query(Visit).filter_by(user_id=user.id, status="in_progress").first()
+        in_progress = (
+            db.query(Visit).filter_by(user_id=user.id, status="in_progress").first()
+        )
         if in_progress:
             visit = in_progress
             resumed = True
         else:
             visit_number = (user.completed_visits or 0) + 1
-            if (user.free_credits or 0) > 0:
+            review_match = data.review_code == "ZARINPAL-REVIEW-1403"
+            has_free_credit = (user.free_credits or 0) > 0
+
+            if review_match:
+                must_pay = False
+                used_credit = False
+                payment_status = "free"
+                amount = 0
+            elif has_free_credit:
                 must_pay = False
                 used_credit = True
                 payment_status = "free"
                 amount = 0
             else:
-                # ---- شروع کد بررسی زرین‌پال ----
-if data.review_code == "ZARINPAL-REVIEW-1403":
-    must_pay = False
-    payment_status = "free"
-    amount = 0
-    used_credit = False
-    print("✅ ZarinPal Review Code Activated!")
-# ---- پایان کد بررسی زرین‌پال ----
-else:
-    must_pay = True
-    user_tier = calculate_tier(user.completed_visits or 0)
-    discount_info = apply_discount(VISIT_PRICE, user_tier)
-    amount = discount_info["final"]
-    payment_status = "pending"
-    used_credit = False
                 must_pay = True
                 user_tier = calculate_tier(user.completed_visits or 0)
                 discount_info = apply_discount(VISIT_PRICE, user_tier)
@@ -651,195 +782,752 @@ def get_questions(visit_id: str):
         # بخش ۱: اطلاعات پایه (۸ سوال)
         {"id": "name", "text": "نام و نام خانوادگی شما؟", "type": "text"},
         {"id": "age", "text": "سن شما چند سال است؟", "type": "number"},
-        {"id": "gender", "text": "جنسیت شما؟", "type": "choice", "options": ["مرد", "زن"]},
-        {"id": "marital_status", "text": "وضعیت تاهل شما؟", "type": "choice",
-         "options": ["مجرد", "متاهل", "مطلقه", "همسر فوت شده"]},
-        {"id": "children_count", "text": "چند فرزند دارید؟ (اگر ندارید، عدد ۰ وارد کنید)", "type": "number"},
-        {"id": "children_detail", "text": "اگر فرزند دارید، تعداد پسر و دختر را بنویسید. (مثال: ۲ پسر، ۱ دختر)", "type": "text"},
+        {
+            "id": "gender",
+            "text": "جنسیت شما؟",
+            "type": "choice",
+            "options": ["مرد", "زن"],
+        },
+        {
+            "id": "marital_status",
+            "text": "وضعیت تاهل شما؟",
+            "type": "choice",
+            "options": ["مجرد", "متاهل", "مطلقه", "همسر فوت شده"],
+        },
+        {
+            "id": "children_count",
+            "text": "چند فرزند دارید؟ (اگر ندارید، عدد ۰ وارد کنید)",
+            "type": "number",
+        },
+        {
+            "id": "children_detail",
+            "text": "اگر فرزند دارید، تعداد پسر و دختر را بنویسید. (مثال: ۲ پسر، ۱ دختر)",
+            "type": "text",
+        },
         {"id": "weight", "text": "وزن شما (کیلوگرم)؟", "type": "number"},
         {"id": "height", "text": "قد شما (سانتی‌متر)؟", "type": "number"},
-
         # بخش ۲: ظاهر و رنگ‌شناسی (۸ سوال)
-        {"id": "skin_color", "text": "رنگ پوست شما چگونه است؟", "type": "choice",
-         "options": ["سفید روشن (بور)", "گندمی روشن", "گندمی تیره", "سبزه", "تیره"]},
-        {"id": "skin_quality", "text": "کیفیت پوست شما چگونه است؟", "type": "choice",
-         "options": ["خشک و زبر", "چرب و براق", "نرم و معمولی", "مخلوط"]},
-        {"id": "eye_color", "text": "رنگ چشم شما چیست؟", "type": "choice",
-         "options": ["قهوه‌ای تیره", "قهوه‌ای روشن", "عسلی", "سبز", "آبی/خاکستری"]},
-        {"id": "tongue_color", "text": "رنگ زبان شما معمولاً چگونه است؟", "type": "choice",
-         "options": ["صورتی طبیعی", "سفید (باردار)", "زرد", "قرمز تیره", "بنفش/تیره"]},
-        {"id": "tongue_moisture", "text": "زبان شما معمولاً چگونه است؟", "type": "choice",
-         "options": ["خشک", "مرطوب و خیس", "معمولی", "متغیر"]},
-        {"id": "body_hair", "text": "پرپشتی موی بدن شما (به جز سر) چگونه است؟", "type": "choice",
-         "options": ["پرپشت و زیاد", "متوسط", "کم", "تقریباً بدون مو"]},
-        {"id": "head_hair_density", "text": "پرپشتی موی سر شما چگونه است؟", "type": "choice",
-         "options": ["پرپشت و زیاد", "متوسط", "کم‌پشت", "طاس (کم‌مو)"]},
-        {"id": "nail_quality", "text": "وضعیت ناخن‌های شما؟", "type": "choice",
-         "options": ["سالم و محکم", "شکننده و لایه‌لایه", "لکه سفید دارند", "زرد و ضخیم", "قاشقی شکل"]},
-
+        {
+            "id": "skin_color",
+            "text": "رنگ پوست شما چگونه است؟",
+            "type": "choice",
+            "options": ["سفید روشن (بور)", "گندمی روشن", "گندمی تیره", "سبزه", "تیره"],
+        },
+        {
+            "id": "skin_quality",
+            "text": "کیفیت پوست شما چگونه است؟",
+            "type": "choice",
+            "options": ["خشک و زبر", "چرب و براق", "نرم و معمولی", "مخلوط"],
+        },
+        {
+            "id": "eye_color",
+            "text": "رنگ چشم شما چیست؟",
+            "type": "choice",
+            "options": ["قهوه‌ای تیره", "قهوه‌ای روشن", "عسلی", "سبز", "آبی/خاکستری"],
+        },
+        {
+            "id": "tongue_color",
+            "text": "رنگ زبان شما معمولاً چگونه است؟",
+            "type": "choice",
+            "options": [
+                "صورتی طبیعی",
+                "سفید (باردار)",
+                "زرد",
+                "قرمز تیره",
+                "بنفش/تیره",
+            ],
+        },
+        {
+            "id": "tongue_moisture",
+            "text": "زبان شما معمولاً چگونه است؟",
+            "type": "choice",
+            "options": ["خشک", "مرطوب و خیس", "معمولی", "متغیر"],
+        },
+        {
+            "id": "body_hair",
+            "text": "پرپشتی موی بدن شما (به جز سر) چگونه است؟",
+            "type": "choice",
+            "options": ["پرپشت و زیاد", "متوسط", "کم", "تقریباً بدون مو"],
+        },
+        {
+            "id": "head_hair_density",
+            "text": "پرپشتی موی سر شما چگونه است؟",
+            "type": "choice",
+            "options": ["پرپشت و زیاد", "متوسط", "کم‌پشت", "طاس (کم‌مو)"],
+        },
+        {
+            "id": "nail_quality",
+            "text": "وضعیت ناخن‌های شما؟",
+            "type": "choice",
+            "options": [
+                "سالم و محکم",
+                "شکننده و لایه‌لایه",
+                "لکه سفید دارند",
+                "زرد و ضخیم",
+                "قاشقی شکل",
+            ],
+        },
         # بخش ۳: مزاج‌شناسی (۱۴ سوال)
-        {"id": "body_temp", "text": "دمای کلی بدن شما معمولاً چگونه است؟", "type": "choice",
-         "options": ["گرم - زیاد عرق می‌کنم", "سرد - کم عرق می‌کنم", "معتدل"]},
-        {"id": "hands_temp", "text": "کف دست‌های شما معمولاً چگونه است؟", "type": "choice",
-         "options": ["گرم و خشک", "گرم و مرطوب", "سرد و خشک", "سرد و مرطوب"]},
-        {"id": "feet_temp", "text": "کف پاهای شما معمولاً چگونه است؟", "type": "choice",
-         "options": ["گرم و خشک", "گرم و مرطوب", "سرد و خشک", "سرد و مرطوب"]},
-        {"id": "thirst", "text": "میزان تشنگی شما در طول روز؟", "type": "choice",
-         "options": ["خیلی زیاد", "زیاد", "معمولی", "کم", "خیلی کم"]},
-        {"id": "mood", "text": "حال روحی معمول شما؟", "type": "choice",
-         "options": ["عصبی و پرانرژی", "آرام و کم‌حرف", "مضطرب و نگران", "غمگین و بی‌حوصله"]},
-        {"id": "hair", "text": "وضعیت موهای سر شما چگونه است؟", "type": "choice",
-         "options": ["خشک، شکننده، بدحالت", "چرب و سنگین", "ریزش زیاد دارم", "معمولی و سالم"]},
-        {"id": "sleep_type", "text": "خواب شما معمولاً چگونه است؟", "type": "choice",
-         "options": ["کم و سبک", "زیاد و سنگین", "معمولی", "بی‌خوابی مزمن"]},
-        {"id": "energy", "text": "سطح انرژی روزانه شما؟", "type": "choice",
-         "options": ["بالا و پرانرژی", "پایین و خسته", "متوسط", "متغیر"]},
-        {"id": "appetite", "text": "اشتهای شما چگونه است؟", "type": "choice",
-         "options": ["زیاد و پرخور", "کم و بی‌اشتها", "معمولی", "متغیر"]},
-        {"id": "voice", "text": "صدای شما چگونه است؟", "type": "choice",
-         "options": ["بلند و قوی", "آرام و ضعیف", "معمولی", "خشن و گرفته"]},
-        {"id": "body_build", "text": "ساختار بدنی شما؟", "type": "choice",
-         "options": ["لاغر و استخوانی", "عضلانی و درشت", "چاق و پرگوشت", "متوسط"]},
-        {"id": "pulse", "text": "ضربان قلب شما معمولاً چگونه است؟ (تند = بالای ۹۰، کند = زیر ۶۰)", "type": "choice",
-         "options": ["تند و قوی", "کند و ضعیف", "معمولی (۶۰ تا ۹۰)", "نامنظم", "نمی‌دانم"]},
-        {"id": "walk_speed", "text": "سرعت راه رفتن شما معمولاً چگونه است؟", "type": "choice",
-         "options": ["تند و شتاب‌زده", "کند و آرام", "معمولی", "متغیر"]},
-        {"id": "talking_speed", "text": "سرعت صحبت کردن شما؟", "type": "choice",
-         "options": ["تند و پرشور", "کند و آرام", "معمولی", "متغیر"]},
-
+        {
+            "id": "body_temp",
+            "text": "دمای کلی بدن شما معمولاً چگونه است؟",
+            "type": "choice",
+            "options": ["گرم - زیاد عرق می‌کنم", "سرد - کم عرق می‌کنم", "معتدل"],
+        },
+        {
+            "id": "hands_temp",
+            "text": "کف دست‌های شما معمولاً چگونه است؟",
+            "type": "choice",
+            "options": ["گرم و خشک", "گرم و مرطوب", "سرد و خشک", "سرد و مرطوب"],
+        },
+        {
+            "id": "feet_temp",
+            "text": "کف پاهای شما معمولاً چگونه است؟",
+            "type": "choice",
+            "options": ["گرم و خشک", "گرم و مرطوب", "سرد و خشک", "سرد و مرطوب"],
+        },
+        {
+            "id": "thirst",
+            "text": "میزان تشنگی شما در طول روز؟",
+            "type": "choice",
+            "options": ["خیلی زیاد", "زیاد", "معمولی", "کم", "خیلی کم"],
+        },
+        {
+            "id": "mood",
+            "text": "حال روحی معمول شما؟",
+            "type": "choice",
+            "options": [
+                "عصبی و پرانرژی",
+                "آرام و کم‌حرف",
+                "مضطرب و نگران",
+                "غمگین و بی‌حوصله",
+            ],
+        },
+        {
+            "id": "hair",
+            "text": "وضعیت موهای سر شما چگونه است؟",
+            "type": "choice",
+            "options": [
+                "خشک، شکننده، بدحالت",
+                "چرب و سنگین",
+                "ریزش زیاد دارم",
+                "معمولی و سالم",
+            ],
+        },
+        {
+            "id": "sleep_type",
+            "text": "خواب شما معمولاً چگونه است؟",
+            "type": "choice",
+            "options": ["کم و سبک", "زیاد و سنگین", "معمولی", "بی‌خوابی مزمن"],
+        },
+        {
+            "id": "energy",
+            "text": "سطح انرژی روزانه شما؟",
+            "type": "choice",
+            "options": ["بالا و پرانرژی", "پایین و خسته", "متوسط", "متغیر"],
+        },
+        {
+            "id": "appetite",
+            "text": "اشتهای شما چگونه است؟",
+            "type": "choice",
+            "options": ["زیاد و پرخور", "کم و بی‌اشتها", "معمولی", "متغیر"],
+        },
+        {
+            "id": "voice",
+            "text": "صدای شما چگونه است؟",
+            "type": "choice",
+            "options": ["بلند و قوی", "آرام و ضعیف", "معمولی", "خشن و گرفته"],
+        },
+        {
+            "id": "body_build",
+            "text": "ساختار بدنی شما؟",
+            "type": "choice",
+            "options": ["لاغر و استخوانی", "عضلانی و درشت", "چاق و پرگوشت", "متوسط"],
+        },
+        {
+            "id": "pulse",
+            "text": "ضربان قلب شما معمولاً چگونه است؟ (تند = بالای ۹۰، کند = زیر ۶۰)",
+            "type": "choice",
+            "options": [
+                "تند و قوی",
+                "کند و ضعیف",
+                "معمولی (۶۰ تا ۹۰)",
+                "نامنظم",
+                "نمی‌دانم",
+            ],
+        },
+        {
+            "id": "walk_speed",
+            "text": "سرعت راه رفتن شما معمولاً چگونه است؟",
+            "type": "choice",
+            "options": ["تند و شتاب‌زده", "کند و آرام", "معمولی", "متغیر"],
+        },
+        {
+            "id": "talking_speed",
+            "text": "سرعت صحبت کردن شما؟",
+            "type": "choice",
+            "options": ["تند و پرشور", "کند و آرام", "معمولی", "متغیر"],
+        },
         # بخش ۴: دستگاه گوارش (۸ سوال)
-        {"id": "digestion", "text": "سرعت هضم غذای شما؟", "type": "choice",
-         "options": ["سریع", "کند", "معمولی", "متغیر"]},
-        {"id": "stool_freq", "text": "چند وقت یکبار اجابت مزاج دارید؟", "type": "choice",
-         "options": ["چند بار در روز", "روزی ۱ بار", "یک روز در میان", "کمتر از ۳ بار در هفته", "متغیر"]},
-        {"id": "stool_shape", "text": "شکل مدفوع شما معمولاً چگونه است؟", "type": "choice",
-         "options": ["سفت و خشک", "شل و آبکی", "معمولی (قالبی)", "باریک و روبان‌مانند", "متغیر"]},
-        {"id": "stool_color", "text": "رنگ مدفوع شما معمولاً چگونه است؟", "type": "choice",
-         "options": ["قهوه‌ای طبیعی", "زرد روشن", "تیره/سیاه", "رنگ روشن یا سفید", "متغیر"]},
-        {"id": "bloating", "text": "میزان نفخ و سنگینی معده شما؟", "type": "choice",
-         "options": ["زیاد - همیشه سنگین", "متوسط", "کم", "تقریباً هیچ"]},
-        {"id": "acid_reflux", "text": "آیا ترش کردن، سوزش معده یا رفلاکس دارید؟", "type": "choice",
-         "options": ["بله، زیاد", "بله، گاهی", "خیر", "فقط بعد از غذاهای خاص"]},
-        {"id": "nausea", "text": "آیا تهوع، استفراغ یا سرگیجه دارید؟", "type": "choice",
-         "options": ["بله، زیاد", "بله، گاهی", "خیر", "فقط صبح‌ها"]},
-        {"id": "mouth_taste", "text": "مزه دهان شما معمولاً چگونه است؟", "type": "choice",
-         "options": ["تلخ", "ترش", "شیرین", "بی‌مزه", "معمولی", "متغیر"]},
-
+        {
+            "id": "digestion",
+            "text": "سرعت هضم غذای شما؟",
+            "type": "choice",
+            "options": ["سریع", "کند", "معمولی", "متغیر"],
+        },
+        {
+            "id": "stool_freq",
+            "text": "چند وقت یکبار اجابت مزاج دارید؟",
+            "type": "choice",
+            "options": [
+                "چند بار در روز",
+                "روزی ۱ بار",
+                "یک روز در میان",
+                "کمتر از ۳ بار در هفته",
+                "متغیر",
+            ],
+        },
+        {
+            "id": "stool_shape",
+            "text": "شکل مدفوع شما معمولاً چگونه است؟",
+            "type": "choice",
+            "options": [
+                "سفت و خشک",
+                "شل و آبکی",
+                "معمولی (قالبی)",
+                "باریک و روبان‌مانند",
+                "متغیر",
+            ],
+        },
+        {
+            "id": "stool_color",
+            "text": "رنگ مدفوع شما معمولاً چگونه است؟",
+            "type": "choice",
+            "options": [
+                "قهوه‌ای طبیعی",
+                "زرد روشن",
+                "تیره/سیاه",
+                "رنگ روشن یا سفید",
+                "متغیر",
+            ],
+        },
+        {
+            "id": "bloating",
+            "text": "میزان نفخ و سنگینی معده شما؟",
+            "type": "choice",
+            "options": ["زیاد - همیشه سنگین", "متوسط", "کم", "تقریباً هیچ"],
+        },
+        {
+            "id": "acid_reflux",
+            "text": "آیا ترش کردن، سوزش معده یا رفلاکس دارید؟",
+            "type": "choice",
+            "options": ["بله، زیاد", "بله، گاهی", "خیر", "فقط بعد از غذاهای خاص"],
+        },
+        {
+            "id": "nausea",
+            "text": "آیا تهوع، استفراغ یا سرگیجه دارید؟",
+            "type": "choice",
+            "options": ["بله، زیاد", "بله، گاهی", "خیر", "فقط صبح‌ها"],
+        },
+        {
+            "id": "mouth_taste",
+            "text": "مزه دهان شما معمولاً چگونه است؟",
+            "type": "choice",
+            "options": ["تلخ", "ترش", "شیرین", "بی‌مزه", "معمولی", "متغیر"],
+        },
         # بخش ۵: دفع و تعریق (۵ سوال)
-        {"id": "urine_color", "text": "رنگ ادرار شما معمولاً چگونه است؟", "type": "choice",
-         "options": ["زرد پررنگ", "زرد روشن", "بی‌رنگ و شفاف", "تیره و کدر", "خونی", "متغیر"]},
-        {"id": "urine_freq", "text": "چند بار در روز ادرار می‌کنید؟", "type": "choice",
-         "options": ["بیشتر از ۸ بار", "۵ تا ۸ بار", "۳ تا ۵ بار", "کمتر از ۳ بار", "متغیر"]},
-        {"id": "urine_night", "text": "آیا شب‌ها برای ادرار بیدار می‌شوید؟", "type": "choice",
-         "options": ["بیشتر از ۲ بار", "۱ تا ۲ بار", "خیر", "گاهی"]},
-        {"id": "sweating", "text": "میزان تعریق شما؟", "type": "choice",
-         "options": ["زیاد - حتی در زمستان", "کم - به‌ندرت", "معمولی", "فقط شب‌ها", "متغیر"]},
-        {"id": "body_odor", "text": "بوی بدن و دهان شما؟", "type": "choice",
-         "options": ["بوی تند و نامطبوع", "معمولی", "فقط صبح‌ها", "مشکلی ندارم"]},
-
+        {
+            "id": "urine_color",
+            "text": "رنگ ادرار شما معمولاً چگونه است؟",
+            "type": "choice",
+            "options": [
+                "زرد پررنگ",
+                "زرد روشن",
+                "بی‌رنگ و شفاف",
+                "تیره و کدر",
+                "خونی",
+                "متغیر",
+            ],
+        },
+        {
+            "id": "urine_freq",
+            "text": "چند بار در روز ادرار می‌کنید؟",
+            "type": "choice",
+            "options": [
+                "بیشتر از ۸ بار",
+                "۵ تا ۸ بار",
+                "۳ تا ۵ بار",
+                "کمتر از ۳ بار",
+                "متغیر",
+            ],
+        },
+        {
+            "id": "urine_night",
+            "text": "آیا شب‌ها برای ادرار بیدار می‌شوید؟",
+            "type": "choice",
+            "options": ["بیشتر از ۲ بار", "۱ تا ۲ بار", "خیر", "گاهی"],
+        },
+        {
+            "id": "sweating",
+            "text": "میزان تعریق شما؟",
+            "type": "choice",
+            "options": [
+                "زیاد - حتی در زمستان",
+                "کم - به‌ندرت",
+                "معمولی",
+                "فقط شب‌ها",
+                "متغیر",
+            ],
+        },
+        {
+            "id": "body_odor",
+            "text": "بوی بدن و دهان شما؟",
+            "type": "choice",
+            "options": ["بوی تند و نامطبوع", "معمولی", "فقط صبح‌ها", "مشکلی ندارم"],
+        },
         # بخش ۶: خواب و ذهن (۵ سوال)
-        {"id": "sleep_hours", "text": "چند ساعت در شب می‌خوابید؟", "type": "choice",
-         "options": ["کمتر از ۵ ساعت", "۵ تا ۷ ساعت", "۷ تا ۹ ساعت", "بیشتر از ۹ ساعت", "متغیر"]},
-        {"id": "sleep_quality", "text": "کیفیت خواب شما؟", "type": "choice",
-         "options": ["عمیق و راحت", "سبک - زود بیدار می‌شوم", "کابوس می‌بینم", "دیر به خواب می‌روم", "متغیر"]},
-        {"id": "memory", "text": "وضعیت حافظه و تمرکز شما؟", "type": "choice",
-         "options": ["خوب و قوی", "ضعیف شده", "متوسط", "متغیر"]},
-        {"id": "stress", "text": "سطح استرس و فشار عصبی شما؟", "type": "choice",
-         "options": ["خیلی زیاد", "متوسط", "کم", "تقریباً هیچ", "متغیر"]},
-        {"id": "anxiety_mood", "text": "آیا دچار اضطراب، افسردگی یا وسواس هستید؟", "type": "choice",
-         "options": ["بله، اضطراب شدید", "بله، افسردگی", "بله، وسواس", "خیر، آرام هستم"]},
-
+        {
+            "id": "sleep_hours",
+            "text": "چند ساعت در شب می‌خوابید؟",
+            "type": "choice",
+            "options": [
+                "کمتر از ۵ ساعت",
+                "۵ تا ۷ ساعت",
+                "۷ تا ۹ ساعت",
+                "بیشتر از ۹ ساعت",
+                "متغیر",
+            ],
+        },
+        {
+            "id": "sleep_quality",
+            "text": "کیفیت خواب شما؟",
+            "type": "choice",
+            "options": [
+                "عمیق و راحت",
+                "سبک - زود بیدار می‌شوم",
+                "کابوس می‌بینم",
+                "دیر به خواب می‌روم",
+                "متغیر",
+            ],
+        },
+        {
+            "id": "memory",
+            "text": "وضعیت حافظه و تمرکز شما؟",
+            "type": "choice",
+            "options": ["خوب و قوی", "ضعیف شده", "متوسط", "متغیر"],
+        },
+        {
+            "id": "stress",
+            "text": "سطح استرس و فشار عصبی شما؟",
+            "type": "choice",
+            "options": ["خیلی زیاد", "متوسط", "کم", "تقریباً هیچ", "متغیر"],
+        },
+        {
+            "id": "anxiety_mood",
+            "text": "آیا دچار اضطراب، افسردگی یا وسواس هستید؟",
+            "type": "choice",
+            "options": [
+                "بله، اضطراب شدید",
+                "بله، افسردگی",
+                "بله، وسواس",
+                "خیر، آرام هستم",
+            ],
+        },
         # بخش ۷: علائم جسمی (۷ سوال)
-        {"id": "headache", "text": "سردرد یا سرگیجه دارید؟", "type": "choice",
-         "options": ["سردرد مکرر", "سرگیجه", "هم سردرد و هم سرگیجه", "گاهی", "خیر"]},
-        {"id": "pain_location", "text": "آیا در بدن خود درد خاصی دارید؟", "type": "choice",
-         "options": ["درد مفاصل و زانو", "درد کمر و گردن", "درد معده و شکم", "درد سینه", "گاهی چند جا", "خیر"]},
-        {"id": "breathing", "text": "وضعیت تنفس شما؟", "type": "choice",
-         "options": ["راحت و عمیق", "تنگی نفس", "خس‌خس سینه", "نفس‌نفس زدن", "گاهی کند می‌شود"]},
-        {"id": "vision", "text": "وضعیت بینایی و چشم شما؟", "type": "choice",
-         "options": ["خوب", "ضعیف شده", "خشکی چشم", "اشک‌ریزش زیاد", "تاری دید"]},
-        {"id": "hearing", "text": "وضعیت شنوایی شما؟", "type": "choice",
-         "options": ["خوب", "وزوز گوش", "کم‌شنوایی", "درد گوش"]},
-        {"id": "skin_problems", "text": "آیا مشکل پوستی خاصی دارید؟", "type": "choice",
-         "options": ["آکنه و جوش", "اگزما و خشکی", "لک و پیسی", "خارش (گاهی)", "خارش (مداوم)", "خیر"]},
-        {"id": "sexual_health", "text": "وضعیت سلامت جنسی شما چگونه است؟ (محرمانه می‌ماند)", "type": "choice",
-         "options": ["خوب و طبیعی", "کاهش میل جنسی", "افزایش میل جنسی", "اختلال در عملکرد", "سردی جنسی", "تمایلی به پاسخ ندارم"]},
-
+        {
+            "id": "headache",
+            "text": "سردرد یا سرگیجه دارید؟",
+            "type": "choice",
+            "options": ["سردرد مکرر", "سرگیجه", "هم سردرد و هم سرگیجه", "گاهی", "خیر"],
+        },
+        {
+            "id": "pain_location",
+            "text": "آیا در بدن خود درد خاصی دارید؟",
+            "type": "choice",
+            "options": [
+                "درد مفاصل و زانو",
+                "درد کمر و گردن",
+                "درد معده و شکم",
+                "درد سینه",
+                "گاهی چند جا",
+                "خیر",
+            ],
+        },
+        {
+            "id": "breathing",
+            "text": "وضعیت تنفس شما؟",
+            "type": "choice",
+            "options": [
+                "راحت و عمیق",
+                "تنگی نفس",
+                "خس‌خس سینه",
+                "نفس‌نفس زدن",
+                "گاهی کند می‌شود",
+            ],
+        },
+        {
+            "id": "vision",
+            "text": "وضعیت بینایی و چشم شما؟",
+            "type": "choice",
+            "options": ["خوب", "ضعیف شده", "خشکی چشم", "اشک‌ریزش زیاد", "تاری دید"],
+        },
+        {
+            "id": "hearing",
+            "text": "وضعیت شنوایی شما؟",
+            "type": "choice",
+            "options": ["خوب", "وزوز گوش", "کم‌شنوایی", "درد گوش"],
+        },
+        {
+            "id": "skin_problems",
+            "text": "آیا مشکل پوستی خاصی دارید؟",
+            "type": "choice",
+            "options": [
+                "آکنه و جوش",
+                "اگزما و خشکی",
+                "لک و پیسی",
+                "خارش (گاهی)",
+                "خارش (مداوم)",
+                "خیر",
+            ],
+        },
+        {
+            "id": "sexual_health",
+            "text": "وضعیت سلامت جنسی شما چگونه است؟ (محرمانه می‌ماند)",
+            "type": "choice",
+            "options": [
+                "خوب و طبیعی",
+                "کاهش میل جنسی",
+                "افزایش میل جنسی",
+                "اختلال در عملکرد",
+                "سردی جنسی",
+                "تمایلی به پاسخ ندارم",
+            ],
+        },
         # بخش ۸: حالات معنوی (۴ سوال)
-        {"id": "spiritual_state", "text": "حال معنوی خود را چگونه توصیف می‌کنید؟", "type": "choice",
-         "options": ["قوی و متصل به خدا", "متوسط", "ضعیف - احساس دوری از خدا", "پریشان و مضطرب روحی"]},
-        {"id": "prayer_feeling", "text": "هنگام نماز و عبادت چه حالی دارید؟", "type": "choice",
-         "options": ["حضور قلب دارم و لذت می‌برم", "معمولی", "حواسم پرت می‌شود", "کسل و بی‌حال هستم", "نماز نمی‌خوانم"]},
-        {"id": "quran_connection", "text": "ارتباط شما با قرآن کریم چگونه است؟", "type": "choice",
-         "options": ["هر روز تلاوت می‌کنم", "هفته‌ای چند بار", "گاهی", "کم - فقط در مناسبت‌ها", "تقریباً هیچ"]},
-        {"id": "heart_peace", "text": "آیا در قلب خود آرامش و سکینه دارید؟", "type": "choice",
-         "options": ["بله، کاملاً آرامم", "نسبتاً آرام", "دلشوره و نگرانی دارم", "قلبم مضطرب و پریشان است"]},
-
+        {
+            "id": "spiritual_state",
+            "text": "حال معنوی خود را چگونه توصیف می‌کنید؟",
+            "type": "choice",
+            "options": [
+                "قوی و متصل به خدا",
+                "متوسط",
+                "ضعیف - احساس دوری از خدا",
+                "پریشان و مضطرب روحی",
+            ],
+        },
+        {
+            "id": "prayer_feeling",
+            "text": "هنگام نماز و عبادت چه حالی دارید؟",
+            "type": "choice",
+            "options": [
+                "حضور قلب دارم و لذت می‌برم",
+                "معمولی",
+                "حواسم پرت می‌شود",
+                "کسل و بی‌حال هستم",
+                "نماز نمی‌خوانم",
+            ],
+        },
+        {
+            "id": "quran_connection",
+            "text": "ارتباط شما با قرآن کریم چگونه است؟",
+            "type": "choice",
+            "options": [
+                "هر روز تلاوت می‌کنم",
+                "هفته‌ای چند بار",
+                "گاهی",
+                "کم - فقط در مناسبت‌ها",
+                "تقریباً هیچ",
+            ],
+        },
+        {
+            "id": "heart_peace",
+            "text": "آیا در قلب خود آرامش و سکینه دارید؟",
+            "type": "choice",
+            "options": [
+                "بله، کاملاً آرامم",
+                "نسبتاً آرام",
+                "دلشوره و نگرانی دارم",
+                "قلبم مضطرب و پریشان است",
+            ],
+        },
         # بخش ۹: فرائض دینی (۴ سوال)
-        {"id": "prayer_regular", "text": "نمازهای واجب خود را چگونه می‌خوانید؟", "type": "choice",
-         "options": ["همیشه اول وقت", "همیشه ولی با تأخیر", "بعضی اوقات قضا می‌شود", "غالباً قضا می‌شود", "نمی‌خوانم"]},
-        {"id": "fasting", "text": "وضعیت روزه‌داری شما؟", "type": "choice",
-         "options": ["همه روزه‌های واجب و مستحبی", "همه واجب‌ها", "بعضی قضا می‌شود", "روزه نمی‌گیرم"]},
-        {"id": "khums_zakat", "text": "وضعیت پرداخت خمس و زکات شما؟", "type": "choice",
-         "options": ["مرتب پرداخت می‌کنم", "گاهی", "کم", "اصلاً پرداخت نمی‌کنم"]},
-        {"id": "night_prayer", "text": "آیا نماز شب یا تهجد دارید؟ (نماز شب = ۱۱ رکعت قبل از اذان صبح)", "type": "choice",
-         "options": ["بله، مرتب", "گاهی", "خیلی کم", "هرگز"]},
-
+        {
+            "id": "prayer_regular",
+            "text": "نمازهای واجب خود را چگونه می‌خوانید؟",
+            "type": "choice",
+            "options": [
+                "همیشه اول وقت",
+                "همیشه ولی با تأخیر",
+                "بعضی اوقات قضا می‌شود",
+                "غالباً قضا می‌شود",
+                "نمی‌خوانم",
+            ],
+        },
+        {
+            "id": "fasting",
+            "text": "وضعیت روزه‌داری شما؟",
+            "type": "choice",
+            "options": [
+                "همه روزه‌های واجب و مستحبی",
+                "همه واجب‌ها",
+                "بعضی قضا می‌شود",
+                "روزه نمی‌گیرم",
+            ],
+        },
+        {
+            "id": "khums_zakat",
+            "text": "وضعیت پرداخت خمس و زکات شما؟",
+            "type": "choice",
+            "options": ["مرتب پرداخت می‌کنم", "گاهی", "کم", "اصلاً پرداخت نمی‌کنم"],
+        },
+        {
+            "id": "night_prayer",
+            "text": "آیا نماز شب یا تهجد دارید؟ (نماز شب = ۱۱ رکعت قبل از اذان صبح)",
+            "type": "choice",
+            "options": ["بله، مرتب", "گاهی", "خیلی کم", "هرگز"],
+        },
         # بخش ۱۰: رابطه با خدا (۵ سوال)
-        {"id": "trust_in_god", "text": "میزان توکل و اعتماد شما به خدا؟", "type": "choice",
-         "options": ["کامل - در همه امور", "زیاد", "متوسط", "کم", "خیلی کم - نگران آینده‌ام"]},
-        {"id": "gratitude", "text": "چقدر شکرگزار نعمت‌های خدا هستید؟", "type": "choice",
-         "options": ["همیشه در حال شکر", "غالباً", "گاهی", "کم", "غالباً ناسپاسی می‌کنم"]},
-        {"id": "repentance", "text": "آیا از گناهان گذشته خود توبه کرده‌اید؟", "type": "choice",
-         "options": ["بله، توبه‌ی واقعی کرده‌ام", "توبه کرده‌ام ولی گاهی برمی‌گردم", "قصد توبه دارم", "هنوز تصمیم نگرفته‌ام"]},
-        {"id": "god_communication", "text": "چقدر با خدا راز و نیاز می‌کنید؟", "type": "choice",
-         "options": ["هر روز دعا و مناجات دارم", "هفته‌ای چند بار", "گاهی", "کم", "هرگز"]},
-        {"id": "satisfaction", "text": "آیا به تقدیر و قضای الهی راضی هستید؟", "type": "choice",
-         "options": ["کاملاً راضی و تسلیم", "نسبتاً راضی", "گاهی معترضم", "غالباً ناراضی‌ام"]},
-
+        {
+            "id": "trust_in_god",
+            "text": "میزان توکل و اعتماد شما به خدا؟",
+            "type": "choice",
+            "options": [
+                "کامل - در همه امور",
+                "زیاد",
+                "متوسط",
+                "کم",
+                "خیلی کم - نگران آینده‌ام",
+            ],
+        },
+        {
+            "id": "gratitude",
+            "text": "چقدر شکرگزار نعمت‌های خدا هستید؟",
+            "type": "choice",
+            "options": [
+                "همیشه در حال شکر",
+                "غالباً",
+                "گاهی",
+                "کم",
+                "غالباً ناسپاسی می‌کنم",
+            ],
+        },
+        {
+            "id": "repentance",
+            "text": "آیا از گناهان گذشته خود توبه کرده‌اید؟",
+            "type": "choice",
+            "options": [
+                "بله، توبه‌ی واقعی کرده‌ام",
+                "توبه کرده‌ام ولی گاهی برمی‌گردم",
+                "قصد توبه دارم",
+                "هنوز تصمیم نگرفته‌ام",
+            ],
+        },
+        {
+            "id": "god_communication",
+            "text": "چقدر با خدا راز و نیاز می‌کنید؟",
+            "type": "choice",
+            "options": [
+                "هر روز دعا و مناجات دارم",
+                "هفته‌ای چند بار",
+                "گاهی",
+                "کم",
+                "هرگز",
+            ],
+        },
+        {
+            "id": "satisfaction",
+            "text": "آیا به تقدیر و قضای الهی راضی هستید؟",
+            "type": "choice",
+            "options": [
+                "کاملاً راضی و تسلیم",
+                "نسبتاً راضی",
+                "گاهی معترضم",
+                "غالباً ناراضی‌ام",
+            ],
+        },
         # بخش ۱۱: اخلاق و روابط (۵ سوال)
-        {"id": "family_relations", "text": "رابطه شما با خانواده (والدین، همسر، فرزندان) چگونه است؟", "type": "choice",
-         "options": ["عالی و صمیمی", "خوب", "متوسط - گاهی اختلاف", "پرخاشگری و تنش زیاد", "قطع رابطه"]},
-        {"id": "neighbors_friends", "text": "رابطه شما با همسایه‌ها، دوستان و اقوام؟", "type": "choice",
-         "options": ["عالی", "خوب", "متوسط", "کم - فقط در حد سلام", "کدورت و اختلاف دارم"]},
-        {"id": "moral_habits", "text": "آیا دچار اخلاق ناپسند هستید؟ (حسد، کینه، دروغ، غیبت و...)", "type": "choice",
-         "options": ["خیر، تلاش می‌کنم پاک باشم", "گاهی", "زیاد - درگیر این صفات هستم", "نمی‌دانم"]},
-        {"id": "forgiveness", "text": "آیا کسی را نبخشیده‌اید یا از کسی کینه دارید؟", "type": "choice",
-         "options": ["همه را بخشیده‌ام", "تقریباً همه را بخشیده‌ام", "چند نفر را نبخشیده‌ام", "کینه‌ی زیادی در قلبم دارم"]},
-        {"id": "kindness", "text": "میزان انفاق، احسان و کمک به دیگران؟", "type": "choice",
-         "options": ["زیاد - همیشه در حال کمک", "متوسط", "گاهی", "کم", "تقریباً هیچ"]},
-
+        {
+            "id": "family_relations",
+            "text": "رابطه شما با خانواده (والدین، همسر، فرزندان) چگونه است؟",
+            "type": "choice",
+            "options": [
+                "عالی و صمیمی",
+                "خوب",
+                "متوسط - گاهی اختلاف",
+                "پرخاشگری و تنش زیاد",
+                "قطع رابطه",
+            ],
+        },
+        {
+            "id": "neighbors_friends",
+            "text": "رابطه شما با همسایه‌ها، دوستان و اقوام؟",
+            "type": "choice",
+            "options": [
+                "عالی",
+                "خوب",
+                "متوسط",
+                "کم - فقط در حد سلام",
+                "کدورت و اختلاف دارم",
+            ],
+        },
+        {
+            "id": "moral_habits",
+            "text": "آیا دچار اخلاق ناپسند هستید؟ (حسد، کینه، دروغ، غیبت و...)",
+            "type": "choice",
+            "options": [
+                "خیر، تلاش می‌کنم پاک باشم",
+                "گاهی",
+                "زیاد - درگیر این صفات هستم",
+                "نمی‌دانم",
+            ],
+        },
+        {
+            "id": "forgiveness",
+            "text": "آیا کسی را نبخشیده‌اید یا از کسی کینه دارید؟",
+            "type": "choice",
+            "options": [
+                "همه را بخشیده‌ام",
+                "تقریباً همه را بخشیده‌ام",
+                "چند نفر را نبخشیده‌ام",
+                "کینه‌ی زیادی در قلبم دارم",
+            ],
+        },
+        {
+            "id": "kindness",
+            "text": "میزان انفاق، احسان و کمک به دیگران؟",
+            "type": "choice",
+            "options": [
+                "زیاد - همیشه در حال کمک",
+                "متوسط",
+                "گاهی",
+                "کم",
+                "تقریباً هیچ",
+            ],
+        },
         # بخش ۱۲: سبک زندگی (۸ سوال)
-        {"id": "exercise", "text": "چقدر ورزش می‌کنید؟", "type": "choice",
-         "options": ["هر روز", "هفته‌ای ۲-۳ بار", "هفته‌ای ۱ بار", "هیچ"]},
-        {"id": "water_intake", "text": "روزانه چقدر آب می‌نوشید؟", "type": "choice",
-         "options": ["کمتر از ۱ لیتر", "۱ تا ۲ لیتر", "۲ تا ۳ لیتر", "بیشتر از ۳ لیتر", "متغیر"]},
-        {"id": "tea_coffee", "text": "مصرف چای شما در روز چقدر است؟", "type": "choice",
-         "options": ["بیشتر از ۵ فنجان", "۲ تا ۵ فنجان", "۱ فنجان", "مصرف نمی‌کنم", "متغیر"]},
-        {"id": "coffee_only", "text": "مصرف قهوه شما در روز چقدر است؟", "type": "choice",
-         "options": ["بیشتر از ۳ فنجان", "۱ تا ۳ فنجان", "کمتر از ۱ فنجان", "مصرف نمی‌کنم"]},
-        {"id": "fast_food", "text": "مصرف فست‌فود؟", "type": "choice",
-         "options": ["هر روز", "هفته‌ای چند بار", "هفته‌ای یک بار", "تقریباً هرگز"]},
-        {"id": "dairy", "text": "مصرف لبنیات شما؟", "type": "choice",
-         "options": ["زیاد و روزانه", "متوسط", "کم", "اصلاً مصرف نمی‌کنم"]},
-        {"id": "smoking_cigarette", "text": "مصرف سیگار شما؟", "type": "choice",
-         "options": ["بله، روزانه", "بله، گاهی", "ترک کرده‌ام", "هرگز"]},
-        {"id": "smoking_hookah", "text": "مصرف قلیان شما؟", "type": "choice",
-         "options": ["بله، روزانه", "هفته‌ای چند بار", "ماهی چند بار", "سالانه چند بار", "هرگز"]},
-
+        {
+            "id": "exercise",
+            "text": "چقدر ورزش می‌کنید؟",
+            "type": "choice",
+            "options": ["هر روز", "هفته‌ای ۲-۳ بار", "هفته‌ای ۱ بار", "هیچ"],
+        },
+        {
+            "id": "water_intake",
+            "text": "روزانه چقدر آب می‌نوشید؟",
+            "type": "choice",
+            "options": [
+                "کمتر از ۱ لیتر",
+                "۱ تا ۲ لیتر",
+                "۲ تا ۳ لیتر",
+                "بیشتر از ۳ لیتر",
+                "متغیر",
+            ],
+        },
+        {
+            "id": "tea_coffee",
+            "text": "مصرف چای شما در روز چقدر است؟",
+            "type": "choice",
+            "options": [
+                "بیشتر از ۵ فنجان",
+                "۲ تا ۵ فنجان",
+                "۱ فنجان",
+                "مصرف نمی‌کنم",
+                "متغیر",
+            ],
+        },
+        {
+            "id": "coffee_only",
+            "text": "مصرف قهوه شما در روز چقدر است؟",
+            "type": "choice",
+            "options": [
+                "بیشتر از ۳ فنجان",
+                "۱ تا ۳ فنجان",
+                "کمتر از ۱ فنجان",
+                "مصرف نمی‌کنم",
+            ],
+        },
+        {
+            "id": "fast_food",
+            "text": "مصرف فست‌فود؟",
+            "type": "choice",
+            "options": ["هر روز", "هفته‌ای چند بار", "هفته‌ای یک بار", "تقریباً هرگز"],
+        },
+        {
+            "id": "dairy",
+            "text": "مصرف لبنیات شما؟",
+            "type": "choice",
+            "options": ["زیاد و روزانه", "متوسط", "کم", "اصلاً مصرف نمی‌کنم"],
+        },
+        {
+            "id": "smoking_cigarette",
+            "text": "مصرف سیگار شما؟",
+            "type": "choice",
+            "options": ["بله، روزانه", "بله، گاهی", "ترک کرده‌ام", "هرگز"],
+        },
+        {
+            "id": "smoking_hookah",
+            "text": "مصرف قلیان شما؟",
+            "type": "choice",
+            "options": [
+                "بله، روزانه",
+                "هفته‌ای چند بار",
+                "ماهی چند بار",
+                "سالانه چند بار",
+                "هرگز",
+            ],
+        },
         # بخش ۱۳: سابقه پزشکی (۳ سوال)
-        {"id": "medications", "text": "آیا داروی خاصی مصرف می‌کنید؟ نام ببرید.", "type": "text"},
-        {"id": "chronic_disease", "text": "آیا بیماری زمینه‌ای دارید؟ (دیابت، فشار خون، تیروئید، قلبی و...)", "type": "text"},
-        {"id": "family_history", "text": "آیا در خانواده سابقه بیماری خاصی وجود دارد؟", "type": "text"},
-
+        {
+            "id": "medications",
+            "text": "آیا داروی خاصی مصرف می‌کنید؟ نام ببرید.",
+            "type": "text",
+        },
+        {
+            "id": "chronic_disease",
+            "text": "آیا بیماری زمینه‌ای دارید؟ (دیابت، فشار خون، تیروئید، قلبی و...)",
+            "type": "text",
+        },
+        {
+            "id": "family_history",
+            "text": "آیا در خانواده سابقه بیماری خاصی وجود دارد؟",
+            "type": "text",
+        },
         # بخش ۱۴: شکایت اصلی (۴ سوال)
-        {"id": "complaint_duration", "text": "چند وقت است که از مشکل رنج می‌برید؟", "type": "choice",
-         "options": ["کمتر از ۱ هفته", "۱ تا ۴ هفته", "۱ تا ۶ ماه", "بیشتر از ۶ ماه"]},
-        {"id": "complaint_severity", "text": "شدت مشکل چقدر است؟", "type": "choice",
-         "options": ["خفیف", "متوسط", "شدید", "بسیار شدید"]},
-        {"id": "complaint_pattern", "text": "مشکل شما چه الگویی دارد؟", "type": "choice",
-         "options": ["همیشه ثابت", "صبح‌ها بدتر", "شب‌ها بدتر", "بعد از غذا بدتر", "با استرس بدتر", "متغیر"]},
-        {"id": "complaint", "text": "لطفاً همه‌ی مشکلات خود را با جزئیات کامل بنویسید. (جسمی، روحی، معنوی)", "type": "text"},
+        {
+            "id": "complaint_duration",
+            "text": "چند وقت است که از مشکل رنج می‌برید؟",
+            "type": "choice",
+            "options": [
+                "کمتر از ۱ هفته",
+                "۱ تا ۴ هفته",
+                "۱ تا ۶ ماه",
+                "بیشتر از ۶ ماه",
+            ],
+        },
+        {
+            "id": "complaint_severity",
+            "text": "شدت مشکل چقدر است؟",
+            "type": "choice",
+            "options": ["خفیف", "متوسط", "شدید", "بسیار شدید"],
+        },
+        {
+            "id": "complaint_pattern",
+            "text": "مشکل شما چه الگویی دارد؟",
+            "type": "choice",
+            "options": [
+                "همیشه ثابت",
+                "صبح‌ها بدتر",
+                "شب‌ها بدتر",
+                "بعد از غذا بدتر",
+                "با استرس بدتر",
+                "متغیر",
+            ],
+        },
+        {
+            "id": "complaint",
+            "text": "لطفاً همه‌ی مشکلات خود را با جزئیات کامل بنویسید. (جسمی، روحی، معنوی)",
+            "type": "text",
+        },
     ]
     return {"questions": questions, "total": len(questions)}
 
@@ -998,12 +1686,12 @@ async def complete_visit(visit_id: str):
                     messages=[
                         {
                             "role": "system",
-                            "content": "شما دکتر حکیم هستید، متخصص طب سنتی و اسلامی. فقط به فارسی پاسخ می‌دهید. هیچ شکایتی را نادیده نمی‌گیرید. به بُعد معنوی سلامت کاربر توجه ویژه دارید."
+                            "content": "شما دکتر حکیم هستید، متخصص طب سنتی و اسلامی. فقط به فارسی پاسخ می‌دهید. هیچ شکایتی را نادیده نمی‌گیرید. به بُعد معنوی سلامت کاربر توجه ویژه دارید.",
                         },
-                        {"role": "user", "content": prompt}
+                        {"role": "user", "content": prompt},
                     ],
                     temperature=0.75,
-                    max_tokens=16000
+                    max_tokens=16000,
                 )
                 report_text = response.choices[0].message.content
                 print(f"✅ گزارش AI تولید شد ({len(report_text)} کاراکتر)")
@@ -1012,13 +1700,19 @@ async def complete_visit(visit_id: str):
         except Exception as e:
             print(f"❌ خطا در AI: {e}")
             fallback = []
-            fallback.append(f"سلام {answers.get('name', user.name)} عزیز، تحلیل شما آماده است:\n")
-            fallback.append(f"🔥 مزاج غالب: {mizaj_data['mizaj']} ({mizaj_data['hot_cold']} و {mizaj_data['wet_dry']})")
+            fallback.append(
+                f"سلام {answers.get('name', user.name)} عزیز، تحلیل شما آماده است:\n"
+            )
+            fallback.append(
+                f"🔥 مزاج غالب: {mizaj_data['mizaj']} ({mizaj_data['hot_cold']} و {mizaj_data['wet_dry']})"
+            )
             if bmi:
                 fallback.append(f"⚖️ BMI: {bmi} ({bmi_cat})")
             fallback.append(f"\n📝 شکایت شما: {complaint_text}")
             fallback.append("\n⚠️ متأسفانه در لحظه تولید تحلیل اختصاصی خطایی رخ داد.")
-            fallback.append("\n📅 حتماً برای ادامه معالجه و بررسی روند بهبودی هر ماه مراجعه کنید.")
+            fallback.append(
+                "\n📅 حتماً برای ادامه معالجه و بررسی روند بهبودی هر ماه مراجعه کنید."
+            )
             report_text = "\n".join(fallback)
 
         # به‌روزرسانی دیتابیس
@@ -1038,7 +1732,7 @@ async def complete_visit(visit_id: str):
         old_tier = user.loyalty_tier or "newcomer"
         new_tier = calculate_tier(user.completed_visits)
         user.loyalty_tier = new_tier
-        tier_upgraded = (old_tier != new_tier)
+        tier_upgraded = old_tier != new_tier
         new_tier_info = get_tier_info(new_tier)
 
         # پاداش پلاتینیوم
@@ -1068,19 +1762,24 @@ async def complete_visit(visit_id: str):
 
                 tier_boost = apply_referral_boost(referrer, new_count)
                 if tier_boost:
-                    rewards_applied.append(f"🏆 ارتقا به {tier_boost['tier_icon']} {tier_boost['tier_name']}")
+                    rewards_applied.append(
+                        f"🏆 ارتقا به {tier_boost['tier_icon']} {tier_boost['tier_name']}"
+                    )
 
                 if rewards_applied:
                     reward_msg = " | ".join(rewards_applied)
-                    await manager.send(str(referrer.id), {
-                        "title": "🎉 پاداش معرفی!",
-                        "message": f"{referrer.name} عزیز، {reward_msg}"
-                    })
+                    await manager.send(
+                        str(referrer.id),
+                        {
+                            "title": "🎉 پاداش معرفی!",
+                            "message": f"{referrer.name} عزیز، {reward_msg}",
+                        },
+                    )
                     referral_reward = {
                         "referrer_name": referrer.name,
                         "reward": "milestone",
                         "message": reward_msg,
-                        "count": new_count
+                        "count": new_count,
                     }
                 else:
                     next_milestone = get_next_referral_milestone(new_count)
@@ -1088,15 +1787,18 @@ async def complete_visit(visit_id: str):
                         "referrer_name": referrer.name,
                         "reward": "progress",
                         "count": new_count,
-                        "next": next_milestone
+                        "next": next_milestone,
                     }
 
         db.commit()
 
-        await manager.send(str(user.id), {
-            "title": "✅ تحلیل آماده شد",
-            "message": f"تحلیل ویزیت #{visit.visit_number} شما آماده است."
-        })
+        await manager.send(
+            str(user.id),
+            {
+                "title": "✅ تحلیل آماده شد",
+                "message": f"تحلیل ویزیت #{visit.visit_number} شما آماده است.",
+            },
+        )
 
         return {
             "report": report_text,
@@ -1113,7 +1815,7 @@ async def complete_visit(visit_id: str):
                 "color": new_tier_info["color"],
                 "upgraded": tier_upgraded,
                 "next_tier": next_tier_info(user.completed_visits),
-                "free_credits": user.free_credits or 0
+                "free_credits": user.free_credits or 0,
             },
         }
     finally:
@@ -1131,7 +1833,7 @@ def submit_feedback(data: FeedbackInput):
             user_id=data.user_id,
             visit_id=data.visit_id,
             feedback_type=data.feedback_type,
-            feedback_text=data.feedback_text
+            feedback_text=data.feedback_text,
         )
         db.add(feedback)
         db.commit()
@@ -1165,12 +1867,15 @@ def user_loyalty(user_id: str):
             "next_tier": next_tier_info(user.completed_visits or 0),
             "all_tiers": [
                 {
-                    "key": k, "name": v["name"], "icon": v["icon"],
-                    "min_visits": v["min_visits"], "discount": v["discount"],
-                    "is_current": (k == tier)
+                    "key": k,
+                    "name": v["name"],
+                    "icon": v["icon"],
+                    "min_visits": v["min_visits"],
+                    "discount": v["discount"],
+                    "is_current": (k == tier),
                 }
                 for k, v in LOYALTY_TIERS.items()
-            ]
+            ],
         }
     finally:
         db.close()
@@ -1187,19 +1892,21 @@ def user_rewards(user_id: str):
         confirmed = user.confirmed_referrals or 0
         all_rewards = []
         for r in REFERRAL_REWARDS:
-            all_rewards.append({
-                "count": r["count"],
-                "label": r["label"],
-                "achieved": confirmed >= r["count"],
-                "remaining": max(0, r["count"] - confirmed)
-            })
+            all_rewards.append(
+                {
+                    "count": r["count"],
+                    "label": r["label"],
+                    "achieved": confirmed >= r["count"],
+                    "remaining": max(0, r["count"] - confirmed),
+                }
+            )
 
         return {
             "confirmed_referrals": confirmed,
             "referral_code": user.referral_code,
             "free_credits": user.free_credits or 0,
             "next_milestone": get_next_referral_milestone(confirmed),
-            "all_rewards": all_rewards
+            "all_rewards": all_rewards,
         }
     finally:
         db.close()
@@ -1237,7 +1944,7 @@ def admin_stats(token: str):
             "completed_visits": completed_visits,
             "total_feedbacks": total_feedbacks,
             "new_users_today": new_users_today,
-            "visits_today": visits_today
+            "visits_today": visits_today,
         }
     finally:
         db.close()
@@ -1251,16 +1958,25 @@ def admin_users(token: str, search: str = "", limit: int = 200):
     try:
         query = db.query(User)
         if search:
-            query = query.filter((User.name.contains(search)) | (User.phone.contains(search)))
+            query = query.filter(
+                (User.name.contains(search)) | (User.phone.contains(search))
+            )
         users = query.order_by(User.created_at.desc()).limit(limit).all()
-        return [{
-            "id": str(u.id), "name": u.name, "phone": u.phone,
-            "referral_code": u.referral_code, "referred_by": u.referred_by,
-            "completed_visits": u.completed_visits or 0,
-            "total_paid": u.total_paid or 0, "total_free": u.total_free or 0,
-            "loyalty_tier": u.loyalty_tier or "newcomer",
-            "created_at": u.created_at.isoformat() if u.created_at else None
-        } for u in users]
+        return [
+            {
+                "id": str(u.id),
+                "name": u.name,
+                "phone": u.phone,
+                "referral_code": u.referral_code,
+                "referred_by": u.referred_by,
+                "completed_visits": u.completed_visits or 0,
+                "total_paid": u.total_paid or 0,
+                "total_free": u.total_free or 0,
+                "loyalty_tier": u.loyalty_tier or "newcomer",
+                "created_at": u.created_at.isoformat() if u.created_at else None,
+            }
+            for u in users
+        ]
     finally:
         db.close()
 
@@ -1271,14 +1987,26 @@ def admin_visits(token: str, limit: int = 200):
         raise HTTPException(401, "لطفاً دوباره وارد شوید")
     db = SessionLocal()
     try:
-        visits = db.query(Visit, User).join(User, Visit.user_id == User.id).order_by(Visit.created_at.desc()).limit(limit).all()
-        return [{
-            "id": str(v.id), "user_name": u.name, "user_phone": u.phone,
-            "visit_number": v.visit_number, "status": v.status,
-            "payment_status": v.payment_status,
-            "created_at": v.created_at.isoformat() if v.created_at else None,
-            "completed_at": v.completed_at.isoformat() if v.completed_at else None
-        } for v, u in visits]
+        visits = (
+            db.query(Visit, User)
+            .join(User, Visit.user_id == User.id)
+            .order_by(Visit.created_at.desc())
+            .limit(limit)
+            .all()
+        )
+        return [
+            {
+                "id": str(v.id),
+                "user_name": u.name,
+                "user_phone": u.phone,
+                "visit_number": v.visit_number,
+                "status": v.status,
+                "payment_status": v.payment_status,
+                "created_at": v.created_at.isoformat() if v.created_at else None,
+                "completed_at": v.completed_at.isoformat() if v.completed_at else None,
+            }
+            for v, u in visits
+        ]
     finally:
         db.close()
 
@@ -1289,12 +2017,24 @@ def admin_feedbacks(token: str, limit: int = 200):
         raise HTTPException(401, "لطفاً دوباره وارد شوید")
     db = SessionLocal()
     try:
-        feedbacks = db.query(Feedback, User).join(User, Feedback.user_id == User.id).order_by(Feedback.created_at.desc()).limit(limit).all()
-        return [{
-            "id": str(f.id), "user_name": u.name, "user_phone": u.phone,
-            "feedback_type": f.feedback_type, "feedback_text": f.feedback_text,
-            "created_at": f.created_at.isoformat() if f.created_at else None
-        } for f, u in feedbacks]
+        feedbacks = (
+            db.query(Feedback, User)
+            .join(User, Feedback.user_id == User.id)
+            .order_by(Feedback.created_at.desc())
+            .limit(limit)
+            .all()
+        )
+        return [
+            {
+                "id": str(f.id),
+                "user_name": u.name,
+                "user_phone": u.phone,
+                "feedback_type": f.feedback_type,
+                "feedback_text": f.feedback_text,
+                "created_at": f.created_at.isoformat() if f.created_at else None,
+            }
+            for f, u in feedbacks
+        ]
     finally:
         db.close()
 
@@ -1308,19 +2048,33 @@ def admin_user_detail(user_id: str, token: str):
         user = db.query(User).filter_by(id=user_id).first()
         if not user:
             raise HTTPException(404, "کاربر یافت نشد")
-        visits = db.query(Visit).filter_by(user_id=user_id).order_by(Visit.visit_number).all()
+        visits = (
+            db.query(Visit)
+            .filter_by(user_id=user_id)
+            .order_by(Visit.visit_number)
+            .all()
+        )
         return {
-            "id": str(user.id), "name": user.name, "phone": user.phone,
+            "id": str(user.id),
+            "name": user.name,
+            "phone": user.phone,
             "referral_code": user.referral_code,
             "completed_visits": user.completed_visits or 0,
             "created_at": user.created_at.isoformat() if user.created_at else None,
-            "visits": [{
-                "id": str(v.id), "visit_number": v.visit_number,
-                "status": v.status, "payment_status": v.payment_status,
-                "created_at": v.created_at.isoformat() if v.created_at else None,
-                "completed_at": v.completed_at.isoformat() if v.completed_at else None,
-                "session_data": v.session_data
-            } for v in visits]
+            "visits": [
+                {
+                    "id": str(v.id),
+                    "visit_number": v.visit_number,
+                    "status": v.status,
+                    "payment_status": v.payment_status,
+                    "created_at": v.created_at.isoformat() if v.created_at else None,
+                    "completed_at": (
+                        v.completed_at.isoformat() if v.completed_at else None
+                    ),
+                    "session_data": v.session_data,
+                }
+                for v in visits
+            ],
         }
     finally:
         db.close()
@@ -1337,31 +2091,38 @@ def admin_loyalty_distribution(token: str):
             count = db.query(User).filter(User.loyalty_tier == tier_key).count()
             distribution[tier_key] = count
 
-        top_users = db.query(User).filter(User.completed_visits > 0).order_by(
-            User.completed_visits.desc()
-        ).limit(20).all()
+        top_users = (
+            db.query(User)
+            .filter(User.completed_visits > 0)
+            .order_by(User.completed_visits.desc())
+            .limit(20)
+            .all()
+        )
 
         return {
             "distribution": [
                 {
-                    "tier": k, "name": LOYALTY_TIERS[k]["name"],
-                    "icon": LOYALTY_TIERS[k]["icon"], "color": LOYALTY_TIERS[k]["color"],
+                    "tier": k,
+                    "name": LOYALTY_TIERS[k]["name"],
+                    "icon": LOYALTY_TIERS[k]["icon"],
+                    "color": LOYALTY_TIERS[k]["color"],
                     "discount": LOYALTY_TIERS[k]["discount"],
                     "min_visits": LOYALTY_TIERS[k]["min_visits"],
-                    "count": distribution.get(k, 0)
+                    "count": distribution.get(k, 0),
                 }
                 for k in LOYALTY_TIERS.keys()
             ],
             "top_users": [
                 {
-                    "name": u.name, "phone": u.phone,
+                    "name": u.name,
+                    "phone": u.phone,
                     "completed_visits": u.completed_visits or 0,
                     "tier": u.loyalty_tier or "newcomer",
                     "tier_name": get_tier_info(u.loyalty_tier)["name"],
-                    "tier_icon": get_tier_info(u.loyalty_tier)["icon"]
+                    "tier_icon": get_tier_info(u.loyalty_tier)["icon"],
                 }
                 for u in top_users
-            ]
+            ],
         }
     finally:
         db.close()
@@ -1371,14 +2132,16 @@ def admin_loyalty_distribution(token: str):
 # خروجی اکسل
 # ============================================================
 def _style_excel_sheet(ws, headers, rows):
-    header_fill = PatternFill(start_color="1a6b52", end_color="1a6b52", fill_type="solid")
+    header_fill = PatternFill(
+        start_color="1a6b52", end_color="1a6b52", fill_type="solid"
+    )
     header_font = Font(bold=True, color="FFFFFF", size=12, name="Tahoma")
     header_align = Alignment(horizontal="center", vertical="center", readingOrder=2)
     thin_border = Border(
-        left=Side(style='thin', color='CCCCCC'),
-        right=Side(style='thin', color='CCCCCC'),
-        top=Side(style='thin', color='CCCCCC'),
-        bottom=Side(style='thin', color='CCCCCC')
+        left=Side(style="thin", color="CCCCCC"),
+        right=Side(style="thin", color="CCCCCC"),
+        top=Side(style="thin", color="CCCCCC"),
+        bottom=Side(style="thin", color="CCCCCC"),
     )
 
     ws.append(headers)
@@ -1404,7 +2167,9 @@ def _style_excel_sheet(ws, headers, rows):
             for cell in row:
                 if cell.value:
                     max_len = max(max_len, len(str(cell.value)))
-        ws.column_dimensions[ws.cell(row=1, column=col_idx).column_letter].width = min(max_len + 4, 40)
+        ws.column_dimensions[ws.cell(row=1, column=col_idx).column_letter].width = min(
+            max_len + 4, 40
+        )
 
 
 @app.get("/admin/export/users")
@@ -1420,19 +2185,36 @@ def export_users_excel(token: str):
         ws.title = "کاربران"
         ws.sheet_view.rightToLeft = True
 
-        headers = ["ردیف", "نام و نام خانوادگی", "موبایل", "کد معرفی", "معرفی‌شده توسط",
-                   "ویزیت موفق", "کل ویزیت پرداخت‌شده", "ویزیت رایگان", "سطح باشگاه", "تاریخ ثبت‌نام"]
+        headers = [
+            "ردیف",
+            "نام و نام خانوادگی",
+            "موبایل",
+            "کد معرفی",
+            "معرفی‌شده توسط",
+            "ویزیت موفق",
+            "کل ویزیت پرداخت‌شده",
+            "ویزیت رایگان",
+            "سطح باشگاه",
+            "تاریخ ثبت‌نام",
+        ]
 
         rows = []
         for i, u in enumerate(users, 1):
             tier_info = get_tier_info(u.loyalty_tier)
-            rows.append([
-                i, u.name or "—", u.phone or "—",
-                u.referral_code or "—", u.referred_by or "—",
-                u.completed_visits or 0, u.total_paid or 0, u.total_free or 0,
-                f"{tier_info['icon']} {tier_info['name']}",
-                to_shamsi(u.created_at)
-            ])
+            rows.append(
+                [
+                    i,
+                    u.name or "—",
+                    u.phone or "—",
+                    u.referral_code or "—",
+                    u.referred_by or "—",
+                    u.completed_visits or 0,
+                    u.total_paid or 0,
+                    u.total_free or 0,
+                    f"{tier_info['icon']} {tier_info['name']}",
+                    to_shamsi(u.created_at),
+                ]
+            )
 
         _style_excel_sheet(ws, headers, rows)
 
@@ -1444,7 +2226,7 @@ def export_users_excel(token: str):
         return StreamingResponse(
             buffer,
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={"Content-Disposition": f"attachment; filename={filename}"}
+            headers={"Content-Disposition": f"attachment; filename={filename}"},
         )
     finally:
         db.close()
@@ -1456,29 +2238,52 @@ def export_visits_excel(token: str):
         raise HTTPException(401, "لطفاً دوباره وارد شوید")
     db = SessionLocal()
     try:
-        visits = db.query(Visit, User).join(User, Visit.user_id == User.id).order_by(Visit.created_at.desc()).all()
+        visits = (
+            db.query(Visit, User)
+            .join(User, Visit.user_id == User.id)
+            .order_by(Visit.created_at.desc())
+            .all()
+        )
 
         wb = Workbook()
         ws = wb.active
         ws.title = "ویزیت‌ها"
         ws.sheet_view.rightToLeft = True
 
-        headers = ["ردیف", "کاربر", "موبایل", "شماره ویزیت", "وضعیت ویزیت",
-                   "وضعیت پرداخت", "مبلغ پرداخت", "تاریخ شروع", "تاریخ پایان"]
+        headers = [
+            "ردیف",
+            "کاربر",
+            "موبایل",
+            "شماره ویزیت",
+            "وضعیت ویزیت",
+            "وضعیت پرداخت",
+            "مبلغ پرداخت",
+            "تاریخ شروع",
+            "تاریخ پایان",
+        ]
 
         status_map = {"completed": "✅ تکمیل شده", "in_progress": "🔄 در جریان"}
-        pay_map = {"paid": "💰 پرداخت‌شده", "free": "🎁 رایگان", "pending": "⏳ در انتظار"}
+        pay_map = {
+            "paid": "💰 پرداخت‌شده",
+            "free": "🎁 رایگان",
+            "pending": "⏳ در انتظار",
+        }
 
         rows = []
         for i, (v, u) in enumerate(visits, 1):
-            rows.append([
-                i, u.name or "—", u.phone or "—",
-                v.visit_number or "—",
-                status_map.get(v.status, v.status or "—"),
-                pay_map.get(v.payment_status, v.payment_status or "—"),
-                f"{v.final_amount or 0:,}",
-                to_shamsi(v.created_at), to_shamsi(v.completed_at)
-            ])
+            rows.append(
+                [
+                    i,
+                    u.name or "—",
+                    u.phone or "—",
+                    v.visit_number or "—",
+                    status_map.get(v.status, v.status or "—"),
+                    pay_map.get(v.payment_status, v.payment_status or "—"),
+                    f"{v.final_amount or 0:,}",
+                    to_shamsi(v.created_at),
+                    to_shamsi(v.completed_at),
+                ]
+            )
 
         _style_excel_sheet(ws, headers, rows)
 
@@ -1490,7 +2295,7 @@ def export_visits_excel(token: str):
         return StreamingResponse(
             buffer,
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={"Content-Disposition": f"attachment; filename={filename}"}
+            headers={"Content-Disposition": f"attachment; filename={filename}"},
         )
     finally:
         db.close()
@@ -1502,7 +2307,12 @@ def export_feedbacks_excel(token: str):
         raise HTTPException(401, "لطفاً دوباره وارد شوید")
     db = SessionLocal()
     try:
-        feedbacks = db.query(Feedback, User).join(User, Feedback.user_id == User.id).order_by(Feedback.created_at.desc()).all()
+        feedbacks = (
+            db.query(Feedback, User)
+            .join(User, Feedback.user_id == User.id)
+            .order_by(Feedback.created_at.desc())
+            .all()
+        )
 
         wb = Workbook()
         ws = wb.active
@@ -1513,11 +2323,16 @@ def export_feedbacks_excel(token: str):
 
         rows = []
         for i, (f, u) in enumerate(feedbacks, 1):
-            rows.append([
-                i, u.name or "—", u.phone or "—",
-                f.feedback_type or "—", f.feedback_text or "—",
-                to_shamsi(f.created_at)
-            ])
+            rows.append(
+                [
+                    i,
+                    u.name or "—",
+                    u.phone or "—",
+                    f.feedback_type or "—",
+                    f.feedback_text or "—",
+                    to_shamsi(f.created_at),
+                ]
+            )
 
         _style_excel_sheet(ws, headers, rows)
 
@@ -1529,7 +2344,7 @@ def export_feedbacks_excel(token: str):
         return StreamingResponse(
             buffer,
             media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            headers={"Content-Disposition": f"attachment; filename={filename}"}
+            headers={"Content-Disposition": f"attachment; filename={filename}"},
         )
     finally:
         db.close()
@@ -1542,13 +2357,23 @@ def export_feedbacks_excel(token: str):
 def user_history(user_id: str):
     db = SessionLocal()
     try:
-        visits = db.query(Visit).filter_by(user_id=user_id).order_by(Visit.visit_number).all()
-        return [{
-            "visit_number": v.visit_number, "status": v.status,
-            "payment_status": v.payment_status, "amount": v.final_amount,
-            "created_at": v.created_at.isoformat() if v.created_at else None,
-            "completed_at": v.completed_at.isoformat() if v.completed_at else None,
-        } for v in visits]
+        visits = (
+            db.query(Visit)
+            .filter_by(user_id=user_id)
+            .order_by(Visit.visit_number)
+            .all()
+        )
+        return [
+            {
+                "visit_number": v.visit_number,
+                "status": v.status,
+                "payment_status": v.payment_status,
+                "amount": v.final_amount,
+                "created_at": v.created_at.isoformat() if v.created_at else None,
+                "completed_at": v.completed_at.isoformat() if v.completed_at else None,
+            }
+            for v in visits
+        ]
     finally:
         db.close()
 
@@ -1565,10 +2390,14 @@ def user_referrals(user_id: str):
             "referral_code": user.referral_code,
             "confirmed_referrals": user.confirmed_referrals,
             "free_credits": user.free_credits,
-            "referred_list": [{
-                "name": u.name, "confirmed": u.referral_confirmed,
-                "created_at": u.created_at.isoformat() if u.created_at else None,
-            } for u in referred]
+            "referred_list": [
+                {
+                    "name": u.name,
+                    "confirmed": u.referral_confirmed,
+                    "created_at": u.created_at.isoformat() if u.created_at else None,
+                }
+                for u in referred
+            ],
         }
     finally:
         db.close()
