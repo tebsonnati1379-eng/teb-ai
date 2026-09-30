@@ -345,6 +345,7 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
 </div>
 
 <script>
+    let globalVisitId = null;
 var SUPPORT_BOT = "TebAI_Help_bot";
 var API = window.location.origin;
 let state = { answers: {}, visitId: null };
@@ -401,7 +402,7 @@ if (userInput === "ZARINPAL-REVIEW-1403") {
         body: JSON.stringify({ name: name, phone: phone, referral_code: ref, review_code: reviewCode })
     })
     .then(function(data) {
-        state.visitId = data.visit_id;
+        globalVisitId = data.visit_id;
     // اگر کاربر باید پول بده، صفحه پرداخت رو نشون بده
     if (data.must_pay === true) {
         document.getElementById('screen-payment').classList.remove('hidden');
@@ -559,7 +560,7 @@ document.getElementById('btn-next').addEventListener('click', async function() {
     state.answers[q.id] = answer;
 
     try {
-        var res = await fetch(API + '/visits/' + state.visitId + '/answer', {
+        var res = await fetch(API + '/visits/' + globalVisitId + '/answer', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ question_id: q.id, answer: String(answer) })
