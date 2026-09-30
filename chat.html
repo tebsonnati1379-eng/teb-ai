@@ -345,10 +345,9 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
 </div>
 
 <script>
-let currentVisitId = null;
 var SUPPORT_BOT = "TebAI_Help_bot";
 var API = window.location.origin;
-var state = {
+let state = { answers: {}, visitId: null };
     userId: null,
     visitId: null,
     questions: [],
@@ -402,7 +401,7 @@ if (userInput === "ZARINPAL-REVIEW-1403") {
         body: JSON.stringify({ name: name, phone: phone, referral_code: ref, review_code: reviewCode })
     })
     .then(function(data) {
-        currentVisitId = data.visit_id;
+        state.visitId = data.visit_id;
     // اگر کاربر باید پول بده، صفحه پرداخت رو نشون بده
     if (data.must_pay === true) {
         document.getElementById('screen-payment').classList.remove('hidden');
