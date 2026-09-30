@@ -377,7 +377,7 @@ function toPersianNum(n) {
     return String(n).replace(/\d/g, function(d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; });
 }
 
-// ثبت‌نام
+// ✅ ثبت‌نام - نسخه اصلاح شده
 document.getElementById('btn-register').addEventListener('click', function() {
     var name = document.getElementById('reg-name').value.trim();
     var phone = document.getElementById('reg-phone').value.trim();
@@ -385,13 +385,14 @@ document.getElementById('btn-register').addEventListener('click', function() {
 
     if (!name || name.length < 3) { showError('reg-error', 'لطفاً نام معتبر وارد کنید'); return; }
     if (!/^09\d{9}$/.test(phone)) { showError('reg-error', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود'); return; }
-// ---- کد بررسی زرین‌پال ----
-let reviewCode = "";
-const userInput = prompt("لطفاً کد بررسی را وارد کنید (فقط برای زرین‌پال):");
-if (userInput === "ZARINPAL-REVIEW-1403") {
-    reviewCode = userInput;
-}
-// ---- پایان کد بررسی ----
+
+    // کد بررسی زرین‌پال
+    let reviewCode = "";
+    const userInput = prompt("لطفاً کد بررسی را وارد کنید (فقط برای زرین‌پال):");
+    if (userInput === "ZARINPAL-REVIEW-1403") {
+        reviewCode = userInput;
+    }
+
     var btn = document.getElementById('btn-register');
     btn.disabled = true;
     btn.textContent = 'در حال ثبت...';
@@ -401,25 +402,19 @@ if (userInput === "ZARINPAL-REVIEW-1403") {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: name, phone: phone, referral_code: ref, review_code: reviewCode })
     })
+    .then(function(res) {
+        if (!res.ok) throw new Error('خطا در ارتباط با سرور');
+        return res.json();
+    })
     .then(function(data) {
-        state.visitId = data.visit_id;
-    sessionStorage.setItem('visitId', data.visit_id);
-    // اگر کاربر باید پول بده، صفحه پرداخت رو نشون بده
-    if (data.must_pay === true) {
-        document.getElementById('screen-payment').classList.remove('hidden');
-        document.getElementById('screen-register').classList.add('hidden');
-    } 
-    // اگر کد بررسی زده شده یا ویزیت رایگانه، مستقیم برو سوالات
-    else {
-        document.getElementById('screen-register').classList.add('hidden');
-        document.getElementById('screen-questions').classList.remove('hidden');
-        loadQuestions(data.visit_id); // تابعی که سوالات رو لود می‌کنه
-    }
-})
-    .then(function(data) {
+        // ذخیره اطلاعات در state و sessionStorage
         state.userId = data.user_id;
         state.visitId = data.visit_id;
         state.referralCode = data.referral_code;
+        sessionStorage.setItem('visitId', data.visit_id);
+        sessionStorage.setItem('userId', data.user_id);
+        
+        console.log('✅ Visit ID ذخیره شد:', data.visit_id);
 
         if (data.must_pay && data.payment_status !== 'paid') {
             document.getElementById('pay-name').textContent = '👋 ' + data.name + ' عزیز، خوش آمدید';
@@ -429,7 +424,7 @@ if (userInput === "ZARINPAL-REVIEW-1403") {
         }
     })
     .catch(function(e) {
-        showError('reg-error', e.message);
+        showError('reg-error', e.message || 'خطای ناشناخته');
         btn.disabled = false;
         btn.textContent = '🚀 شروع مشاوره';
     });
@@ -450,9 +445,16 @@ document.getElementById('btn-support').addEventListener('click', function() {
     window.open('https://ble.ir/' + SUPPORT_BOT, '_blank');
 });
 
-// بارگذاری سوالات
+// ✅ بارگذاری سوالات - با fallback از sessionStorage
 function loadQuestions() {
-    fetch(API + '/visits/' + state.visitId + '/questions')
+    const visitId = state.visitId || sessionStorage.getItem('visitId');
+    if (!visitId || visitId === 'undefined' || visitId === 'null') {
+        alert('⚠️ خطا: شناسه ویزیت یافت نشد. لطفاً صفحه را رفرش کنید.');
+        return;
+    }
+    state.visitId = visitId;
+
+    fetch(API + '/visits/' + visitId + '/questions')
     .then(function(res) { return res.json(); })
     .then(function(data) {
         state.questions = data.questions;
@@ -534,7 +536,7 @@ function renderQuestion() {
     }, 300);
 }
 
-// دکمه بعدی
+// ✅ دکمه بعدی - با fallback از sessionStorage
 document.getElementById('btn-next').addEventListener('click', async function() {
     var q = state.questions[state.currentIndex];
     var answer = null;
@@ -560,13 +562,13 @@ document.getElementById('btn-next').addEventListener('click', async function() {
 
     state.answers[q.id] = answer;
 
-        try {
-        const visitId = state.visitId || sessionStorage.getItem('visitId');
-        if (!visitId || visitId === 'undefined' || visitId === 'null') {
-            alert('⚠️ شناسه ویزیت یافت نشد. لطفاً صفحه را رفرش کنید و دوباره تلاش کنید.');
-            return;
-        }
-        
+    const visitId = state.visitId || sessionStorage.getItem('visitId');
+    if (!visitId || visitId === 'undefined' || visitId === 'null') {
+        alert('⚠️ شناسه ویزیت یافت نشد. لطفاً صفحه را رفرش کنید و دوباره از ابتدا شروع کنید.');
+        return;
+    }
+
+    try {
         var res = await fetch(API + '/visits/' + visitId + '/answer', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -575,7 +577,7 @@ document.getElementById('btn-next').addEventListener('click', async function() {
         
         if (!res.ok) throw new Error('خطا در ذخیره پاسخ');
     } catch (e) {
-        console.error('❌ خطا در ذخیره پاسخ:', e.message, '| visitId:', state.visitId);
+        console.error('❌ خطا در ذخیره پاسخ:', e.message, '| visitId:', visitId);
         alert('خطا در ذخیره پاسخ. لطفاً دوباره تلاش کنید.');
         return;
     }
@@ -597,10 +599,17 @@ document.getElementById('btn-prev').addEventListener('click', function() {
     }
 });
 
-// تکمیل ویزیت
+// ✅ تکمیل ویزیت - با fallback از sessionStorage
 function completeVisit() {
     show('screen-loading');
-    fetch(API + '/visits/' + state.visitId + '/complete', { method: 'POST' })
+    const visitId = state.visitId || sessionStorage.getItem('visitId');
+    if (!visitId || visitId === 'undefined' || visitId === 'null') {
+        alert('⚠️ خطا: شناسه ویزیت یافت نشد.');
+        show('screen-questions');
+        return;
+    }
+
+    fetch(API + '/visits/' + visitId + '/complete', { method: 'POST' })
     .then(function(res) {
         if (!res.ok) throw new Error('خطا در تحلیل');
         return res.json();
@@ -622,6 +631,7 @@ document.getElementById('btn-pdf').addEventListener('click', function() {
 
 // شروع مجدد
 document.getElementById('btn-restart').addEventListener('click', function() {
+    sessionStorage.clear();
     location.reload();
 });
 
@@ -655,8 +665,8 @@ document.getElementById('feedback-submit').addEventListener('click', async funct
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                user_id: state.userId,
-                visit_id: state.visitId,
+                user_id: state.userId || sessionStorage.getItem('userId') || 'anonymous',
+                visit_id: state.visitId || sessionStorage.getItem('visitId') || 'anonymous',
                 feedback_type: type,
                 feedback_text: text
             })
