@@ -400,10 +400,19 @@ if (userInput === "ZARINPAL-REVIEW-1403") {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: name, phone: phone, referral_code: ref, review_code: reviewCode })
     })
-    .then(function(res) {
-        if (!res.ok) return res.json().then(function(err) { throw new Error(err.detail || 'خطا در ثبت‌نام'); });
-        return res.json();
-    })
+    .then(function(data) {
+    // اگر کاربر باید پول بده، صفحه پرداخت رو نشون بده
+    if (data.must_pay === true) {
+        document.getElementById('screen-payment').classList.remove('hidden');
+        document.getElementById('screen-register').classList.add('hidden');
+    } 
+    // اگر کد بررسی زده شده یا ویزیت رایگانه، مستقیم برو سوالات
+    else {
+        document.getElementById('screen-register').classList.add('hidden');
+        document.getElementById('screen-questions').classList.remove('hidden');
+        loadQuestions(data.visit_id); // تابعی که سوالات رو لود می‌کنه
+    }
+})
     .then(function(data) {
         state.userId = data.user_id;
         state.visitId = data.visit_id;
