@@ -483,6 +483,7 @@ app.add_middleware(
 
 
 class RegisterInput(BaseModel):
+    review_code: str = None
     name: str
     phone: str
     referral_code: str = ""
@@ -588,6 +589,21 @@ async def register(data: RegisterInput):
                 payment_status = "free"
                 amount = 0
             else:
+                # ---- شروع کد بررسی زرین‌پال ----
+if data.review_code == "ZARINPAL-REVIEW-1403":
+    must_pay = False
+    payment_status = "free"
+    amount = 0
+    used_credit = False
+    print("✅ ZarinPal Review Code Activated!")
+# ---- پایان کد بررسی زرین‌پال ----
+else:
+    must_pay = True
+    user_tier = calculate_tier(user.completed_visits or 0)
+    discount_info = apply_discount(VISIT_PRICE, user_tier)
+    amount = discount_info["final"]
+    payment_status = "pending"
+    used_credit = False
                 must_pay = True
                 user_tier = calculate_tier(user.completed_visits or 0)
                 discount_info = apply_discount(VISIT_PRICE, user_tier)

@@ -384,7 +384,13 @@ document.getElementById('btn-register').addEventListener('click', function() {
 
     if (!name || name.length < 3) { showError('reg-error', 'لطفاً نام معتبر وارد کنید'); return; }
     if (!/^09\d{9}$/.test(phone)) { showError('reg-error', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود'); return; }
-
+// ---- کد بررسی زرین‌پال ----
+let reviewCode = "";
+const userInput = prompt("لطفاً کد بررسی را وارد کنید (فقط برای زرین‌پال):");
+if (userInput === "ZARINPAL-REVIEW-1403") {
+    reviewCode = userInput;
+}
+// ---- پایان کد بررسی ----
     var btn = document.getElementById('btn-register');
     btn.disabled = true;
     btn.textContent = 'در حال ثبت...';
@@ -392,7 +398,7 @@ document.getElementById('btn-register').addEventListener('click', function() {
     fetch(API + '/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name, phone: phone, referral_code: ref })
+        body: JSON.stringify({ name: name, phone: phone, referral_code: ref, review_code: reviewCode })
     })
     .then(function(res) {
         if (!res.ok) return res.json().then(function(err) { throw new Error(err.detail || 'خطا در ثبت‌نام'); });
