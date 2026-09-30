@@ -137,6 +137,61 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
 .btn-cancel { background: #f0f0f0; color: #555; }
 .btn-submit { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
 
+/* استایل جدول‌ها در گزارش */
+.report table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    font-size: 13px;
+}
+.report table th {
+    background: linear-gradient(135deg, #1a6b52, #0f4c3a);
+    color: #fff;
+    padding: 12px 8px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 13px;
+}
+.report table td {
+    padding: 10px 8px;
+    text-align: right;
+    border-bottom: 1px solid #e8f0ed;
+    color: #333;
+}
+.report table tr:nth-child(even) td {
+    background: #f8faf9;
+}
+.report table tr:hover td {
+    background: #e8f5e9;
+}
+.report h1, .report h2, .report h3 {
+    color: #0f4c3a;
+    margin: 20px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #4ade80;
+}
+.report hr {
+    border: none;
+    border-top: 2px dashed #4ade80;
+    margin: 20px 0;
+}
+.report strong {
+    color: #0f4c3a;
+}
+.report .signature {
+    background: linear-gradient(135deg, #f0f9f4, #e8f5e9);
+    border-right: 4px solid #1a6b52;
+    padding: 14px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 16px 0;
+    font-weight: 700;
+    color: #0f4c3a;
+}
 @media print {
     body { background: #fff !important; padding: 0 !important; margin: 0 !important; display: block !important; }
     .container { box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; }
@@ -615,7 +670,7 @@ function completeVisit() {
         return res.json();
     })
     .then(function(data) {
-        document.getElementById('report-text').textContent = data.report;
+        document.getElementById('report-text').innerHTML = markdownToHtml(data.report);
         show('screen-result');
     })
     .catch(function(e) {
@@ -692,6 +747,55 @@ feedbackModal.addEventListener('click', function(e) {
         feedbackModal.classList.remove('show');
     }
 });
+// تبدیل Markdown به HTML (برای جدول‌ها و فرمت‌بندی)
+function markdownToHtml(md) {
+    let html = md;
+    
+    // تبدیل جدول‌های Markdown
+    html = html.replace(/((?:^\|.*\|\s*$\n?)+)/gm, function(tableBlock) {
+        const lines = tableBlock.trim().split('\n').filter(l => l.trim());
+        if (lines.length < 2) return tableBlock;
+        
+        const headers = lines[0].split('|').map(h => h.trim()).filter(h => h);
+        const dataLines = lines.slice(2); // خط دوم جداکننده است
+        
+        let tableHtml = '<table><thead><tr>';
+        headers.forEach(h => tableHtml += '<th>' + h + '</th>');
+        tableHtml += '</tr></thead><tbody>';
+        
+        dataLines.forEach(line => {
+            const cells = line.split('|').map(c => c.trim()).filter((c, i, arr) => !(i === 0 && c === '') && !(i === arr.length - 1 && c === ''));
+            if (cells.length > 0) {
+                tableHtml += '<tr>';
+                cells.forEach(c => tableHtml += '<td>' + c + '</td>');
+                tableHtml += '</tr>';
+            }
+        });
+        
+        tableHtml += '</tbody></table>';
+        return tableHtml;
+    });
+    
+    // تیترها
+    html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+    html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+    html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+    
+    // بولد
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    
+    // خط جداکننده
+    html = html.replace(/^---$/gm, '<hr>');
+    
+    // خط جدید
+    html = html.replace(/\n/g, '<br>');
+    
+    // اصلاح: حذف <br> اضافی بعد از تگ‌های بلوکی
+    html = html.replace(/<\/(table|h1|h2|h3|hr)><br>/g, '</$1>');
+    html = html.replace(/<hr><br>/g, '<hr>');
+    
+    return html;
+}
 </script>
 <div style="position:fixed !important;bottom:0 !important;left:0 !important;right:0 !important;text-align:center !important;font-size:13px !important;padding:12px !important;background:#ffffff !important;box-shadow:0 -2px 10px rgba(0,0,0,0.1) !important;z-index:2147483647 !important;display:block !important;visibility:visible !important;">
   <a href="/terms" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 10px !important;font-weight:bold !important;">📜 قوانین و مقررات</a>
