@@ -104,9 +104,8 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
     .report h1:first-of-type { page-break-before: auto !important; }
     
     .report h2 { page-break-after: avoid !important; color: #000 !important; font-size: 16px !important; border-bottom: 2px solid #333 !important; }
-    
+    .report h2:not(:first-of-type) { page-break-before: always !important; break-before: page !important; }
     .report h3 { page-break-before: always !important; break-before: page !important; padding-top: 20px !important; color: #000 !important; font-size: 15px !important; border-bottom: 2px solid #000 !important; padding-bottom: 8px !important; }
-    .report h3:first-of-type { page-break-before: auto !important; break-before: auto !important; }
     
     .report table { page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important; margin: 12px 0 !important; border: 1px solid #999 !important; box-shadow: none !important; font-size: 11px !important; }
     .report table th { background: #2e7d32 !important; color: #fff !important; padding: 8px 5px !important; font-size: 11px !important; border: 1px solid #999 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -228,10 +227,10 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
         <div id="screen-result" class="hidden">
             <div style="text-align:center;margin-bottom:20px;">
                 <div style="font-size:48px;">✅</div>
-                <h2 style="color:#0f4c3a;">تحلیل شما آماده شد</h2>
+                <h2 style="color:#0f4c3a;">نسخه شما آماده شد</h2>
             </div>
             <div class="report" id="report-text"></div>
-            <button class="btn" id="btn-pdf" style="background:linear-gradient(135deg, #dc2626, #b91c1c); margin-top:20px;">📥 دانلود تحلیل (PDF)</button>
+            <button class="btn" id="btn-pdf" style="background:linear-gradient(135deg, #dc2626, #b91c1c); margin-top:20px;">📥 دانلود نسخه (PDF)</button>
             <button class="feedback-btn" id="btn-feedback">💬 ارسال نظرات، انتقادات و پیشنهادات</button>
             <button class="btn btn-prev" id="btn-restart" style="margin-top:10px;">🔄 مشاوره جدید</button>
         </div>
@@ -352,7 +351,14 @@ function markdownToHtml(md) {
     <div class="name">🖋️ امضای دکتر حکیم</div>
     <div class="contact">📞 پشتیبانی: bale.ir/TebAI_Help_bot</div>
 </div>`;
+        // حذف امضای متنی AI و جایگزینی با SVG
+    html = html.replace(/🖋️[\s\S]{0,500}?TebAI_Help_bot/g, signatureHtml);
+    html = html.replace(/امضای دکتر حکیم[\s\S]{0,500}?TebAI_Help_bot/g, signatureHtml);
     
+    // اگه امضا توی متن نبود، آخرش اضافه کن
+    if (!html.includes('dr-signature')) {
+        html = html + signatureHtml;
+    }
     // اصلاح: حذف <br> اضافی بعد از تگ‌های بلوکی
     html = html.replace(/<\/(table|h1|h2|h3|hr)><br>/g, '</$1>');
     html = html.replace(/<hr><br>/g, '<hr>');
