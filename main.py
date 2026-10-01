@@ -82,13 +82,17 @@ except json.JSONDecodeError as e:
 # ============================================================
 # تنظیمات دیتابیس (SQLite)
 # ============================================================
-DATABASE_URL = "sqlite:///./teb_local.db"
-connect_args = {"check_same_thread": False}
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./teb_local.db")
+
+# تنظیمات مخصوص هر دیتابیس (SQLite برای لوکال، PostgreSQL برای لیارا)
+if DATABASE_URL.startswith("sqlite"):
+    connect_args = {"check_same_thread": False}
+else:
+    connect_args = {}
 
 engine = create_engine(DATABASE_URL, connect_args=connect_args, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 Base = declarative_base()
-
 VISIT_PRICE = 100_000
 REFERRALS_NEEDED = 5
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin@1403")

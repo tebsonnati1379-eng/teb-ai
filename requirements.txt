@@ -6,3 +6,5 @@ openai
 python-dotenv
 openpyxl
 jdatetime
+requests
+psycopg2-binary
