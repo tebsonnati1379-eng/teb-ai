@@ -333,36 +333,49 @@ function markdownToHtml(md) {
     // خط جدید
     html = html.replace(/\n/g, '<br>');
     
-    // جایگزینی امضای متنی با تصویر SVG
+            // ===== حذف خطوط امضای متنی AI و اضافه کردن SVG =====
     const signatureHtml = `
 <div class="dr-signature">
-    <svg viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 400 140" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
         <defs>
             <linearGradient id="sigGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" style="stop-color:#0f4c3a;stop-opacity:1" />
                 <stop offset="100%" style="stop-color:#4ade80;stop-opacity:1" />
             </linearGradient>
         </defs>
-        <path d="M 20,50 Q 40,20 60,45 T 100,40 Q 120,50 140,35 T 180,45 Q 200,30 220,50 T 260,40" stroke="url(#sigGrad)" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M 30,60 Q 80,55 130,62 T 230,58" stroke="url(#sigGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <text x="150" y="35" font-family="'Dancing Script', cursive, Tahoma" font-size="22" fill="#0f4c3a" text-anchor="middle" font-weight="bold">Dr. Hakim</text>
-        <text x="150" y="75" font-family="Tahoma" font-size="10" fill="#666" text-anchor="middle">دستیار هوشمند طب سنتی و اسلامی</text>
+        <path d="M 40,30 Q 120,5 200,20 Q 280,5 360,30" stroke="url(#sigGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <circle cx="40" cy="30" r="4" fill="#4ade80"/>
+        <circle cx="360" cy="30" r="4" fill="#0f4c3a"/>
+        <text x="200" y="85" font-family="'Vazirmatn', 'Tahoma', sans-serif" font-size="38" fill="#0f4c3a" text-anchor="middle" font-weight="900">دکتر حکیم</text>
+        <path d="M 100,100 Q 200,112 300,100" stroke="url(#sigGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="200" cy="100" r="3" fill="#4ade80"/>
+        <circle cx="140" cy="103" r="2" fill="#4ade80"/>
+        <circle cx="260" cy="103" r="2" fill="#4ade80"/>
+        <text x="200" y="130" font-family="'Tahoma', sans-serif" font-size="11" fill="#666" text-anchor="middle">✦ دستیار هوشمند طب سنتی و اسلامی ✦</text>
     </svg>
-    <div class="name">🖋️ امضای دکتر حکیم</div>
-    <div class="contact">📞 پشتیبانی: bale.ir/TebAI_Help_bot</div>
+    <div style="margin-top:10px;font-size:12px;color:#666;font-weight:600;">📞 پشتیبانی: bale.ir/TebAI_Help_bot</div>
 </div>`;
-        // حذف امضای متنی AI و جایگزینی با SVG
-    html = html.replace(/🖋️[\s\S]{0,500}?TebAI_Help_bot/g, signatureHtml);
-    html = html.replace(/امضای دکتر حکیم[\s\S]{0,500}?TebAI_Help_bot/g, signatureHtml);
-    
-    // اگه امضا توی متن نبود، آخرش اضافه کن
-    if (!html.includes('dr-signature')) {
-        html = html + signatureHtml;
-    }
-    // اصلاح: حذف <br> اضافی بعد از تگ‌های بلوکی
+
+    // حذف خطوط امضای متنی AI (روش line-by-line)
+    const reportLines = html.split(/<br\s*\/?>/i);
+    const cleanedLines = reportLines.filter(function(line) {
+        const plainText = line.replace(/<[^>]*>/g, '').trim();
+        if (plainText.indexOf('امضای دکتر حکیم') !== -1) return false;
+        if (plainText.indexOf('دستیار هوشمند طب سنتی') !== -1) return false;
+        if (plainText.indexOf('TebAI_Help_bot') !== -1) return false;
+        if (plainText.indexOf('پشتیبانی:') !== -1) return false;
+        if (plainText.indexOf('bale.ir/') !== -1) return false;
+        return true;
+    });
+    html = cleanedLines.join('<br>');
+
+    // همیشه امضای SVG رو در آخر اضافه کن
+    html = html + signatureHtml;
+
+    // حذف <br> اضافی
     html = html.replace(/<\/(table|h1|h2|h3|hr)><br>/g, '</$1>');
     html = html.replace(/<hr><br>/g, '<hr>');
-    
+
     return html;
 }
 
