@@ -33,7 +33,7 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
 .status { text-align: center; padding: 40px 20px; }
 .spinner { width: 48px; height: 48px; border: 4px solid #e0e0e0; border-top-color: #1a6b52; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.report { background: #f5f7f6; border-right: 4px solid #1a6b52; padding: 20px; border-radius: 12px; line-height: 2; white-space: pre-wrap; font-size: 14px; color: #333; max-height: 500px; overflow-y: auto; text-align: right; }
+.report { background: #f5f7f6; border-right: 4px solid #1a6b52; padding: 20px; border-radius: 12px; line-height: 2; font-size: 14px; color: #333; max-height: 500px; overflow-y: auto; text-align: right; }
 .hidden { display: none; }
 .error { background: #fee2e2; color: #991b1b; padding: 12px 16px; border-radius: 10px; font-size: 14px; margin-bottom: 16px; display: none; }
 .error.show { display: block; }
@@ -44,422 +44,81 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
 #q-input:focus { border-color: #0f4c3a; background: #fff; box-shadow: 0 0 0 5px rgba(26,107,82,0.2); }
 .hint-text { font-size: 13px; color: #1a6b52; margin-top: 10px; padding: 10px 14px; background: #f0f9f4; border-radius: 10px; border-right: 3px solid #4ade80; line-height: 1.6; }
 
-.time-notice {
-    background: linear-gradient(135deg, #fef3c7, #fde68a);
-    border-right: 5px solid #f59e0b;
-    padding: 16px 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
+.time-notice { background: linear-gradient(135deg, #fef3c7, #fde68a); border-right: 5px solid #f59e0b; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
 .time-notice .icon { font-size: 32px; }
 .time-notice .text { font-size: 14px; color: #78350f; font-weight: 600; line-height: 1.7; }
 
-.support-btn {
-    background: linear-gradient(135deg, #0ea5e9, #0284c7);
-    color: white;
-    padding: 12px 20px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 20px;
-    transition: all 0.2s;
-    cursor: pointer;
-    border: none;
-    font-family: inherit;
-    width: 100%;
-}
+.support-btn { background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 20px; transition: all 0.2s; cursor: pointer; border: none; font-family: inherit; width: 100%; }
 .support-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(14,165,233,0.4); }
 
-.feedback-btn {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-    color: white;
-    padding: 14px 20px;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 10px;
-    transition: all 0.2s;
-    cursor: pointer;
-    border: none;
-    font-family: inherit;
-    width: 100%;
-}
+.feedback-btn { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 14px 20px; border-radius: 12px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; transition: all 0.2s; cursor: pointer; border: none; font-family: inherit; width: 100%; }
 .feedback-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(139,92,246,0.4); }
 
-.modal-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.6);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    padding: 20px;
-}
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; }
 .modal-overlay.show { display: flex; }
-.modal {
-    background: #fff;
-    border-radius: 20px;
-    padding: 28px;
-    max-width: 480px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-}
+.modal { background: #fff; border-radius: 20px; padding: 28px; max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto; }
 .modal h3 { color: #0f4c3a; margin-bottom: 8px; font-size: 20px; }
 .modal p { color: #666; font-size: 13px; margin-bottom: 20px; line-height: 1.7; }
 .modal label { display: block; font-size: 13px; color: #333; margin-bottom: 6px; font-weight: 600; }
-.modal select, .modal textarea {
-    width: 100%;
-    padding: 12px 14px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    font-size: 14px;
-    font-family: inherit;
-    outline: none;
-    margin-bottom: 16px;
-    resize: vertical;
-}
+.modal select, .modal textarea { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; font-family: inherit; outline: none; margin-bottom: 16px; resize: vertical; }
 .modal select:focus, .modal textarea:focus { border-color: #8b5cf6; }
 .modal-buttons { display: flex; gap: 10px; }
 .modal-buttons .btn { flex: 1; margin-top: 0; }
 .btn-cancel { background: #f0f0f0; color: #555; }
 .btn-submit { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
 
-/* استایل جدول‌ها در گزارش */
-.report table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 16px 0;
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    font-size: 13px;
-}
-.report table th {
-    background: linear-gradient(135deg, #1a6b52, #0f4c3a);
-    color: #fff;
-    padding: 12px 8px;
-    text-align: center;
-    font-weight: 700;
-    font-size: 13px;
-}
-.report table td {
-    padding: 10px 8px;
-    text-align: right;
-    border-bottom: 1px solid #e8f0ed;
-    color: #333;
-}
-.report table tr:nth-child(even) td {
-    background: #f8faf9;
-}
-.report table tr:hover td {
-    background: #e8f5e9;
-}
-.report h1, .report h2, .report h3 {
-    color: #0f4c3a;
-    margin: 20px 0 10px;
-    padding-bottom: 6px;
-    border-bottom: 2px solid #4ade80;
-}
-.report hr {
-    border: none;
-    border-top: 2px dashed #4ade80;
-    margin: 20px 0;
-}
-.report strong {
-    color: #0f4c3a;
-}
-.report .signature {
-    background: linear-gradient(135deg, #f0f9f4, #e8f5e9);
-    border-right: 4px solid #1a6b52;
-    padding: 14px;
-    border-radius: 10px;
-    text-align: center;
-    margin: 16px 0;
-    font-weight: 700;
-    color: #0f4c3a;
-}
 /* ===== استایل جدول‌های زیبا ===== */
-.report table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin: 20px 0;
-    background: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    font-size: 13px;
-    direction: rtl;
-}
+.report table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 20px 0; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); font-size: 13px; direction: rtl; }
+.report table thead { background: linear-gradient(135deg, #2e7d32, #1b5e20); }
+.report table th { background: linear-gradient(135deg, #2e7d32, #1b5e20); color: #ffffff; padding: 14px 10px; text-align: center; font-weight: 700; font-size: 13px; border: none; border-bottom: 3px solid #4ade80; }
+.report table td { padding: 12px 10px; text-align: right; color: #333; border-bottom: 1px solid #e8f0ed; font-size: 13px; line-height: 1.6; }
+.report table tbody tr:nth-child(odd) td { background: #ffffff; }
+.report table tbody tr:nth-child(even) td { background: #f1f8e9; }
+.report table tbody tr:last-child td { border-bottom: none; }
+.report table tbody tr:hover td { background: #e8f5e9; transition: background 0.2s; }
+.report h1 { color: #1b5e20; font-size: 22px; margin: 24px 0 14px; padding: 12px 16px; background: linear-gradient(135deg, #f1f8e9, #e8f5e9); border-right: 6px solid #2e7d32; border-radius: 8px; }
+.report h2 { color: #2e7d32; font-size: 18px; margin: 20px 0 12px; padding-bottom: 8px; border-bottom: 3px solid #4ade80; }
+.report h3 { color: #2e7d32; font-size: 16px; margin: 16px 0 10px; padding-right: 10px; border-right: 4px solid #81c784; }
+.report hr { border: none; height: 2px; background: linear-gradient(90deg, transparent, #4ade80, transparent); margin: 24px 0; }
+.report strong { color: #1b5e20; font-weight: 700; }
+.report .dr-signature { background: linear-gradient(135deg, #f0f9f4, #e8f5e9); border-right: 4px solid #1a6b52; padding: 14px; border-radius: 10px; text-align: center; margin: 16px 0; font-weight: 700; color: #0f4c3a; }
 
-.report table thead {
-    background: linear-gradient(135deg, #2e7d32, #1b5e20);
-}
-
-.report table th {
-    background: linear-gradient(135deg, #2e7d32, #1b5e20);
-    color: #ffffff;
-    padding: 14px 10px;
-    text-align: center;
-    font-weight: 700;
-    font-size: 13px;
-    border: none;
-    border-bottom: 3px solid #4ade80;
-}
-
-.report table td {
-    padding: 12px 10px;
-    text-align: right;
-    color: #333;
-    border-bottom: 1px solid #e8f0ed;
-    font-size: 13px;
-    line-height: 1.6;
-}
-
-.report table tbody tr:nth-child(odd) td {
-    background: #ffffff;
-}
-
-.report table tbody tr:nth-child(even) td {
-    background: #f1f8e9;
-}
-
-.report table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-.report table tbody tr:hover td {
-    background: #e8f5e9;
-    transition: background 0.2s;
-}
-
-.report h1 {
-    color: #1b5e20;
-    font-size: 22px;
-    margin: 24px 0 14px;
-    padding: 12px 16px;
-    background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
-    border-right: 6px solid #2e7d32;
-    border-radius: 8px;
-}
-
-.report h2 {
-    color: #2e7d32;
-    font-size: 18px;
-    margin: 20px 0 12px;
-    padding-bottom: 8px;
-    border-bottom: 3px solid #4ade80;
-}
-
-.report h3 {
-    color: #2e7d32;
-    font-size: 16px;
-    margin: 16px 0 10px;
-    padding-right: 10px;
-    border-right: 4px solid #81c784;
-}
-
-.report hr {
-    border: none;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #4ade80, transparent);
-    margin: 24px 0;
-}
-
-.report strong {
-    color: #1b5e20;
-    font-weight: 700;
-}
+/* ===== استایل چاپ (فقط موقع پرینت) ===== */
 @media print {
-    /* شماره صفحه */
-    @page {
-        @bottom-center {
-            content: "صفحه " counter(page);
-            font-size: 10px;
-            color: #666;
-            size: A4;
-            margin: 15mm 10mm;
-        }
-    }
-}
-        
-    }
+    @page { size: A4; margin: 15mm 10mm; }
     
-    body { 
-        background: #fff !important; 
-        padding: 0 !important; 
-        margin: 0 !important; 
-        display: block !important; 
-        font-size: 12px !important;
-    }
+    body { background: #fff !important; padding: 0 !important; margin: 0 !important; display: block !important; font-size: 12px !important; }
+    .container { box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; width: 100% !important; }
     
-    .container { 
-        box-shadow: none !important; 
-        border-radius: 0 !important; 
-        max-width: 100% !important; 
-        width: 100% !important;
-    }
-    
-    /* مخفی کردن صفحات غیرلازم */
-    .header, 
-    .badge-row, 
-    .progress-bar, 
-    #screen-register, 
-    #screen-payment, 
-    #screen-questions, 
-    #screen-loading, 
-    #btn-pdf, 
-    #btn-restart, 
-    #btn-feedback, 
-    .support-btn, 
-    .time-notice,
-    .dr-signature {
+    .header, .badge-row, .progress-bar, #screen-register, #screen-payment, 
+    #screen-questions, #screen-loading, #btn-pdf, #btn-restart, #btn-feedback, 
+    .support-btn, .time-notice {
         display: none !important;
     }
     
-    /* نمایش صفحه نتیجه */
-    #screen-result { 
-        display: block !important; 
-        padding: 0 !important; 
-    }
+    #screen-result { display: block !important; padding: 0 !important; }
     
-    /* تنظیمات کادر گزارش */
-    .report { 
-        max-height: none !important; 
-        overflow: visible !important; 
-        border: none !important; 
-        padding: 0 !important; 
-        background: #fff !important;
-        font-size: 12px !important;
-        line-height: 1.9 !important;
-        color: #000 !important;
-    }
+    .report { max-height: none !important; overflow: visible !important; border: none !important; padding: 0 !important; background: #fff !important; font-size: 12px !important; line-height: 1.9 !important; color: #000 !important; }
     
-    /* ⭐ شروع هر مشکل توی صفحه جدید */
-    .report h3 {
-        page-break-before: always !important;
-        break-before: page !important;
-        padding-top: 20px !important;
-        color: #000 !important;
-        font-size: 15px !important;
-        border-bottom: 2px solid #000 !important;
-        padding-bottom: 8px !important;
-    }
+    .report h1 { page-break-before: always !important; break-before: page !important; color: #000 !important; font-size: 18px !important; text-align: center !important; padding: 15px !important; background: #f0f0f0 !important; border-right: 4px solid #000 !important; }
+    .report h1:first-of-type { page-break-before: auto !important; }
     
-    /* اولین h3 نباید صفحه جدید بسازه */
-    .report h3:first-of-type {
-        page-break-before: auto !important;
-        break-before: auto !important;
-    }
+    .report h2 { page-break-after: avoid !important; color: #000 !important; font-size: 16px !important; border-bottom: 2px solid #333 !important; }
     
-    /* هر بخش بزرگ (بخش اول، دوم و...) هم صفحه جدید */
-    .report h1 {
-        page-break-before: always !important;
-        break-before: page !important;
-        color: #000 !important;
-        font-size: 18px !important;
-        text-align: center !important;
-        padding: 15px !important;
-        background: #f0f0f0 !important;
-        border-right: 4px solid #000 !important;
-    }
+    .report h3 { page-break-before: always !important; break-before: page !important; padding-top: 20px !important; color: #000 !important; font-size: 15px !important; border-bottom: 2px solid #000 !important; padding-bottom: 8px !important; }
+    .report h3:first-of-type { page-break-before: auto !important; break-before: auto !important; }
     
-    .report h2 {
-        page-break-after: avoid !important;
-        color: #000 !important;
-        font-size: 16px !important;
-        border-bottom: 2px solid #333 !important;
-    }
+    .report table { page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important; margin: 12px 0 !important; border: 1px solid #999 !important; box-shadow: none !important; font-size: 11px !important; }
+    .report table th { background: #2e7d32 !important; color: #fff !important; padding: 8px 5px !important; font-size: 11px !important; border: 1px solid #999 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .report table td { padding: 6px 5px !important; font-size: 11px !important; color: #000 !important; background: #fff !important; border: 1px solid #ccc !important; }
+    .report table tbody tr:nth-child(even) td { background: #f5f5f5 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     
-    /* جدول‌ها - نمایش واضح و خوانا */
-    .report table {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        width: 100% !important;
-        margin: 12px 0 !important;
-        border: 1px solid #999 !important;
-        box-shadow: none !important;
-        font-size: 11px !important;
-    }
+    .report strong { color: #000 !important; font-weight: 900 !important; }
+    .report p, .report li { color: #000 !important; font-size: 12px !important; line-height: 1.9 !important; }
+    .report hr { border: none !important; border-top: 1px dashed #999 !important; background: none !important; margin: 15px 0 !important; height: auto !important; }
+    .report p { orphans: 3; widows: 3; }
     
-    .report table th {
-        background: #2e7d32 !important;
-        color: #fff !important;
-        padding: 8px 5px !important;
-        font-size: 11px !important;
-        border: 1px solid #999 !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
-    
-    .report table td {
-        padding: 6px 5px !important;
-        font-size: 11px !important;
-        color: #000 !important;
-        background: #fff !important;
-        border: 1px solid #ccc !important;
-    }
-    
-    .report table tbody tr:nth-child(even) td {
-        background: #f5f5f5 !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
-    
-    /* متن‌های bold - کاملاً مشکی */
-    .report strong {
-        color: #000 !important;
-        font-weight: 900 !important;
-    }
-    
-    /* پاراگراف‌ها */
-    .report p, .report li {
-        color: #000 !important;
-        font-size: 12px !important;
-        line-height: 1.9 !important;
-    }
-    
-    /* خطوط جداکننده */
-    .report hr {
-        border: none !important;
-        border-top: 1px dashed #999 !important;
-        background: none !important;
-        margin: 15px 0 !important;
-        height: auto !important;
-    }
-    
-    /* جلوگیری از شکستن متن‌های کوتاه */
-    .report p {
-        orphans: 3;
-        widows: 3;
-    }
-    
-    /* امضا در پایین آخرین صفحه */
-    .dr-signature {
-        display: block !important;
-        page-break-inside: avoid !important;
-        margin-top: 30px !important;
-        background: #f5f5f5 !important;
-        border: 1px solid #999 !important;
-        padding: 15px !important;
-        text-align: center !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-    }
+    .dr-signature, .report .dr-signature { display: block !important; page-break-inside: avoid !important; margin-top: 30px !important; background: #f5f5f5 !important; border: 1px solid #999 !important; padding: 15px !important; text-align: center !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }
 </style>
 </head>
@@ -472,7 +131,6 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
     </div>
 
     <div class="body">
-        <!-- صفحه ثبت‌نام -->
         <div id="screen-register">
             <div class="error" id="reg-error"></div>
             <div class="field">
@@ -491,7 +149,6 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
             <p style="text-align:center;font-size:13px;color:#1a6b52;margin-top:16px;font-weight:600;">🌿 سلامتی شما برای ما ارزشمند است.</p>
         </div>
 
-        <!-- صفحه پرداخت -->
         <div id="screen-payment" class="hidden">
             <div style="text-align:center;padding:10px 0;">
                 <div style="font-size:56px;margin-bottom:12px;">💎</div>
@@ -502,38 +159,20 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
             <div style="background:linear-gradient(135deg,#f0f9f4,#e8f5e9);border-radius:16px;padding:20px;margin-bottom:20px;border:2px solid #4ade80;">
                 <div style="font-size:15px;font-weight:900;color:#0f4c3a;margin-bottom:14px;text-align:center;">✨ چه چیزی دریافت می‌کنید؟</div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;">
-                        <span style="font-size:18px;">✅</span><span>تحلیل ۸۸ سوالی تخصصی</span>
-                    </div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;">
-                        <span style="font-size:18px;">✅</span><span>تشخیص مزاج دقیق</span>
-                    </div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;">
-                        <span style="font-size:18px;">✅</span><span>گیاهان دارویی اختصاصی</span>
-                    </div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;">
-                        <span style="font-size:18px;">✅</span><span>برنامه هفتگی مادی</span>
-                    </div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;">
-                        <span style="font-size:18px;">✅</span><span>برنامه معنوی روزانه</span>
-                    </div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;">
-                        <span style="font-size:18px;">✅</span><span>PDF قابل دانلود</span>
-                    </div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;">
-                        <span style="font-size:18px;">✅</span><span>دعا و ذکر اختصاصی</span>
-                    </div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;">
-                        <span style="font-size:18px;">✅</span><span>پشتیبانی کامل</span>
-                    </div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>تحلیل ۸۸ سوالی تخصصی</span></div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>تشخیص مزاج دقیق</span></div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>گیاهان دارویی اختصاصی</span></div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>برنامه هفتگی مادی</span></div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>برنامه معنوی روزانه</span></div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>PDF قابل دانلود</span></div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>دعا و ذکر اختصاصی</span></div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>پشتیبانی کامل</span></div>
                 </div>
             </div>
 
             <div style="background:#fff;border:2px solid #e0e0e0;border-radius:16px;padding:20px;margin-bottom:16px;text-align:center;position:relative;">
                 <div style="position:absolute;top:-14px;right:20px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;">🎁 قیمت معرفی</div>
-                <div style="font-size:15px;color:#888;margin-bottom:6px;">
-                    <span style="text-decoration:line-through;">۲۰۰,۰۰۰ تومان</span>
-                </div>
+                <div style="font-size:15px;color:#888;margin-bottom:6px;"><span style="text-decoration:line-through;">۲۰۰,۰۰۰ تومان</span></div>
                 <div style="font-size:44px;font-weight:900;color:#0f4c3a;line-height:1;">۱۰۰,۰۰۰</div>
                 <div style="font-size:14px;color:#666;margin-top:4px;">تومان</div>
                 <div style="margin-top:12px;font-size:13px;color:#059669;font-weight:700;">💰 ۵۰٪ تخفیف ویژه کاربران اولیه</div>
@@ -544,58 +183,30 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
                     <div style="font-size:36px;">🛡️</div>
                     <div style="flex:1;">
                         <div style="font-size:15px;font-weight:900;color:#075985;margin-bottom:4px;">گارانتی بازگشت وجه</div>
-                        <div style="font-size:12px;color:#0c4a6e;line-height:1.7;">
-                            اگر از تحلیل راضی نبودید، <strong>۱۰۰٪ پول شما</strong> بدون سوال برگشت داده می‌شود.
-                        </div>
+                        <div style="font-size:12px;color:#0c4a6e;line-height:1.7;">اگر از تحلیل راضی نبودید، <strong>۱۰۰٪ پول شما</strong> بدون سوال برگشت داده می‌شود.</div>
                     </div>
                 </div>
             </div>
 
             <div style="display:flex;justify-content:space-around;margin-bottom:20px;padding:12px;background:#f5f7f6;border-radius:12px;">
-                <div style="text-align:center;">
-                    <div style="font-size:22px;">🔒</div>
-                    <div style="font-size:10px;color:#666;margin-top:4px;">پرداخت امن</div>
-                </div>
-                <div style="text-align:center;">
-                    <div style="font-size:22px;">⚡</div>
-                    <div style="font-size:10px;color:#666;margin-top:4px;">فعال‌سازی آنی</div>
-                </div>
-                <div style="text-align:center;">
-                    <div style="font-size:22px;">🎯</div>
-                    <div style="font-size:10px;color:#666;margin-top:4px;">تخصصی</div>
-                </div>
-                <div style="text-align:center;">
-                    <div style="font-size:22px;">🌟</div>
-                    <div style="font-size:10px;color:#666;margin-top:4px;">مادی + معنوی</div>
-                </div>
+                <div style="text-align:center;"><div style="font-size:22px;">🔒</div><div style="font-size:10px;color:#666;margin-top:4px;">پرداخت امن</div></div>
+                <div style="text-align:center;"><div style="font-size:22px;">⚡</div><div style="font-size:10px;color:#666;margin-top:4px;">فعال‌سازی آنی</div></div>
+                <div style="text-align:center;"><div style="font-size:22px;">🎯</div><div style="font-size:10px;color:#666;margin-top:4px;">تخصصی</div></div>
+                <div style="text-align:center;"><div style="font-size:22px;">🌟</div><div style="font-size:10px;color:#666;margin-top:4px;">مادی + معنوی</div></div>
             </div>
 
-            <button class="btn" id="btn-pay" style="background:linear-gradient(135deg,#1a6b52,#0f4c3a); font-size:17px; padding:18px;">
-                💳 پرداخت و شروع مشاوره
-            </button>
+            <button class="btn" id="btn-pay" style="background:linear-gradient(135deg,#1a6b52,#0f4c3a); font-size:17px; padding:18px;">💳 پرداخت و شروع مشاوره</button>
 
-            <p style="font-size:11px;color:#888;margin-top:12px;text-align:center;line-height:1.8;">
-                با کلیک روی این دکمه، شرایط استفاده را می‌پذیرید.<br>
-                🔒 اطلاعات شما نزد ما محرمانه است.
-            </p>
-        
+            <p style="font-size:11px;color:#888;margin-top:12px;text-align:center;line-height:1.8;">با کلیک روی این دکمه، شرایط استفاده را می‌پذیرید.<br>🔒 اطلاعات شما نزد ما محرمانه است.</p>
         </div>
 
-        <!-- صفحه سوالات -->
         <div id="screen-questions" class="hidden">
             <div class="badge-row" id="visit-badges"></div>
-
             <div class="time-notice">
                 <div class="icon">⏰</div>
-                <div class="text">
-                    این مشاوره حدود <strong>۱۵ دقیقه</strong> زمان می‌برد.<br>
-                    لطفاً با حوصله پاسخ دهید تا تشخیص دقیق‌تری دریافت کنید.
-                </div>
+                <div class="text">این مشاوره حدود <strong>۱۵ دقیقه</strong> زمان می‌برد.<br>لطفاً با حوصله پاسخ دهید تا تشخیص دقیق‌تری دریافت کنید.</div>
             </div>
-
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress" style="width:0%"></div>
-            </div>
+            <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
             <div style="text-align:center;font-size:13px;color:#888;margin-bottom:16px;" id="progress-text"></div>
             <div class="question" id="question-text"></div>
             <div id="answer-area"></div>
@@ -603,13 +214,9 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
                 <button class="btn btn-prev" id="btn-prev">→ سوال قبلی</button>
                 <button class="btn" id="btn-next">تأیید و ادامه ←</button>
             </div>
-
-            <button class="support-btn" id="btn-support">
-                💬 ارتباط با پشتیبان
-            </button>
+            <button class="support-btn" id="btn-support">💬 ارتباط با پشتیبان</button>
         </div>
 
-        <!-- صفحه پردازش -->
         <div id="screen-loading" class="hidden">
             <div class="status">
                 <div class="spinner"></div>
@@ -618,7 +225,6 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
             </div>
         </div>
 
-        <!-- صفحه نتیجه -->
         <div id="screen-result" class="hidden">
             <div style="text-align:center;margin-bottom:20px;">
                 <div style="font-size:48px;">✅</div>
@@ -626,20 +232,16 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
             </div>
             <div class="report" id="report-text"></div>
             <button class="btn" id="btn-pdf" style="background:linear-gradient(135deg, #dc2626, #b91c1c); margin-top:20px;">📥 دانلود تحلیل (PDF)</button>
-            <button class="feedback-btn" id="btn-feedback">
-                💬 ارسال نظرات، انتقادات و پیشنهادات
-            </button>
+            <button class="feedback-btn" id="btn-feedback">💬 ارسال نظرات، انتقادات و پیشنهادات</button>
             <button class="btn btn-prev" id="btn-restart" style="margin-top:10px;">🔄 مشاوره جدید</button>
         </div>
     </div>
 </div>
 
-<!-- Modal نظرات -->
 <div class="modal-overlay" id="feedback-modal">
     <div class="modal">
         <h3>💬 نظرات و پیشنهادات شما</h3>
         <p>نظر شما برای بهبود کیفیت ربات دکتر حکیم بسیار ارزشمند است.</p>
-
         <label>نوع پیام:</label>
         <select id="feedback-type">
             <option value="پیشنهاد">💡 پیشنهاد</option>
@@ -647,12 +249,9 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
             <option value="شکایت">😞 شکایت</option>
             <option value="تعریف">👏 تعریف و تشکر</option>
         </select>
-
         <label>متن پیام:</label>
         <textarea id="feedback-text" rows="5" placeholder="نظر خود را اینجا بنویسید..."></textarea>
-
         <div class="error" id="feedback-error"></div>
-
         <div class="modal-buttons">
             <button class="btn btn-cancel" id="feedback-cancel">انصراف</button>
             <button class="btn btn-submit" id="feedback-submit">📤 ارسال</button>
@@ -661,7 +260,6 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
 </div>
 
 <script>
-    let globalVisitId = null;
 var SUPPORT_BOT = "TebAI_Help_bot";
 var API = window.location.origin;
 let state = { 
@@ -693,7 +291,76 @@ function toPersianNum(n) {
     return String(n).replace(/\d/g, function(d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; });
 }
 
-// ✅ ثبت‌نام - نسخه اصلاح شده
+// ===== تبدیل Markdown به HTML =====
+function markdownToHtml(md) {
+    let html = md;
+    
+    // تبدیل جدول‌های Markdown
+    html = html.replace(/((?:^\|.*\|\s*$\n?)+)/gm, function(tableBlock) {
+        const lines = tableBlock.trim().split('\n').filter(l => l.trim());
+        if (lines.length < 2) return tableBlock;
+        
+        const headers = lines[0].split('|').map(h => h.trim()).filter(h => h);
+        const dataLines = lines.slice(2);
+        
+        let tableHtml = '<table><thead><tr>';
+        headers.forEach(h => tableHtml += '<th>' + h + '</th>');
+        tableHtml += '</tr></thead><tbody>';
+        
+        dataLines.forEach(line => {
+            const cells = line.split('|').map(c => c.trim()).filter((c, i, arr) => !(i === 0 && c === '') && !(i === arr.length - 1 && c === ''));
+            if (cells.length > 0) {
+                tableHtml += '<tr>';
+                cells.forEach(c => tableHtml += '<td>' + c + '</td>');
+                tableHtml += '</tr>';
+            }
+        });
+        
+        tableHtml += '</tbody></table>';
+        return tableHtml;
+    });
+    
+    // تیترها
+    html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+    html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+    html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+    
+    // بولد
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    
+    // خط جداکننده
+    html = html.replace(/^---$/gm, '<hr>');
+    
+    // خط جدید
+    html = html.replace(/\n/g, '<br>');
+    
+    // جایگزینی امضای متنی با تصویر SVG
+    const signatureHtml = `
+<div class="dr-signature">
+    <svg viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="sigGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#0f4c3a;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#4ade80;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+        <path d="M 20,50 Q 40,20 60,45 T 100,40 Q 120,50 140,35 T 180,45 Q 200,30 220,50 T 260,40" stroke="url(#sigGrad)" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M 30,60 Q 80,55 130,62 T 230,58" stroke="url(#sigGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <text x="150" y="35" font-family="'Dancing Script', cursive, Tahoma" font-size="22" fill="#0f4c3a" text-anchor="middle" font-weight="bold">Dr. Hakim</text>
+        <text x="150" y="75" font-family="Tahoma" font-size="10" fill="#666" text-anchor="middle">دستیار هوشمند طب سنتی و اسلامی</text>
+    </svg>
+    <div class="name">🖋️ امضای دکتر حکیم</div>
+    <div class="contact">📞 پشتیبانی: bale.ir/TebAI_Help_bot</div>
+</div>`;
+    
+    // اصلاح: حذف <br> اضافی بعد از تگ‌های بلوکی
+    html = html.replace(/<\/(table|h1|h2|h3|hr)><br>/g, '</$1>');
+    html = html.replace(/<hr><br>/g, '<hr>');
+    
+    return html;
+}
+
+// ثبت‌نام
 document.getElementById('btn-register').addEventListener('click', function() {
     var name = document.getElementById('reg-name').value.trim();
     var phone = document.getElementById('reg-phone').value.trim();
@@ -702,7 +369,6 @@ document.getElementById('btn-register').addEventListener('click', function() {
     if (!name || name.length < 3) { showError('reg-error', 'لطفاً نام معتبر وارد کنید'); return; }
     if (!/^09\d{9}$/.test(phone)) { showError('reg-error', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود'); return; }
 
-    // کد بررسی زرین‌پال
     let reviewCode = "";
     const userInput = prompt("لطفاً کد بررسی را وارد کنید (فقط برای زرین‌پال):");
     if (userInput === "ZARINPAL-REVIEW-1403") {
@@ -723,7 +389,6 @@ document.getElementById('btn-register').addEventListener('click', function() {
         return res.json();
     })
     .then(function(data) {
-        // ذخیره اطلاعات در state و sessionStorage
         state.userId = data.user_id;
         state.visitId = data.visit_id;
         state.referralCode = data.referral_code;
@@ -746,22 +411,14 @@ document.getElementById('btn-register').addEventListener('click', function() {
     });
 });
 
-// پرداخت
 document.getElementById('btn-pay').addEventListener('click', function() {
-    alert(
-        '⚠️ درگاه پرداخت در حال راه‌اندازی است.\n\n' +
-        'به زودی می‌توانید از خدمات پرداخت آنلاین استفاده کنید.\n\n' +
-        'در حال حاضر، لطفاً با پشتیبانی تماس بگیرید:\n' +
-        '📞 bale.ir/' + SUPPORT_BOT
-    );
+    alert('⚠️ درگاه پرداخت در حال راه‌اندازی است.\n\nبه زودی می‌توانید از خدمات پرداخت آنلاین استفاده کنید.\n\nدر حال حاضر، لطفاً با پشتیبانی تماس بگیرید:\n📞 bale.ir/' + SUPPORT_BOT);
 });
 
-// دکمه پشتیبان
 document.getElementById('btn-support').addEventListener('click', function() {
     window.open('https://ble.ir/' + SUPPORT_BOT, '_blank');
 });
 
-// ✅ بارگذاری سوالات - با fallback از sessionStorage
 function loadQuestions() {
     const visitId = state.visitId || sessionStorage.getItem('visitId');
     if (!visitId || visitId === 'undefined' || visitId === 'null') {
@@ -784,8 +441,8 @@ function loadQuestions() {
     .catch(function(e) { alert('خطا در دریافت سوالات: ' + e.message); });
 }
 
-function renderQuestion() {    
-if (!state.questions || state.questions.length === 0) {
+function renderQuestion() {
+    if (!state.questions || state.questions.length === 0) {
         console.error('❌ سوالات لود نشده!');
         alert('⚠️ خطا: سوالات لود نشدند. لطفاً صفحه را رفرش کنید.');
         return;
@@ -858,7 +515,6 @@ if (!state.questions || state.questions.length === 0) {
     }, 300);
 }
 
-// ✅ دکمه بعدی - با fallback از sessionStorage
 document.getElementById('btn-next').addEventListener('click', async function() {
     var q = state.questions[state.currentIndex];
     var answer = null;
@@ -913,7 +569,6 @@ document.getElementById('btn-next').addEventListener('click', async function() {
     }
 });
 
-// دکمه قبلی
 document.getElementById('btn-prev').addEventListener('click', function() {
     if (state.currentIndex > 0) {
         state.currentIndex--;
@@ -921,7 +576,6 @@ document.getElementById('btn-prev').addEventListener('click', function() {
     }
 });
 
-// ✅ تکمیل ویزیت - با fallback از sessionStorage
 function completeVisit() {
     show('screen-loading');
     const visitId = state.visitId || sessionStorage.getItem('visitId');
@@ -946,18 +600,15 @@ function completeVisit() {
     });
 }
 
-// دانلود PDF
 document.getElementById('btn-pdf').addEventListener('click', function() {
     window.print();
 });
 
-// شروع مجدد
 document.getElementById('btn-restart').addEventListener('click', function() {
     sessionStorage.clear();
     location.reload();
 });
 
-// Modal نظرات
 var feedbackModal = document.getElementById('feedback-modal');
 
 document.getElementById('btn-feedback').addEventListener('click', function() {
@@ -1014,79 +665,6 @@ feedbackModal.addEventListener('click', function(e) {
         feedbackModal.classList.remove('show');
     }
 });
-// تبدیل Markdown به HTML (برای جدول‌ها و فرمت‌بندی)
-function markdownToHtml(md) {
-    let html = md;
-    
-    // تبدیل جدول‌های Markdown
-    html = html.replace(/^### (.*$)/gm, '<h3 class="problem-heading">$1</h3>'); {
-        const lines = tableBlock.trim().split('\n').filter(l => l.trim());
-        if (lines.length < 2) return tableBlock;
-        
-        const headers = lines[0].split('|').map(h => h.trim()).filter(h => h);
-        const dataLines = lines.slice(2); // خط دوم جداکننده است
-        
-        let tableHtml = '<table><thead><tr>';
-        headers.forEach(h => tableHtml += '<th>' + h + '</th>');
-        tableHtml += '</tr></thead><tbody>';
-        
-        dataLines.forEach(line => {
-            const cells = line.split('|').map(c => c.trim()).filter((c, i, arr) => !(i === 0 && c === '') && !(i === arr.length - 1 && c === ''));
-            if (cells.length > 0) {
-                tableHtml += '<tr>';
-                cells.forEach(c => tableHtml += '<td>' + c + '</td>');
-                tableHtml += '</tr>';
-            }
-        });
-        
-        tableHtml += '</tbody></table>';
-        return tableHtml;
-    }
-    
-    // تیترها
-    html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-    html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-    html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-    
-    // بولد
-    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    
-    // خط جداکننده
-    html = html.replace(/^---$/gm, '<hr>');
-    
-    // خط جدید
-    html = html.replace(/\n/g, '<br>');
-    // جایگزینی امضای متنی با تصویر امضای زیبا
-const signatureHtml = `
-<div class="dr-signature">
-    <svg viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <linearGradient id="sigGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:#0f4c3a;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#4ade80;stop-opacity:1" />
-            </linearGradient>
-        </defs>
-        <path d="M 20,50 Q 40,20 60,45 T 100,40 Q 120,50 140,35 T 180,45 Q 200,30 220,50 T 260,40"
-              stroke="url(#sigGrad)" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path d="M 30,60 Q 80,55 130,62 T 230,58" stroke="url(#sigGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <text x="150" y="35" font-family="'Dancing Script', cursive, Tahoma" font-size="22" fill="#0f4c3a" text-anchor="middle" font-weight="bold">Dr. Hakim</text>
-        <text x="150" y="75" font-family="Tahoma" font-size="10" fill="#666" text-anchor="middle">دستیار هوشمند طب سنتی و اسلامی</text>
-    </svg>
-    <div class="name">🖋️ امضای دکتر حکیم</div>
-    <div class="contact">📞 پشتیبانی: bale.ir/TebAI_Help_bot</div>
-</div>
-`;
-
-// جایگزینی الگوی امضای متنی با تصویر SVG
-html = html.replace(/🖋️ \*\*امضای دکتر حکیم\*\*[\s\S]*?(?=<\/|$)/g, signatureHtml);
-html = html.replace(/امضای دکتر حکیم[\s\S]*?bale\.ir\/TebAI_Help_bot/g, signatureHtml);
-    
-    // اصلاح: حذف <br> اضافی بعد از تگ‌های بلوکی
-    html = html.replace(/<\/(table|h1|h2|h3|hr)><br>/g, '</$1>');
-    html = html.replace(/<hr><br>/g, '<hr>');
-    
-    return html;
-}
 </script>
 <div style="position:fixed !important;bottom:0 !important;left:0 !important;right:0 !important;text-align:center !important;font-size:13px !important;padding:12px !important;background:#ffffff !important;box-shadow:0 -2px 10px rgba(0,0,0,0.1) !important;z-index:2147483647 !important;display:block !important;visibility:visible !important;">
   <a href="/terms" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 10px !important;font-weight:bold !important;">📜 قوانین و مقررات</a>
