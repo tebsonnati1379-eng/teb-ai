@@ -285,35 +285,173 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
     font-weight: 700;
 }
 @media print {
-    body { background: #fff !important; padding: 0 !important; margin: 0 !important; display: block !important; }
-    .container { box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; }
-    .header, .badge-row, .progress-bar, #screen-register, #screen-payment, #screen-questions, #screen-loading, #btn-pdf, #btn-restart, #btn-feedback, .support-btn, .time-notice { display: none !important; }
-    #screen-result { display: block !important; padding: 20px !important; }
-    .report { max-height: none !important; overflow: visible !important; border: none !important; border-right: 4px solid #1a6b52 !important; padding: 0 !important; font-size: 13px !important; line-height: 2 !important; background: #fff !important; }
-    h1, h2, h3 { page-break-after: avoid; }
-}
-.dr-signature {
-    text-align: center;
-    margin: 30px 0 20px;
-    padding: 20px;
-    background: linear-gradient(135deg, #f0f9f4, #e8f5e9);
-    border-radius: 16px;
-    border: 2px solid #4ade80;
-}
-.dr-signature svg {
-    max-width: 250px;
-    height: auto;
-}
-.dr-signature .name {
-    font-size: 14px;
-    color: #0f4c3a;
-    font-weight: 700;
-    margin-top: 8px;
-}
-.dr-signature .contact {
-    font-size: 12px;
-    color: #666;
-    margin-top: 6px;
+    /* تنظیمات کلی صفحه */
+    @page {
+        size: A4;
+        margin: 15mm 10mm;
+    }
+    
+    body { 
+        background: #fff !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+        display: block !important; 
+        font-size: 12px !important;
+    }
+    
+    .container { 
+        box-shadow: none !important; 
+        border-radius: 0 !important; 
+        max-width: 100% !important; 
+        width: 100% !important;
+    }
+    
+    /* مخفی کردن صفحات غیرلازم */
+    .header, 
+    .badge-row, 
+    .progress-bar, 
+    #screen-register, 
+    #screen-payment, 
+    #screen-questions, 
+    #screen-loading, 
+    #btn-pdf, 
+    #btn-restart, 
+    #btn-feedback, 
+    .support-btn, 
+    .time-notice,
+    .dr-signature {
+        display: none !important;
+    }
+    
+    /* نمایش صفحه نتیجه */
+    #screen-result { 
+        display: block !important; 
+        padding: 0 !important; 
+    }
+    
+    /* تنظیمات کادر گزارش */
+    .report { 
+        max-height: none !important; 
+        overflow: visible !important; 
+        border: none !important; 
+        padding: 0 !important; 
+        background: #fff !important;
+        font-size: 12px !important;
+        line-height: 1.9 !important;
+        color: #000 !important;
+    }
+    
+    /* ⭐ شروع هر مشکل توی صفحه جدید */
+    .report h3 {
+        page-break-before: always !important;
+        break-before: page !important;
+        padding-top: 20px !important;
+        color: #000 !important;
+        font-size: 15px !important;
+        border-bottom: 2px solid #000 !important;
+        padding-bottom: 8px !important;
+    }
+    
+    /* اولین h3 نباید صفحه جدید بسازه */
+    .report h3:first-of-type {
+        page-break-before: auto !important;
+        break-before: auto !important;
+    }
+    
+    /* هر بخش بزرگ (بخش اول، دوم و...) هم صفحه جدید */
+    .report h1 {
+        page-break-before: always !important;
+        break-before: page !important;
+        color: #000 !important;
+        font-size: 18px !important;
+        text-align: center !important;
+        padding: 15px !important;
+        background: #f0f0f0 !important;
+        border-right: 4px solid #000 !important;
+    }
+    
+    .report h2 {
+        page-break-after: avoid !important;
+        color: #000 !important;
+        font-size: 16px !important;
+        border-bottom: 2px solid #333 !important;
+    }
+    
+    /* جدول‌ها - نمایش واضح و خوانا */
+    .report table {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        width: 100% !important;
+        margin: 12px 0 !important;
+        border: 1px solid #999 !important;
+        box-shadow: none !important;
+        font-size: 11px !important;
+    }
+    
+    .report table th {
+        background: #2e7d32 !important;
+        color: #fff !important;
+        padding: 8px 5px !important;
+        font-size: 11px !important;
+        border: 1px solid #999 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .report table td {
+        padding: 6px 5px !important;
+        font-size: 11px !important;
+        color: #000 !important;
+        background: #fff !important;
+        border: 1px solid #ccc !important;
+    }
+    
+    .report table tbody tr:nth-child(even) td {
+        background: #f5f5f5 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    /* متن‌های bold - کاملاً مشکی */
+    .report strong {
+        color: #000 !important;
+        font-weight: 900 !important;
+    }
+    
+    /* پاراگراف‌ها */
+    .report p, .report li {
+        color: #000 !important;
+        font-size: 12px !important;
+        line-height: 1.9 !important;
+    }
+    
+    /* خطوط جداکننده */
+    .report hr {
+        border: none !important;
+        border-top: 1px dashed #999 !important;
+        background: none !important;
+        margin: 15px 0 !important;
+        height: auto !important;
+    }
+    
+    /* جلوگیری از شکستن متن‌های کوتاه */
+    .report p {
+        orphans: 3;
+        widows: 3;
+    }
+    
+    /* امضا در پایین آخرین صفحه */
+    .dr-signature {
+        display: block !important;
+        page-break-inside: avoid !important;
+        margin-top: 30px !important;
+        background: #f5f5f5 !important;
+        border: 1px solid #999 !important;
+        padding: 15px !important;
+        text-align: center !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
 }
 </style>
 </head>
@@ -873,7 +1011,7 @@ function markdownToHtml(md) {
     let html = md;
     
     // تبدیل جدول‌های Markdown
-    html = html.replace(/((?:^\|.*\|\s*$\n?)+)/gm, function(tableBlock) {
+    html = html.replace(/^### (.*$)/gm, '<h3 class="problem-heading">$1</h3>'); {
         const lines = tableBlock.trim().split('\n').filter(l => l.trim());
         if (lines.length < 2) return tableBlock;
         
