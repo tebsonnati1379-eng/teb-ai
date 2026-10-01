@@ -285,10 +285,18 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
     font-weight: 700;
 }
 @media print {
-    /* تنظیمات کلی صفحه */
+    /* شماره صفحه */
     @page {
-        size: A4;
-        margin: 15mm 10mm;
+        @bottom-center {
+            content: "صفحه " counter(page);
+            font-size: 10px;
+            color: #666;
+            size: A4;
+            margin: 15mm 10mm;
+        }
+    }
+}
+        
     }
     
     body { 
