@@ -638,7 +638,13 @@ function loadQuestions() {
     .catch(function(e) { alert('خطا در دریافت سوالات: ' + e.message); });
 }
 
-function renderQuestion() {
+function renderQuestion() {    
+if (!state.questions || state.questions.length === 0) {
+        console.error('❌ سوالات لود نشده!');
+        alert('⚠️ خطا: سوالات لود نشدند. لطفاً صفحه را رفرش کنید.');
+        return;
+    }
+
     var q = state.questions[state.currentIndex];
     var total = state.questions.length;
     var idx = state.currentIndex;

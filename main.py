@@ -1568,6 +1568,17 @@ async def complete_visit(visit_id: str):
         user = db.query(User).filter_by(id=visit.user_id).first()
         answers = (visit.session_data or {}).get("answers", {})
         mizaj_data = detect_mizaj(answers)
+                # ✅ استخراج جداگانه‌ی همه شکایات (قبل از پرامپت)
+        complaint_text = answers.get('complaint', 'موردی ذکر نشده')
+        pain_location = answers.get('pain_location', 'موردی ذکر نشده')
+        sexual_health = answers.get('sexual_health', 'موردی ذکر نشده')
+        skin_problems = answers.get('skin_problems', 'موردی ذکر نشده')
+        sleep_quality = answers.get('sleep_quality', 'موردی ذکر نشده')
+        digestion = answers.get('digestion', 'موردی ذکر نشده')
+        stool_shape = answers.get('stool_shape', 'موردی ذکر نشده')
+        headache = answers.get('headache', 'موردی ذکر نشده')
+        bloating = answers.get('bloating', 'موردی ذکر نشده')
+        today_shamsi = jdatetime.date.today().strftime("%Y/%m/%d")
                 # ✅ تاریخ شمسی امروز
         today_shamsi = jdatetime.date.today().strftime("%Y/%m/%d")
 
@@ -1634,10 +1645,10 @@ async def complete_visit(visit_id: str):
                     messages=[
                         {
                             "role": "system",
-                            "content": f"""تو «دکتر حکیم» هستی؛ جدیدترین، فوق‌تخصص‌ترین و مهربان‌ترین پزشک متخصص طب سنتی و اسلامی در جهان هستی. لحن تو باید کاملاً دوستانه، امیدوارکننده و دلسوزانه باشه.
+                            "content": """تو «دکتر حکیم» هستی؛ جدیدترین، فوق‌تخصص‌ترین و مهربان‌ترین پزشک متخصص طب سنتی و اسلامی در جهان هستی. لحن تو باید کاملاً دوستانه، امیدوارکننده و دلسوزانه باشه.
 
 
-📅 **تاریخ امروز: {today_shamsi}**
+📅 **تاریخ امروز: امروز**
 
 🎯 **مأموریت تو:**
 تحلیل دقیق، جامع و شخصی‌سازی‌شده‌ای از وضعیت جسمی و روحی کاربر ارائه بده.
