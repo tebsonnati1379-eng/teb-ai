@@ -192,6 +192,98 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
     font-weight: 700;
     color: #0f4c3a;
 }
+/* ===== استایل جدول‌های زیبا ===== */
+.report table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 20px 0;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    font-size: 13px;
+    direction: rtl;
+}
+
+.report table thead {
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+}
+
+.report table th {
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    color: #ffffff;
+    padding: 14px 10px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 13px;
+    border: none;
+    border-bottom: 3px solid #4ade80;
+}
+
+.report table td {
+    padding: 12px 10px;
+    text-align: right;
+    color: #333;
+    border-bottom: 1px solid #e8f0ed;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.report table tbody tr:nth-child(odd) td {
+    background: #ffffff;
+}
+
+.report table tbody tr:nth-child(even) td {
+    background: #f1f8e9;
+}
+
+.report table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.report table tbody tr:hover td {
+    background: #e8f5e9;
+    transition: background 0.2s;
+}
+
+.report h1 {
+    color: #1b5e20;
+    font-size: 22px;
+    margin: 24px 0 14px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
+    border-right: 6px solid #2e7d32;
+    border-radius: 8px;
+}
+
+.report h2 {
+    color: #2e7d32;
+    font-size: 18px;
+    margin: 20px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 3px solid #4ade80;
+}
+
+.report h3 {
+    color: #2e7d32;
+    font-size: 16px;
+    margin: 16px 0 10px;
+    padding-right: 10px;
+    border-right: 4px solid #81c784;
+}
+
+.report hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #4ade80, transparent);
+    margin: 24px 0;
+}
+
+.report strong {
+    color: #1b5e20;
+    font-weight: 700;
+}
 @media print {
     body { background: #fff !important; padding: 0 !important; margin: 0 !important; display: block !important; }
     .container { box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; }
@@ -199,6 +291,29 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
     #screen-result { display: block !important; padding: 20px !important; }
     .report { max-height: none !important; overflow: visible !important; border: none !important; border-right: 4px solid #1a6b52 !important; padding: 0 !important; font-size: 13px !important; line-height: 2 !important; background: #fff !important; }
     h1, h2, h3 { page-break-after: avoid; }
+}
+.dr-signature {
+    text-align: center;
+    margin: 30px 0 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f9f4, #e8f5e9);
+    border-radius: 16px;
+    border: 2px solid #4ade80;
+}
+.dr-signature svg {
+    max-width: 250px;
+    height: auto;
+}
+.dr-signature .name {
+    font-size: 14px;
+    color: #0f4c3a;
+    font-weight: 700;
+    margin-top: 8px;
+}
+.dr-signature .contact {
+    font-size: 12px;
+    color: #666;
+    margin-top: 6px;
 }
 </style>
 </head>
@@ -789,6 +904,30 @@ function markdownToHtml(md) {
     
     // خط جدید
     html = html.replace(/\n/g, '<br>');
+    // جایگزینی امضای متنی با تصویر امضای زیبا
+const signatureHtml = `
+<div class="dr-signature">
+    <svg viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="sigGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#0f4c3a;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#4ade80;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+        <path d="M 20,50 Q 40,20 60,45 T 100,40 Q 120,50 140,35 T 180,45 Q 200,30 220,50 T 260,40"
+              stroke="url(#sigGrad)" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M 30,60 Q 80,55 130,62 T 230,58" stroke="url(#sigGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <text x="150" y="35" font-family="'Dancing Script', cursive, Tahoma" font-size="22" fill="#0f4c3a" text-anchor="middle" font-weight="bold">Dr. Hakim</text>
+        <text x="150" y="75" font-family="Tahoma" font-size="10" fill="#666" text-anchor="middle">دستیار هوشمند طب سنتی و اسلامی</text>
+    </svg>
+    <div class="name">🖋️ امضای دکتر حکیم</div>
+    <div class="contact">📞 پشتیبانی: bale.ir/TebAI_Help_bot</div>
+</div>
+`;
+
+// جایگزینی الگوی امضای متنی با تصویر SVG
+html = html.replace(/🖋️ \*\*امضای دکتر حکیم\*\*[\s\S]*?(?=<\/|$)/g, signatureHtml);
+html = html.replace(/امضای دکتر حکیم[\s\S]*?bale\.ir\/TebAI_Help_bot/g, signatureHtml);
     
     // اصلاح: حذف <br> اضافی بعد از تگ‌های بلوکی
     html = html.replace(/<\/(table|h1|h2|h3|hr)><br>/g, '</$1>');
