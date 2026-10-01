@@ -1823,7 +1823,7 @@ async def complete_visit(visit_id: str):
             print(f"❌ خطا در AI: {e}")
             fallback = []
             fallback.append(
-                f"سلام {answers.get('name', user.name)} عزیز، تحلیل شما آماده است:\n"
+                f"سلام {answers.get('name', user.name)} عزیز،نسخه شما آماده است:\n"
             )
             fallback.append(
                 f"🔥 مزاج غالب: {mizaj_data['mizaj']} ({mizaj_data['hot_cold']} و {mizaj_data['wet_dry']})"
@@ -1917,8 +1917,8 @@ async def complete_visit(visit_id: str):
         await manager.send(
             str(user.id),
             {
-                "title": "✅ تحلیل آماده شد",
-                "message": f"تحلیل ویزیت #{visit.visit_number} شما آماده است.",
+                "title": "✅نسخه شما آماده شد",
+                "message": f"نسخه ویزیت #{visit.visit_number} شما آماده است.",
             },
         )
 
