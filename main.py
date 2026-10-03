@@ -613,6 +613,16 @@ def contact_page():
     return FileResponse("contact.html")
 
 
+@app.get("/about")
+def about_page():
+    return FileResponse("about.html")
+
+
+@app.get("/faq")
+def faq_page():
+    return FileResponse("faq.html")
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
