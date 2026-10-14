@@ -10,12 +10,13 @@ import uuid
 import secrets
 import io
 import jdatetime
+import requests
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
 
-from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -1958,6 +1959,99 @@ async def complete_visit(visit_id: str):
         db.close()
 
 
+# ============================================================
+# درگاه پرداخت زرین‌پال
+# ============================================================
+ZARINPAL_MERCHANT_ID = os.getenv("ZARINPAL_MERCHANT_ID", "")
+ZARINPAL_REQUEST_URL = "https://payment.zarinpal.com/pg/v4/payment/request.json"
+ZARINPAL_VERIFY_URL = "https://payment.zarinpal.com/pg/v4/payment/verify.json"
+ZARINPAL_STARTPAY_URL = "https://payment.zarinpal.com/pg/StartPay/"
+
+class PaymentRequest(BaseModel):
+    visit_id: str
+    amount: int = 100000
+    description: str = "ویزیت دکتر حکیم - تحلیل مزاج"
+
+@app.post("/payment/request")
+async def create_payment(payment: PaymentRequest):
+    callback_url = "https://drhakimai.ir/payment/verify"
+    
+    payload = {
+        "merchant_id": ZARINPAL_MERCHANT_ID,
+        "amount": payment.amount * 10,  # تبدیل تومان به ریال
+        "description": payment.description,
+        "callback_url": callback_url,
+    }
+    
+    try:
+        response = requests.post(
+            ZARINPAL_REQUEST_URL,
+            json=payload,
+            headers={"Content-Type": "application/json", "Accept": "application/json"},
+            timeout=15
+        )
+        result = response.json()
+        
+        if result.get("data") and result["data"].get("code") == 100:
+            authority = result["data"]["authority"]
+            payment_url = f"{ZARINPAL_STARTPAY_URL}{authority}"
+            return {"success": True, "payment_url": payment_url, "authority": authority}
+        else:
+            error_msg = result.get("errors", [{}])[0].get("message", "خطای ناشناخته")
+            return {"success": False, "error": error_msg}
+    except Exception as e:
+        return {"success": False, "error": f"خطا در ارتباط: {str(e)}"}
+
+@app.get("/payment/verify")
+async def verify_payment(request: Request):
+    authority = request.query_params.get("Authority")
+    status = request.query_params.get("Status")
+    
+    if status != "OK" or not authority:
+        return HTMLResponse(content="<h2>❌ پرداخت ناموفق بود</h2><a href='/chat'>بازگشت</a>", status_code=400)
+    
+    payload = {
+        "merchant_id": ZARINPAL_MERCHANT_ID,
+        "amount": 100000 * 10,
+        "authority": authority
+    }
+    
+    try:
+        response = requests.post(
+            ZARINPAL_VERIFY_URL,
+            json=payload,
+            headers={"Content-Type": "application/json", "Accept": "application/json"},
+            timeout=15
+        )
+        result = response.json()
+        
+        if result.get("data") and result["data"].get("code") in [100, 101]:
+            ref_id = result["data"].get("ref_id")
+            # به‌روزرسانی وضعیت پرداخت
+            db = SessionLocal()
+            try:
+                visit = db.query(Visit).filter_by(payment_ref=authority).first()
+                if visit:
+                    visit.payment_status = "paid"
+                    visit.payment_ref = str(ref_id)
+                    db.commit()
+            finally:
+                db.close()
+            
+            return HTMLResponse(content=f"""
+                <html dir="rtl"><body style="font-family:Tahoma;text-align:center;padding:50px;">
+                <h1 style="color:#0f4c3a;">✅ پرداخت با موفقیت انجام شد</h1>
+                <p style="font-size:18px;">شماره پیگیری: <b>{ref_id}</b></p>
+                <p>حالا می‌تونید به صفحه چت برگردید و سوالات رو پاسخ بدید.</p>
+                <a href="/chat" style="display:inline-block;margin-top:20px;padding:14px 28px;background:#0f4c3a;color:#fff;text-decoration:none;border-radius:10px;">بازگشت به سایت</a>
+                </body></html>
+            """)
+        else:
+            error_msg = result.get("errors", [{}])[0].get("message", "خطا در تایید")
+            return HTMLResponse(content=f"<h2>❌ تایید ناموفق</h2><p>{error_msg}</p>", status_code=400)
+    except Exception as e:
+        return HTMLResponse(content=f"<h2>خطا در ارتباط با درگاه</h2><p>{str(e)}</p>", status_code=500)
+    
 # ============================================================
 # نظرات
 # ============================================================

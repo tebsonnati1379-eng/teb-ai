@@ -438,8 +438,35 @@ document.getElementById('btn-register').addEventListener('click', function() {
     });
 });
 
-document.getElementById('btn-pay').addEventListener('click', function() {
-    alert('⚠️ درگاه پرداخت در حال راه‌اندازی است.\n\nبه زودی می‌توانید از خدمات پرداخت آنلاین استفاده کنید.\n\nدر حال حاضر، لطفاً با پشتیبانی تماس بگیرید:\n📞 bale.ir/' + SUPPORT_BOT);
+document.getElementById('btn-pay').addEventListener('click', async function() {
+    var btn = document.getElementById('btn-pay');
+    btn.disabled = true;
+    btn.textContent = 'در حال اتصال به درگاه...';
+    
+    try {
+        var res = await fetch(API + '/payment/request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                visit_id: state.visitId,
+                amount: 100000,
+                description: 'ویزیت دکتر حکیم - تحلیل مزاج'
+            })
+        });
+        var data = await res.json();
+        
+        if (data.success && data.payment_url) {
+            window.location.href = data.payment_url;
+        } else {
+            alert('خطا در ایجاد پرداخت: ' + (data.error || 'خطای ناشناخته'));
+            btn.disabled = false;
+            btn.textContent = '💳 پرداخت و شروع مشاوره';
+        }
+    } catch (e) {
+        alert('خطا در ارتباط با سرور: ' + e.message);
+        btn.disabled = false;
+        btn.textContent = '💳 پرداخت و شروع مشاوره';
+    }
 });
 
 document.getElementById('btn-support').addEventListener('click', function() {
