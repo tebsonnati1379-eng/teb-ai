@@ -1974,7 +1974,7 @@ class PaymentRequest(BaseModel):
 
 @app.post("/payment/request")
 async def create_payment(payment: PaymentRequest):
-    callback_url = "https://pay.drhakimai.ir/payment/verify"
+    callback_url = "https://drhakimai.ir/payment/verify"
     
     payload = {
         "merchant_id": ZARINPAL_MERCHANT_ID,
