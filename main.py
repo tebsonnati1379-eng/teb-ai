@@ -1978,7 +1978,7 @@ async def create_payment(payment: PaymentRequest):
     
     payload = {
         "merchant_id": ZARINPAL_MERCHANT_ID,
-        "amount": payment.amount * 10,  # تبدیل تومان به ریال
+        "amount": payment.amount * 10, 
         "description": payment.description,
         "callback_url": callback_url,
     }
@@ -1995,6 +1995,19 @@ async def create_payment(payment: PaymentRequest):
         if result.get("data") and result["data"].get("code") == 100:
             authority = result["data"]["authority"]
             payment_url = f"{ZARINPAL_STARTPAY_URL}{authority}"
+            
+            # 🔥 اصلاح حیاتی: ذخیره Authority در دیتابیس
+            db = SessionLocal()
+            try:
+                visit = db.query(Visit).filter_by(id=payment.visit_id).first()
+                if visit:
+                    visit.payment_ref = authority
+                    visit.payment_status = "pending"
+                    db.commit()
+            finally:
+                db.close()
+            # ---------------------------------------------
+            
             return {"success": True, "payment_url": payment_url, "authority": authority}
         else:
             error_msg = result.get("errors", [{}])[0].get("message", "خطای ناشناخته")
@@ -2007,16 +2020,28 @@ async def verify_payment(request: Request):
     authority = request.query_params.get("Authority")
     status = request.query_params.get("Status")
     
+    # ۱. بررسی اولیه وضعیت
     if status != "OK" or not authority:
         return HTMLResponse(content="<h2>❌ پرداخت ناموفق بود</h2><a href='/chat'>بازگشت</a>", status_code=400)
     
-    payload = {
-        "merchant_id": ZARINPAL_MERCHANT_ID,
-        "amount": 100000 * 10,
-        "authority": authority
-    }
-    
+    db = SessionLocal()
     try:
+        # ۲. پیدا کردن ویزیت
+        visit = db.query(Visit).filter_by(payment_ref=authority).first()
+        
+        if not visit:
+            return HTMLResponse(content="<h2>❌ ویزیت یافت نشد</h2><a href='/chat'>بازگشت</a>", status_code=404)
+            
+        # ۳. محاسبه مبلغ واقعی
+        real_amount = visit.final_amount * 10 
+        
+        payload = {
+            "merchant_id": ZARINPAL_MERCHANT_ID,
+            "amount": real_amount,
+            "authority": authority
+        }
+        
+        # ۴. ارتباط با زرین‌پال
         response = requests.post(
             ZARINPAL_VERIFY_URL,
             json=payload,
@@ -2025,18 +2050,13 @@ async def verify_payment(request: Request):
         )
         result = response.json()
         
+        # ۵. بررسی نتیجه نهایی
         if result.get("data") and result["data"].get("code") in [100, 101]:
             ref_id = result["data"].get("ref_id")
-            # به‌روزرسانی وضعیت پرداخت
-            db = SessionLocal()
-            try:
-                visit = db.query(Visit).filter_by(payment_ref=authority).first()
-                if visit:
-                    visit.payment_status = "paid"
-                    visit.payment_ref = str(ref_id)
-                    db.commit()
-            finally:
-                db.close()
+            
+            visit.payment_status = "paid"
+            visit.payment_ref = str(ref_id)
+            db.commit()
             
             return HTMLResponse(content=f"""
                 <html dir="rtl"><body style="font-family:Tahoma;text-align:center;padding:50px;">
@@ -2049,8 +2069,12 @@ async def verify_payment(request: Request):
         else:
             error_msg = result.get("errors", [{}])[0].get("message", "خطا در تایید")
             return HTMLResponse(content=f"<h2>❌ تایید ناموفق</h2><p>{error_msg}</p>", status_code=400)
+            
     except Exception as e:
         return HTMLResponse(content=f"<h2>خطا در ارتباط با درگاه</h2><p>{str(e)}</p>", status_code=500)
+    finally:
+        # این بلاک همیشه در آخرین سطح اجرا میشه
+        db.close()
     
 # ============================================================
 # نظرات
