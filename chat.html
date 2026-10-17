@@ -404,7 +404,7 @@ document.getElementById('btn-register').addEventListener('click', function() {
     fetch(API + '/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name, phone: phone, referral_code: ref, review_code: reviewCode })
+        body: JSON.stringify({ name: name, phone: phone, referral_code: ref, review_code: "" })
     })
     .then(function(res) {
         if (!res.ok) throw new Error('خطا در ارتباط با سرور');
