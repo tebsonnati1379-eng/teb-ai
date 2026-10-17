@@ -642,7 +642,6 @@ function getTierBadge(tier) {
         'skilled_sage':'<span class="badge badge-warning">🍃 حکیم ماهر</span>',
         'grand_sage':  '<span class="badge badge-warning">🌟 حکیم بزرگ</span>',
         'master_sage': '<span class="badge badge-success">💎 استاد حکیم</span>',
-        // سازگاری با نسخه قدیمی
         'bronze':      '<span class="badge badge-gray">🥉 برنزی</span>',
         'silver':      '<span class="badge badge-info">🥈 نقره‌ای</span>',
         'gold':        '<span class="badge badge-warning">🥇 طلایی</span>',
@@ -709,7 +708,7 @@ document.getElementById('user-modal').addEventListener('click', function(e) {
 });
 
 // ============================================================
-// ویزیت‌ها
+// ویزیت‌ها (آپدیت شده با دکمه تایید دستی)
 // ============================================================
 function loadVisits() {
     var el = document.getElementById('visits-list');
@@ -723,7 +722,7 @@ function loadVisits() {
             return;
         }
         var html = '<table><thead><tr>' +
-            '<th>کاربر</th><th>موبایل</th><th>شماره ویزیت</th><th>وضعیت</th><th>پرداخت</th><th>تاریخ</th>' +
+            '<th>کاربر</th><th>موبایل</th><th>شماره ویزیت</th><th>وضعیت</th><th>پرداخت</th><th>تاریخ</th><th>عملیات</th>' +
             '</tr></thead><tbody>';
         data.forEach(function(v) {
             var statusBadge = v.status === 'completed' 
@@ -734,6 +733,13 @@ function loadVisits() {
                 : v.payment_status === 'free'
                 ? '<span class="badge badge-info">🎁 رایگان</span>'
                 : '<span class="badge badge-warning">⏳ در انتظار</span>';
+            
+            // دکمه تایید دستی فقط برای ویزیت‌های در انتظار نمایش داده می‌شود
+            var actionBtn = '';
+            if (v.payment_status === 'pending' || v.payment_status === 'در انتظار') {
+                actionBtn = '<button class="btn-detail" style="background:#dc2626; padding:4px 10px; font-size:11px;" onclick="approveVisit(\'' + v.id + '\')">✅ تایید دستی</button>';
+            }
+
             html += '<tr>' +
                 '<td><strong>' + v.user_name + '</strong></td>' +
                 '<td style="direction:ltr;text-align:right;">' + v.user_phone + '</td>' +
@@ -741,6 +747,7 @@ function loadVisits() {
                 '<td>' + statusBadge + '</td>' +
                 '<td>' + payBadge + '</td>' +
                 '<td>' + formatDate(v.created_at) + '</td>' +
+                '<td>' + actionBtn + '</td>' +
             '</tr>';
         });
         html += '</tbody></table>';
@@ -749,6 +756,34 @@ function loadVisits() {
     .catch(function() {
         el.innerHTML = '<div class="empty-state">⚠️ خطا در بارگذاری</div>';
     });
+}
+
+// ============================================================
+// تایید دستی ویزیت (ویژه مدیریت)
+// ============================================================
+async function approveVisit(visitId) {
+    if (!confirm('آیا از تایید دستی این پرداخت مطمئن هستید؟ (فقط برای تراکنش‌های موفق زرین‌پال که در سیستم ثبت نشده‌اند استفاده شود)')) return;
+
+    try {
+        const res = await fetch(API + '/admin/visits/update?token=' + state.token, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                visit_id: visitId,
+                payment_status: 'paid',
+                status: 'in_progress'
+            })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert('✅ وضعیت با موفقیت به "پرداخت شده" تغییر یافت.');
+            loadVisits(); // رفرش خودکار جدول
+        } else {
+            alert('❌ خطا: ' + (data.detail || 'مشکلی پیش آمد'));
+        }
+    } catch (e) {
+        alert('خطای شبکه در ارتباط با سرور');
+    }
 }
 
 // ============================================================
@@ -790,7 +825,7 @@ function loadFeedbacks() {
 }
 
 // ============================================================
-// ⭐ باشگاه مشتریان (نسخه جذاب)
+// ⭐ باشگاه مشتریان
 // ============================================================
 function loadLoyalty() {
     var el = document.getElementById('loyalty-content');
@@ -804,9 +839,6 @@ function loadLoyalty() {
     .then(function(data) {
         var html = '';
 
-        // ============================================================
-        // سطوح باشگاه
-        // ============================================================
         html += '<div class="section-card" style="margin-bottom:20px;">';
         html += '<h2>🏆 سطوح باشگاه مشتریان</h2>';
         html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:16px;">';
@@ -834,9 +866,6 @@ function loadLoyalty() {
         html += '<div style="text-align:center;margin-top:20px;font-size:16px;color:#0f4c3a;font-weight:700;">📊 مجموع: ' + total + ' کاربر</div>';
         html += '</div>';
 
-        // ============================================================
-        // تالار افتخارات
-        // ============================================================
         html += '<div class="section-card hall-of-fame">';
         html += '<h2>🏅 تالار افتخارات - کاربران برتر</h2>';
 
