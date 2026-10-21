@@ -7,8 +7,8 @@
 <title>دکتر حکیم — طب سنتی و اسلامی</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tahoma', 'Vazirmatn', sans-serif; }
-body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; direction: rtl; }
-.container { background: #fff; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 100%; max-width: 560px; overflow: hidden; }
+body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; direction: rtl; padding-bottom: 60px; }
+.container { background: #fff; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 100%; max-width: 560px; overflow: hidden; margin-bottom: 50px; }
 .header { background: linear-gradient(135deg, #0f4c3a, #1a6b52); color: white; padding: 28px 24px; text-align: center; }
 .header h1 { font-size: 24px; margin-bottom: 6px; }
 .header p { font-size: 13px; opacity: 0.9; }
@@ -44,17 +44,13 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
 #q-input { width: 100%; padding: 18px 20px; border: 3px solid #1a6b52; border-radius: 14px; font-size: 17px; font-family: inherit; outline: none; background: #f0f9f4; transition: all 0.2s; direction: rtl; text-align: right; font-weight: 600; color: #0f4c3a; }
 #q-input:focus { border-color: #0f4c3a; background: #fff; box-shadow: 0 0 0 5px rgba(26,107,82,0.2); }
 .hint-text { font-size: 13px; color: #1a6b52; margin-top: 10px; padding: 10px 14px; background: #f0f9f4; border-radius: 10px; border-right: 3px solid #4ade80; line-height: 1.6; }
-
 .time-notice { background: linear-gradient(135deg, #fef3c7, #fde68a); border-right: 5px solid #f59e0b; padding: 16px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
 .time-notice .icon { font-size: 32px; }
 .time-notice .text { font-size: 14px; color: #78350f; font-weight: 600; line-height: 1.7; }
-
 .support-btn { background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 20px; transition: all 0.2s; cursor: pointer; border: none; font-family: inherit; width: 100%; }
 .support-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(14,165,233,0.4); }
-
 .feedback-btn { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 14px 20px; border-radius: 12px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px; transition: all 0.2s; cursor: pointer; border: none; font-family: inherit; width: 100%; }
 .feedback-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(139,92,246,0.4); }
-
 .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 20px; }
 .modal-overlay.show { display: flex; }
 .modal { background: #fff; border-radius: 20px; padding: 28px; max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto; }
@@ -87,37 +83,24 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
 /* ===== استایل چاپ (فقط موقع پرینت) ===== */
 @media print {
     @page { size: A4; margin: 15mm 10mm; }
-    
     body { background: #fff !important; padding: 0 !important; margin: 0 !important; display: block !important; font-size: 12px !important; }
     .container { box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; width: 100% !important; }
-    
-    .header, .badge-row, .progress-bar, #screen-register, #screen-payment, 
-    #screen-questions, #screen-loading, #btn-pdf, #btn-restart, #btn-feedback, 
-    .support-btn, .time-notice {
-        display: none !important;
-    }
-    
+    .header, .badge-row, .progress-bar, #screen-register, #screen-payment, #screen-questions, #screen-loading, #btn-pdf, #btn-restart, #btn-feedback, .support-btn, .time-notice { display: none !important; }
     #screen-result { display: block !important; padding: 0 !important; }
-    
     .report { max-height: none !important; overflow: visible !important; border: none !important; padding: 0 !important; background: #fff !important; font-size: 12px !important; line-height: 1.9 !important; color: #000 !important; }
-    
     .report h1 { page-break-before: always !important; break-before: page !important; color: #000 !important; font-size: 18px !important; text-align: center !important; padding: 15px !important; background: #f0f0f0 !important; border-right: 4px solid #000 !important; }
     .report h1:first-of-type { page-break-before: auto !important; }
-    
     .report h2 { page-break-after: avoid !important; color: #000 !important; font-size: 16px !important; border-bottom: 2px solid #333 !important; }
     .report h2:not(:first-of-type) { page-break-before: always !important; break-before: page !important; }
     .report h3 { page-break-before: always !important; break-before: page !important; padding-top: 20px !important; color: #000 !important; font-size: 15px !important; border-bottom: 2px solid #000 !important; padding-bottom: 8px !important; }
-    
     .report table { page-break-inside: avoid !important; break-inside: avoid !important; width: 100% !important; margin: 12px 0 !important; border: 1px solid #999 !important; box-shadow: none !important; font-size: 11px !important; }
     .report table th { background: #2e7d32 !important; color: #fff !important; padding: 8px 5px !important; font-size: 11px !important; border: 1px solid #999 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     .report table td { padding: 6px 5px !important; font-size: 11px !important; color: #000 !important; background: #fff !important; border: 1px solid #ccc !important; }
     .report table tbody tr:nth-child(even) td { background: #f5f5f5 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-    
     .report strong { color: #000 !important; font-weight: 900 !important; }
     .report p, .report li { color: #000 !important; font-size: 12px !important; line-height: 1.9 !important; }
     .report hr { border: none !important; border-top: 1px dashed #999 !important; background: none !important; margin: 15px 0 !important; height: auto !important; }
     .report p { orphans: 3; widows: 3; }
-    
     .dr-signature, .report .dr-signature { display: block !important; page-break-inside: avoid !important; margin-top: 30px !important; background: #f5f5f5 !important; border: 1px solid #999 !important; padding: 15px !important; text-align: center !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }
 </style>
@@ -131,6 +114,7 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
     </div>
 
     <div class="body">
+        <!-- صفحه ثبت‌نام -->
         <div id="screen-register">
             <div class="error" id="reg-error"></div>
             <div class="field">
@@ -145,24 +129,23 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
                 <label>🎁 کد معرفی (اختیاری)</label>
                 <input type="text" id="reg-ref" placeholder="اگر کسی شما را معرفی کرده">
             </div>
-            <!-- نماد اعتماد الکترونیکی (اینماد) -->
-<div style="text-align:center; margin: 20px 0 10px; padding-top: 15px; border-top: 1px dashed #e0e0e0;">
-    <p style="font-size:11px; color:#888; margin-bottom:8px;">🔒 این سایت دارای نماد اعتماد الکترونیکی (اینماد) است</p>
-    <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=8003734&Code=JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl' style="display:inline-block;">
-        <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=8003734&Code=JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl' alt='اینماد' style='cursor:pointer; height:80px; width:auto;' code='JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl'>
-    </a>
-</div>
+            <div style="text-align:center; margin: 20px 0 10px; padding-top: 15px; border-top: 1px dashed #e0e0e0;">
+                <p style="font-size:11px; color:#888; margin-bottom:8px;">🔒 این سایت دارای نماد اعتماد الکترونیکی (اینماد) است</p>
+                <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=8003734&Code=JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl' style="display:inline-block;">
+                    <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=8003734&Code=JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl' alt='اینماد' style='cursor:pointer; height:80px; width:auto;' code='JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl'>
+                </a>
+            </div>
             <button class="btn" id="btn-register">🚀 شروع مشاوره</button>
             <p style="text-align:center;font-size:13px;color:#1a6b52;margin-top:16px;font-weight:600;">🌿 سلامتی شما برای ما ارزشمند است.</p>
         </div>
 
+        <!-- صفحه پرداخت -->
         <div id="screen-payment" class="hidden">
             <div style="text-align:center;padding:10px 0;">
                 <div style="font-size:56px;margin-bottom:12px;">💎</div>
                 <h2 style="color:#0f4c3a;margin-bottom:8px;font-size:22px;">مشاوره تخصصی با دکتر حکیم</h2>
                 <p id="pay-name" style="color:#666;margin-bottom:20px;font-size:14px;"></p>
             </div>
-
             <div style="background:linear-gradient(135deg,#f0f9f4,#e8f5e9);border-radius:16px;padding:20px;margin-bottom:20px;border:2px solid #4ade80;">
                 <div style="font-size:15px;font-weight:900;color:#0f4c3a;margin-bottom:14px;text-align:center;">✨ چه چیزی دریافت می‌کنید؟</div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -172,11 +155,8 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
                     <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>برنامه هفتگی مادی</span></div>
                     <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>برنامه معنوی روزانه</span></div>
                     <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>PDF قابل دانلود</span></div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>دعا و ذکر اختصاصی</span></div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>پشتیبانی کامل</span></div>
                 </div>
             </div>
-
             <div style="background:#fff;border:2px solid #e0e0e0;border-radius:16px;padding:20px;margin-bottom:16px;text-align:center;position:relative;">
                 <div style="position:absolute;top:-14px;right:20px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;">🎁 قیمت معرفی</div>
                 <div style="font-size:15px;color:#888;margin-bottom:6px;"><span style="text-decoration:line-through;">۲۰۰,۰۰۰ تومان</span></div>
@@ -184,7 +164,6 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
                 <div style="font-size:14px;color:#666;margin-top:4px;">تومان</div>
                 <div style="margin-top:12px;font-size:13px;color:#059669;font-weight:700;">💰 ۵۰٪ تخفیف ویژه کاربران اولیه</div>
             </div>
-
             <div style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:14px;padding:16px;margin-bottom:20px;border-right:4px solid #0284c7;">
                 <div style="display:flex;align-items:center;gap:12px;">
                     <div style="font-size:36px;">🛡️</div>
@@ -194,19 +173,11 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
                     </div>
                 </div>
             </div>
-
-            <div style="display:flex;justify-content:space-around;margin-bottom:20px;padding:12px;background:#f5f7f6;border-radius:12px;">
-                <div style="text-align:center;"><div style="font-size:22px;">🔒</div><div style="font-size:10px;color:#666;margin-top:4px;">پرداخت امن</div></div>
-                <div style="text-align:center;"><div style="font-size:22px;">⚡</div><div style="font-size:10px;color:#666;margin-top:4px;">فعال‌سازی آنی</div></div>
-                <div style="text-align:center;"><div style="font-size:22px;">🎯</div><div style="font-size:10px;color:#666;margin-top:4px;">تخصصی</div></div>
-                <div style="text-align:center;"><div style="font-size:22px;">🌟</div><div style="font-size:10px;color:#666;margin-top:4px;">مادی + معنوی</div></div>
-            </div>
-
             <button class="btn" id="btn-pay" style="background:linear-gradient(135deg,#1a6b52,#0f4c3a); font-size:17px; padding:18px;">💳 پرداخت و شروع مشاوره</button>
-
             <p style="font-size:11px;color:#888;margin-top:12px;text-align:center;line-height:1.8;">با کلیک روی این دکمه، شرایط استفاده را می‌پذیرید.<br>🔒 اطلاعات شما نزد ما محرمانه است.</p>
         </div>
 
+        <!-- صفحه سوالات -->
         <div id="screen-questions" class="hidden">
             <div class="badge-row" id="visit-badges"></div>
             <div class="time-notice">
@@ -224,6 +195,7 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
             <button class="support-btn" id="btn-support">💬 ارتباط با پشتیبان</button>
         </div>
 
+        <!-- صفحه لودینگ -->
         <div id="screen-loading" class="hidden">
             <div class="status">
                 <div class="spinner"></div>
@@ -232,6 +204,7 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
             </div>
         </div>
 
+        <!-- صفحه نتیجه -->
         <div id="screen-result" class="hidden">
             <div style="text-align:center;margin-bottom:20px;">
                 <div style="font-size:48px;">✅</div>
@@ -245,6 +218,7 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
     </div>
 </div>
 
+<!-- Modal نظرات -->
 <div class="modal-overlay" id="feedback-modal">
     <div class="modal">
         <h3>💬 نظرات و پیشنهادات شما</h3>
@@ -266,6 +240,33 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
     </div>
 </div>
 
+<!-- Modal پروفایل کاربر -->
+<div class="modal-overlay" id="profile-modal">
+    <div class="modal">
+        <h3>👤 پروفایل شما در باشگاه حکیمان</h3>
+        <div id="profile-content" style="text-align: center; line-height: 2;">
+            در حال بارگذاری...
+        </div>
+        <div class="modal-buttons" style="margin-top:20px;">
+            <button class="btn btn-cancel" id="profile-close">بستن</button>
+        </div>
+    </div>
+</div>
+
+<!-- فوتر لینک‌ها -->
+<div style="position:fixed !important;bottom:0 !important;left:0 !important;right:0 !important;text-align:center !important;font-size:13px !important;padding:12px !important;background:#ffffff !important;box-shadow:0 -2px 10px rgba(0,0,0,0.1) !important;z-index:2147483647 !important;display:block !important;visibility:visible !important;">
+  <button onclick="openProfileModal()" style="background:none; border:none; color:#0f4c3a !important; margin:0 8px !important; font-weight:bold !important; font-family:inherit; font-size:13px; cursor:pointer; padding:0;">👤 پروفایل شما در باشگاه حکیمان</button>
+  <span style="color:#aaa !important;">|</span>
+  <a href="/terms" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">📜 قوانین و مقررات</a>
+  <span style="color:#aaa !important;">|</span>
+  <a href="/contact" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">📞 تماس با ما</a>
+  <span style="color:#aaa !important;">|</span>
+  <a href="/about" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">🌿 درباره ما</a>
+  <span style="color:#aaa !important;">|</span>
+  <a href="/faq" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">❓ سوالات متداول</a>
+</div>
+
+<!-- اسکریپت‌ها (باید در انتهای فایل باشد) -->
 <script>
 var SUPPORT_BOT = "TebAI_Help_bot";
 var API = window.location.origin;
@@ -277,6 +278,27 @@ let state = {
     answers: {},
     referralCode: null
 };
+
+// ============================================================
+// هدایت خودکار کاربر بعد از پرداخت (رفع مشکل فرم ثبت‌نام)
+// ============================================================
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlVisitId = urlParams.get('visit_id');
+    
+    if (urlVisitId) {
+        console.log("✅ کاربر از درگاه برگشته است. انتقال مستقیم به سوالات...");
+        state.visitId = urlVisitId;
+        sessionStorage.setItem('visitId', urlVisitId);
+        
+        const regScreen = document.getElementById('screen-register');
+        if (regScreen) regScreen.classList.add('hidden');
+        
+        if (typeof loadQuestions === 'function') {
+            loadQuestions();
+        }
+    }
+});
 
 function show(screenId) {
     var screens = ['screen-register', 'screen-payment', 'screen-questions', 'screen-loading', 'screen-result'];
@@ -301,19 +323,14 @@ function toPersianNum(n) {
 // ===== تبدیل Markdown به HTML =====
 function markdownToHtml(md) {
     let html = md;
-    
-    // تبدیل جدول‌های Markdown
     html = html.replace(/((?:^\|.*\|\s*$\n?)+)/gm, function(tableBlock) {
         const lines = tableBlock.trim().split('\n').filter(l => l.trim());
         if (lines.length < 2) return tableBlock;
-        
         const headers = lines[0].split('|').map(h => h.trim()).filter(h => h);
         const dataLines = lines.slice(2);
-        
         let tableHtml = '<table><thead><tr>';
         headers.forEach(h => tableHtml += '<th>' + h + '</th>');
         tableHtml += '</tr></thead><tbody>';
-        
         dataLines.forEach(line => {
             const cells = line.split('|').map(c => c.trim()).filter((c, i, arr) => !(i === 0 && c === '') && !(i === arr.length - 1 && c === ''));
             if (cells.length > 0) {
@@ -322,26 +339,16 @@ function markdownToHtml(md) {
                 tableHtml += '</tr>';
             }
         });
-        
         tableHtml += '</tbody></table>';
         return tableHtml;
     });
-    
-    // تیترها
     html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
     html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
     html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-    
-    // بولد
     html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    
-    // خط جداکننده
     html = html.replace(/^---$/gm, '<hr>');
-    
-    // خط جدید
     html = html.replace(/\n/g, '<br>');
     
-            // ===== حذف خطوط امضای متنی AI و اضافه کردن SVG =====
     const signatureHtml = `
 <div class="dr-signature">
     <svg viewBox="0 0 400 140" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
@@ -364,7 +371,6 @@ function markdownToHtml(md) {
     <div style="margin-top:10px;font-size:12px;color:#666;font-weight:600;">📞 پشتیبانی: bale.ir/TebAI_Help_bot</div>
 </div>`;
 
-    // حذف خطوط امضای متنی AI (روش line-by-line)
     const reportLines = html.split(/<br\s*\/?>/i);
     const cleanedLines = reportLines.filter(function(line) {
         const plainText = line.replace(/<[^>]*>/g, '').trim();
@@ -376,14 +382,9 @@ function markdownToHtml(md) {
         return true;
     });
     html = cleanedLines.join('<br>');
-
-    // همیشه امضای SVG رو در آخر اضافه کن
     html = html + signatureHtml;
-
-    // حذف <br> اضافی
     html = html.replace(/<\/(table|h1|h2|h3|hr)><br>/g, '</$1>');
     html = html.replace(/<hr><br>/g, '<hr>');
-
     return html;
 }
 
@@ -395,7 +396,6 @@ document.getElementById('btn-register').addEventListener('click', function() {
 
     if (!name || name.length < 3) { showError('reg-error', 'لطفاً نام معتبر وارد کنید'); return; }
     if (!/^09\d{9}$/.test(phone)) { showError('reg-error', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود'); return; }
-
 
     var btn = document.getElementById('btn-register');
     btn.disabled = true;
@@ -658,17 +658,17 @@ document.getElementById('btn-restart').addEventListener('click', function() {
     location.reload();
 });
 
+// ============================================================
+// نظرات
+// ============================================================
 var feedbackModal = document.getElementById('feedback-modal');
-
 document.getElementById('btn-feedback').addEventListener('click', function() {
     feedbackModal.classList.add('show');
 });
-
 document.getElementById('feedback-cancel').addEventListener('click', function() {
     feedbackModal.classList.remove('show');
     document.getElementById('feedback-text').value = '';
 });
-
 document.getElementById('feedback-submit').addEventListener('click', async function() {
     var type = document.getElementById('feedback-type').value;
     var text = document.getElementById('feedback-text').value.trim();
@@ -708,119 +708,70 @@ document.getElementById('feedback-submit').addEventListener('click', async funct
         btn.textContent = '📤 ارسال';
     }
 });
-
 feedbackModal.addEventListener('click', function(e) {
     if (e.target === feedbackModal) {
         feedbackModal.classList.remove('show');
     }
 });
+
 // ============================================================
-// هدایت خودکار کاربر بعد از پرداخت به صفحه سوالات
+// پروفایل کاربر (دکمه فوتر)
 // ============================================================
-document.addEventListener("DOMContentLoaded", function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlVisitId = urlParams.get('visit_id');
-    
-    if (urlVisitId) {
-        console.log("✅ کاربر از درگاه برگشته است. انتقال مستقیم به سوالات...");
-        
-        // ذخیره شناسه ویزیت
-        state.visitId = urlVisitId;
-        sessionStorage.setItem('visitId', urlVisitId);
-        
-        // مخفی کردن فرم ثبت‌نام
-        const regScreen = document.getElementById('screen-register');
-        if (regScreen) {
-            regScreen.classList.add('hidden');
-        }
-        
-        // رفتن مستقیم به سوالات
-        if (typeof loadQuestions === 'function') {
-            loadQuestions();
-        }
+async function openProfileModal() {
+    const userId = state.userId || sessionStorage.getItem('userId');
+    const profileModal = document.getElementById('profile-modal');
+    const profileContent = document.getElementById('profile-content');
+
+    if (!profileModal || !profileContent) {
+        console.error("Modal elements not found!");
+        return;
     }
-});
-// --- کدهای مربوط به دکمه پروفایل کاربر ---
-const profileModal = document.getElementById('profile-modal');
-const profileContent = document.getElementById('profile-content');
-const btnProfile = document.getElementById('btn-profile');
 
-if (btnProfile) {
-    btnProfile.addEventListener('click', async function() {
-        const userId = state.userId || sessionStorage.getItem('userId');
-        
-        // اگر کاربر هنوز ثبت‌نام نکرده باشد
-        if (!userId || userId === 'undefined') {
-            alert('👋 برای مشاهده پروفایل، لطفاً ابتدا فرم ثبت‌نام را تکمیل کنید و یک ویزیت را شروع کنید.');
-            return;
-        }
-        
-        profileModal.classList.add('show');
-        profileContent.innerHTML = 'در حال دریافت اطلاعات...';
+    // اگر کاربر هنوز ثبت‌نام نکرده باشد
+    if (!userId || userId === 'undefined') {
+        alert('👋 برای مشاهده پروفایل، لطفاً ابتدا فرم ثبت‌نام را تکمیل کنید و یک ویزیت را شروع کنید.');
+        return;
+    }
+    
+    profileModal.classList.add('show');
+    profileContent.innerHTML = 'در حال دریافت اطلاعات...';
 
-        try {
-            const resLoyalty = await fetch(API + '/users/' + userId + '/loyalty');
-            const dataLoyalty = await resLoyalty.json();
+    try {
+        const resLoyalty = await fetch(API + '/users/' + userId + '/loyalty');
+        const dataLoyalty = await resLoyalty.json();
 
-            const resRef = await fetch(API + '/users/' + userId + '/referrals');
-            const dataRef = await resRef.json();
+        const resRef = await fetch(API + '/users/' + userId + '/referrals');
+        const dataRef = await resRef.json();
 
-            profileContent.innerHTML = `
-                <div style="background:#f0f9f4; padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid #4ade80;">
-                    <p style="margin:0; font-size:14px; color:#666;">کد معرف اختصاصی شما:</p>
-                    <h2 style="margin:5px 0; color:#0f4c3a; letter-spacing:2px;">${dataRef.referral_code}</h2>
-                    <p style="font-size:12px; color:#888;">این کد را به دوستان خود بدهید تا با اولین خرید آن‌ها، به شما پاداش تعلق بگیرد.</p>
-                </div>
-                
-                <div style="background:#fef3c7; padding:15px; border-radius:10px; border:1px solid #f59e0b;">
-                    <p style="margin:0; font-size:14px; color:#666;">سطح فعلی شما:</p>
-                    <h2 style="margin:5px 0; color:#92400e;">${dataLoyalty.icon} ${dataLoyalty.name}</h2>
-                    <p style="margin:0; font-size:13px; color:#78350f;">تخفیف دائمی شما: ${dataLoyalty.discount}٪</p>
-                    <p style="margin:5px 0 0 0; font-size:12px; color:#666;">ویزیت‌های موفق: ${dataLoyalty.completed_visits}</p>
-                </div>
-                
-                ${dataLoyalty.next_tier ? `
-                <div style="margin-top:15px; font-size:13px; color:#0ea5e9;">
-                    🎯 برای رسیدن به سطح <b>${dataLoyalty.next_tier.name}</b> فقط <b>${dataLoyalty.next_tier.visits_needed}</b> ویزیت دیگر نیاز دارید!
-                </div>` : `<div style="margin-top:15px; color:#10b981; font-weight:bold;">شما در بالاترین سطح (استاد حکیم) هستید! 🎉</div>`}
-            `;
-        } catch (e) {
-            profileContent.innerHTML = '<p style="color:red;">خطا در دریافت اطلاعات. لطفاً دوباره تلاش کنید.</p>';
-            console.error(e);
-        }
-    });
-
-    document.getElementById('profile-close').addEventListener('click', function() {
-        profileModal.classList.remove('show');
-    });
+        profileContent.innerHTML = `
+            <div style="background:#f0f9f4; padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid #4ade80;">
+                <p style="margin:0; font-size:14px; color:#666;">کد معرف اختصاصی شما:</p>
+                <h2 style="margin:5px 0; color:#0f4c3a; letter-spacing:2px;">${dataRef.referral_code}</h2>
+                <p style="font-size:12px; color:#888;">این کد را به دوستان خود بدهید تا با اولین خرید آن‌ها، به شما پاداش تعلق بگیرد.</p>
+            </div>
+            
+            <div style="background:#fef3c7; padding:15px; border-radius:10px; border:1px solid #f59e0b;">
+                <p style="margin:0; font-size:14px; color:#666;">سطح فعلی شما:</p>
+                <h2 style="margin:5px 0; color:#92400e;">${dataLoyalty.icon} ${dataLoyalty.name}</h2>
+                <p style="margin:0; font-size:13px; color:#78350f;">تخفیف دائمی شما: ${dataLoyalty.discount}٪</p>
+                <p style="margin:5px 0 0 0; font-size:12px; color:#666;">ویزیت‌های موفق: ${dataLoyalty.completed_visits}</p>
+            </div>
+            
+            ${dataLoyalty.next_tier ? `
+            <div style="margin-top:15px; font-size:13px; color:#0ea5e9;">
+                🎯 برای رسیدن به سطح <b>${dataLoyalty.next_tier.name}</b> فقط <b>${dataLoyalty.next_tier.visits_needed}</b> ویزیت دیگر نیاز دارید!
+            </div>` : `<div style="margin-top:15px; color:#10b981; font-weight:bold;">شما در بالاترین سطح (استاد حکیم) هستید! 🎉</div>`}
+        `;
+    } catch (e) {
+        profileContent.innerHTML = '<p style="color:red;">خطا در دریافت اطلاعات. لطفاً دوباره تلاش کنید.</p>';
+        console.error(e);
+    }
 }
+
+// بستن مدال پروفایل
+document.getElementById('profile-close').addEventListener('click', function() {
+    document.getElementById('profile-modal').classList.remove('show');
+});
 </script>
-<div style="position:fixed !important;bottom:0 !important;left:0 !important;right:0 !important;text-align:center !important;font-size:13px !important;padding:12px !important;background:#ffffff !important;box-shadow:0 -2px 10px rgba(0,0,0,0.1) !important;z-index:2147483647 !important;display:block !important;visibility:visible !important;">
-  
-  <!-- دکمه پروفایل و باشگاه مشتریان -->
-  <button id="btn-profile" style="background:none; border:none; color:#0f4c3a !important; margin:0 8px !important; font-weight:bold !important; font-family:inherit; font-size:13px; cursor:pointer; padding:0;">👤 پروفایل شما در باشگاه حکیمان</button>
-  <span style="color:#aaa !important;">|</span>
-
-  <a href="/terms" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">📜 قوانین و مقررات</a>
-  <span style="color:#aaa !important;">|</span>
-  <a href="/contact" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">📞 تماس با ما</a>
-  <span style="color:#aaa !important;">|</span>
-  <a href="/about" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">🌿 درباره ما</a>
-  <span style="color:#aaa !important;">|</span>
-  <a href="/faq" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">❓ سوالات متداول</a>
-
-</div>
-<!-- Modal پروفایل کاربر -->
-<div class="modal-overlay" id="profile-modal">
-    <div class="modal">
-        <h3>👤 پروفایل شما در باشگاه حکیمان</h3>
-        <div id="profile-content" style="text-align: center; line-height: 2;">
-            در حال بارگذاری...
-        </div>
-        <div class="modal-buttons" style="margin-top:20px;">
-            <button class="btn btn-cancel" id="profile-close">بستن</button>
-        </div>
-    </div>
-</div>
 </body>
 </html>
