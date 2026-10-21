@@ -103,6 +103,69 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
     .report p { orphans: 3; widows: 3; }
     .dr-signature, .report .dr-signature { display: block !important; page-break-inside: avoid !important; margin-top: 30px !important; background: #f5f5f5 !important; border: 1px solid #999 !important; padding: 15px !important; text-align: center !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }
+/* ===== استایل هایلایت‌های باشگاه (با تصویر) ===== */
+.highlights-section {
+    padding: 20px 24px;
+    background: #fff;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 10px;
+    border-radius: 0 0 24px 24px;
+}
+.highlights-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f4c3a;
+    margin-bottom: 15px;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.highlights-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding-bottom: 10px;
+    scrollbar-width: none;
+}
+.highlights-scroll::-webkit-scrollbar { display: none; }
+.highlight-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    min-width: 75px;
+}
+.highlight-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #0f4c3a, #4ade80, #d4af37);
+    padding: 3px;
+    margin-bottom: 6px;
+    transition: transform 0.2s;
+}
+.highlight-circle:hover { transform: scale(1.05); }
+.highlight-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #fff;
+    overflow: hidden;
+}
+.highlight-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.highlight-name {
+    font-size: 11px;
+    color: #333;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.3;
+}
 </style>
 </head>
 <body>
@@ -216,6 +279,48 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
             <button class="btn btn-prev" id="btn-restart" style="margin-top:10px;">🔄 مشاوره جدید</button>
         </div>
     </div>
+            <!-- بخش هایلایت‌های باشگاه (با تصویر) -->
+        <div class="highlights-section">
+            <div class="highlights-title">👑 باشگاه مافیای حکیمان (روی تصاویر کلیک کنید)</div>
+            <div class="highlights-scroll">
+                
+                <div class="highlight-item" onclick="showTierImage('cover.jpg')">
+                    <div class="highlight-circle"><div class="highlight-inner"><img src="cover.jpg" alt="کاور"></div></div>
+                    <div class="highlight-name">قوانین باشگاه</div>
+                </div>
+                
+                <div class="highlight-item" onclick="showTierImage('tier1.jpg')">
+                    <div class="highlight-circle"><div class="highlight-inner"><img src="tier1.jpg" alt="سطح ۱"></div></div>
+                    <div class="highlight-name">تازه‌وارد</div>
+                </div>
+                
+                <div class="highlight-item" onclick="showTierImage('tier2.jpg')">
+                    <div class="highlight-circle"><div class="highlight-inner"><img src="tier2.jpg" alt="سطح ۲"></div></div>
+                    <div class="highlight-name">گیاه‌شناس</div>
+                </div>
+                
+                <div class="highlight-item" onclick="showTierImage('tier3.jpg')">
+                    <div class="highlight-circle"><div class="highlight-inner"><img src="tier3.jpg" alt="سطح ۳"></div></div>
+                    <div class="highlight-name">حکیم جوان</div>
+                </div>
+                
+                <div class="highlight-item" onclick="showTierImage('tier4.jpg')">
+                    <div class="highlight-circle"><div class="highlight-inner"><img src="tier4.jpg" alt="سطح ۴"></div></div>
+                    <div class="highlight-name">حکیم ماهر</div>
+                </div>
+                
+                <div class="highlight-item" onclick="showTierImage('tier5.jpg')">
+                    <div class="highlight-circle"><div class="highlight-inner"><img src="tier5.jpg" alt="سطح ۵"></div></div>
+                    <div class="highlight-name">حکیم بزرگ</div>
+                </div>
+                
+                <div class="highlight-item" onclick="showTierImage('tier6.jpg')">
+                    <div class="highlight-circle"><div class="highlight-inner"><img src="tier6.jpg" alt="سطح ۶"></div></div>
+                    <div class="highlight-name">استاد حکیم</div>
+                </div>
+
+            </div>
+        </div>
 </div>
 
 <!-- Modal نظرات -->
@@ -772,6 +877,28 @@ async function openProfileModal() {
 document.getElementById('profile-close').addEventListener('click', function() {
     document.getElementById('profile-modal').classList.remove('show');
 });
+// ============================================================
+// نمایش تصویر سطوح باشگاه
+// ============================================================
+function showTierImage(imageSrc) {
+    const modal = document.getElementById('tier-modal');
+    const img = document.getElementById('tier-modal-image');
+    img.src = imageSrc;
+    modal.classList.add('show');
+}
+
+function closeTierImage(event) {
+    if (event.target.id === 'tier-modal') {
+        document.getElementById('tier-modal').classList.remove('show');
+    }
+}
 </script>
+<!-- Modal نمایش تصویر سطح باشگاه -->
+<div class="modal-overlay" id="tier-modal" onclick="closeTierImage(event)">
+    <div style="position: relative; max-width: 90vw; max-height: 90vh; display: flex; justify-content: center; align-items: center;">
+        <button style="position: absolute; top: -15px; right: -15px; background: #dc2626; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; font-size: 20px; font-weight: bold; cursor: pointer; z-index: 10;" onclick="document.getElementById('tier-modal').classList.remove('show')">✕</button>
+        <img id="tier-modal-image" src="" style="max-width: 100%; max-height: 85vh; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); object-fit: contain;">
+    </div>
+</div>
 </body>
 </html>
