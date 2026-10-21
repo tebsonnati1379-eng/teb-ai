@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -601,6 +602,7 @@ def check_admin_session(token):
 # FastAPI App
 # ============================================================
 app = FastAPI(title="Teb AI - ربات طب سنتی و اسلامی")
+app.mount("/images", StaticFiles(directory="images"), name="images")
 from fastapi.responses import FileResponse
 
 
