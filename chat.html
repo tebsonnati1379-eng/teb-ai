@@ -740,6 +740,60 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 });
+// --- کدهای مربوط به دکمه پروفایل کاربر ---
+const profileModal = document.getElementById('profile-modal');
+const profileContent = document.getElementById('profile-content');
+const btnProfile = document.getElementById('btn-profile');
+
+if (btnProfile) {
+    btnProfile.addEventListener('click', async function() {
+        const userId = state.userId || sessionStorage.getItem('userId');
+        
+        // اگر کاربر هنوز ثبت‌نام نکرده باشد
+        if (!userId || userId === 'undefined') {
+            alert('👋 برای مشاهده پروفایل، لطفاً ابتدا فرم ثبت‌نام را تکمیل کنید و یک ویزیت را شروع کنید.');
+            return;
+        }
+        
+        profileModal.classList.add('show');
+        profileContent.innerHTML = 'در حال دریافت اطلاعات...';
+
+        try {
+            const resLoyalty = await fetch(API + '/users/' + userId + '/loyalty');
+            const dataLoyalty = await resLoyalty.json();
+
+            const resRef = await fetch(API + '/users/' + userId + '/referrals');
+            const dataRef = await resRef.json();
+
+            profileContent.innerHTML = `
+                <div style="background:#f0f9f4; padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid #4ade80;">
+                    <p style="margin:0; font-size:14px; color:#666;">کد معرف اختصاصی شما:</p>
+                    <h2 style="margin:5px 0; color:#0f4c3a; letter-spacing:2px;">${dataRef.referral_code}</h2>
+                    <p style="font-size:12px; color:#888;">این کد را به دوستان خود بدهید تا با اولین خرید آن‌ها، به شما پاداش تعلق بگیرد.</p>
+                </div>
+                
+                <div style="background:#fef3c7; padding:15px; border-radius:10px; border:1px solid #f59e0b;">
+                    <p style="margin:0; font-size:14px; color:#666;">سطح فعلی شما:</p>
+                    <h2 style="margin:5px 0; color:#92400e;">${dataLoyalty.icon} ${dataLoyalty.name}</h2>
+                    <p style="margin:0; font-size:13px; color:#78350f;">تخفیف دائمی شما: ${dataLoyalty.discount}٪</p>
+                    <p style="margin:5px 0 0 0; font-size:12px; color:#666;">ویزیت‌های موفق: ${dataLoyalty.completed_visits}</p>
+                </div>
+                
+                ${dataLoyalty.next_tier ? `
+                <div style="margin-top:15px; font-size:13px; color:#0ea5e9;">
+                    🎯 برای رسیدن به سطح <b>${dataLoyalty.next_tier.name}</b> فقط <b>${dataLoyalty.next_tier.visits_needed}</b> ویزیت دیگر نیاز دارید!
+                </div>` : `<div style="margin-top:15px; color:#10b981; font-weight:bold;">شما در بالاترین سطح (استاد حکیم) هستید! 🎉</div>`}
+            `;
+        } catch (e) {
+            profileContent.innerHTML = '<p style="color:red;">خطا در دریافت اطلاعات. لطفاً دوباره تلاش کنید.</p>';
+            console.error(e);
+        }
+    });
+
+    document.getElementById('profile-close').addEventListener('click', function() {
+        profileModal.classList.remove('show');
+    });
+}
 </script>
 <div style="position:fixed !important;bottom:0 !important;left:0 !important;right:0 !important;text-align:center !important;font-size:13px !important;padding:12px !important;background:#ffffff !important;box-shadow:0 -2px 10px rgba(0,0,0,0.1) !important;z-index:2147483647 !important;display:block !important;visibility:visible !important;">
   
@@ -755,6 +809,18 @@ document.addEventListener("DOMContentLoaded", function() {
   <span style="color:#aaa !important;">|</span>
   <a href="/faq" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">❓ سوالات متداول</a>
 
+</div>
+<!-- Modal پروفایل کاربر -->
+<div class="modal-overlay" id="profile-modal">
+    <div class="modal">
+        <h3>👤 پروفایل شما در باشگاه حکیمان</h3>
+        <div id="profile-content" style="text-align: center; line-height: 2;">
+            در حال بارگذاری...
+        </div>
+        <div class="modal-buttons" style="margin-top:20px;">
+            <button class="btn btn-cancel" id="profile-close">بستن</button>
+        </div>
+    </div>
 </div>
 </body>
 </html>
