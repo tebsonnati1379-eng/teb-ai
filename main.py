@@ -2055,7 +2055,7 @@ async def verify_payment(request: Request):
                 visit.payment_status = "paid"
                 visit.payment_ref = str(ref_id)
                 db.commit()
-                return HTMLResponse(content=f"<h1>✅ پرداخت موفق</h1><p>کد پیگیری: {ref_id}</p><a href='/chat'>بازگشت</a>")
+                return RedirectResponse(url=f"/chat?visit_id={visit.id}")
             else:
                 error_msg = result.get("errors", [{}])[0].get("message", "خطا در تایید")
                 return HTMLResponse(content=f"<h2>❌ تایید ناموفق</h2><p>{error_msg}</p>", status_code=400)
@@ -2065,7 +2065,7 @@ async def verify_payment(request: Request):
             print(f"🚨 خطای شبکه در تایید زرین‌پال: {e}")
             visit.payment_status = "paid"
             db.commit()
-            return HTMLResponse(content="<h1>✅ پرداخت شما با موفقیت دریافت شد.</h1><p>به دلیل اختلال موقت، تاییدیه به صورت خودکار صادر شد.</p><a href='/chat'>بازگشت به چت</a>")
+            return RedirectResponse(url=f"/chat?visit_id={visit.id}")
             
     finally:
         db.close()

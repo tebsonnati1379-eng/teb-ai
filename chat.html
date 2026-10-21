@@ -714,8 +714,39 @@ feedbackModal.addEventListener('click', function(e) {
         feedbackModal.classList.remove('show');
     }
 });
+// ============================================================
+// هدایت خودکار کاربر بعد از پرداخت به صفحه سوالات
+// ============================================================
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlVisitId = urlParams.get('visit_id');
+    
+    if (urlVisitId) {
+        console.log("✅ کاربر از درگاه برگشته است. انتقال مستقیم به سوالات...");
+        
+        // ذخیره شناسه ویزیت
+        state.visitId = urlVisitId;
+        sessionStorage.setItem('visitId', urlVisitId);
+        
+        // مخفی کردن فرم ثبت‌نام
+        const regScreen = document.getElementById('screen-register');
+        if (regScreen) {
+            regScreen.classList.add('hidden');
+        }
+        
+        // رفتن مستقیم به سوالات
+        if (typeof loadQuestions === 'function') {
+            loadQuestions();
+        }
+    }
+});
 </script>
 <div style="position:fixed !important;bottom:0 !important;left:0 !important;right:0 !important;text-align:center !important;font-size:13px !important;padding:12px !important;background:#ffffff !important;box-shadow:0 -2px 10px rgba(0,0,0,0.1) !important;z-index:2147483647 !important;display:block !important;visibility:visible !important;">
+  
+  <!-- دکمه پروفایل و باشگاه مشتریان -->
+  <button id="btn-profile" style="background:none; border:none; color:#0f4c3a !important; margin:0 8px !important; font-weight:bold !important; font-family:inherit; font-size:13px; cursor:pointer; padding:0;">👤 پروفایل شما در باشگاه حکیمان</button>
+  <span style="color:#aaa !important;">|</span>
+
   <a href="/terms" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">📜 قوانین و مقررات</a>
   <span style="color:#aaa !important;">|</span>
   <a href="/contact" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">📞 تماس با ما</a>
@@ -723,6 +754,7 @@ feedbackModal.addEventListener('click', function(e) {
   <a href="/about" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">🌿 درباره ما</a>
   <span style="color:#aaa !important;">|</span>
   <a href="/faq" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">❓ سوالات متداول</a>
+
 </div>
 </body>
 </html>
