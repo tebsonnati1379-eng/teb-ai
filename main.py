@@ -2822,3 +2822,13 @@ def view_article(article_slug: str):
         return HTMLResponse(content=html_content)
     except FileNotFoundError:
         return HTMLResponse(content="<h1>قالب مقاله یافت نشد</h1>", status_code=500)
+    # ============================================================
+# روت صفحه وبلاگ (لیست تمام مقالات)
+# ============================================================
+@app.get("/blog.html", response_class=HTMLResponse)
+def blog_page():
+    try:
+        with open("blog.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>صفحه وبلاگ یافت نشد</h1>", status_code=404)
