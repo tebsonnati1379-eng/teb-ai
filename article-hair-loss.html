@@ -15,8 +15,10 @@
     <style>
         body { 
             font-family: 'Vazirmatn', sans-serif; 
-            background-color: #0f4c3a; 
+            /* اعمال اجباری رنگ سبز زمردی */
+            background-color: #0f4c3a !important; 
             color: #f8fafc; 
+            overflow-x: hidden;
         }
         
         /* رنگ‌های برند */
@@ -34,9 +36,9 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
 
-        /* پس‌زمینه ستاره‌ای */
+        /* پس‌زمینه گرادیانت سبز زمردی (اجباری) */
         .bg-stars {
-            background-image: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            background-image: radial-gradient(circle at center, #1a6b52 0%, #0f4c3a 100%) !important;
         }
 
         /* استایل متن‌های مقاله */
@@ -85,15 +87,12 @@
                 <h1 class="text-3xl md:text-5xl font-extrabold text-white leading-tight mb-6">
                     راز علمی <span class="brand-gold">ریزش مو</span> و استرس‌های پنهان
                 </h1>
-                <div class="flex items-center justify-center gap-4 text-sm text-gray-400">
+                <div class="flex items-center justify-center gap-4 text-sm text-gray-300">
                     <span class="flex items-center gap-1">✍️ نویسنده: دکتر حکیم</span>
                     <span>|</span>
                     <span class="flex items-center gap-1">⏱️ زمان مطالعه: ۵ دقیقه</span>
                 </div>
             </div>
-
-            <!-- تصویر کاور مقاله (اختیاری - می‌تونی عکس کاور رو اینجا بذاری) -->
-            <!-- <img src="images/tier1.png" alt="ریزش مو" class="w-full h-64 object-cover rounded-2xl mb-10 shadow-2xl"> -->
 
             <!-- بدنه مقاله -->
             <article class="glass-card p-8 md:p-12 rounded-3xl article-content">
@@ -144,21 +143,21 @@
     </main>
 
     <!-- فوتر -->
-    <footer class="border-t border-gray-800 py-10 text-center relative z-10">
+    <footer class="border-t border-green-800 py-10 text-center relative z-10">
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6">
                 <div class="flex items-center gap-2 mb-4 md:mb-0">
                     <span class="text-2xl">🌿</span>
                     <span class="text-xl font-bold text-white">دکتر حکیم</span>
                 </div>
-                <div class="flex gap-6 text-sm text-gray-400">
+                <div class="flex gap-6 text-sm text-gray-300">
                     <a href="/" class="hover:text-yellow-400 transition">صفحه اصلی</a>
                     <a href="/chat" class="hover:text-yellow-400 transition">شروع مشاوره</a>
                     <a href="/about" class="hover:text-yellow-400 transition">درباره ما</a>
                     <a href="/contact" class="hover:text-yellow-400 transition">تماس با ما</a>
                 </div>
             </div>
-            <p class="text-xs text-gray-500">© ۱۴۰۵ دکتر حکیم. تمامی حقوق محفوظ است. | پشتیبانی: bale.ir/TebAI_Help_bot</p>
+            <p class="text-xs text-gray-400">© ۱۴۰۵ دکتر حکیم. تمامی حقوق محفوظ است. | پشتیبانی: bale.ir/TebAI_Help_bot</p>
         </div>
     </footer>
 
