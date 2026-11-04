@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://drhakimai.ir/</loc>
-    <lastmod>2026-11-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://drhakimai.ir/chat</loc>
-    <lastmod>2026-11-04</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
+  <url><loc>https://drhakimai.ir/</loc><priority>1.0</priority></url>
+  <url><loc>https://drhakimai.ir/chat</loc><priority>0.9</priority></url>
+  <url><loc>https://drhakimai.ir/blog.html</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/hair-loss-fear</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/fatty-liver-anger</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/insomnia-grudge</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/acne-jealousy</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/constipation-past</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/thyroid-silence</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/joint-stubbornness</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/migraine-perfectionism</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/sinusitis-tears</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/uterus-rejection</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/blood-pressure-control</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/ulcer-digestion</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/autumn-depression</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/eczema-security</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/eye-dryness-truth</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/kidney-stones</loc><priority>0.8</priority></url>
+  <url><loc>https://drhakimai.ir/article/weight-gain-emptiness</loc><priority>0.8</priority></url>
 </urlset>
