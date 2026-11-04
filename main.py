@@ -718,6 +718,22 @@ def root():
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
         return RedirectResponse(url="/chat")
+    
+@app.get("/sitemap.xml", include_in_schema=False)
+async def sitemap():
+    return FileResponse("sitemap.xml")
+
+@app.get("/robots.txt", include_in_schema=False)
+async def robots():
+    return FileResponse("robots.txt")
+
+@app.get("/article-hair-loss.html", response_class=HTMLResponse)
+def article_hair_loss():
+    try:
+        with open("article-hair-loss.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>مقاله یافت نشد</h1>", status_code=404)
 
 
 @app.get("/health")
