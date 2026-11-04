@@ -602,7 +602,11 @@ def check_admin_session(token):
 # FastAPI App
 # ============================================================
 app = FastAPI(title="Teb AI - ربات طب سنتی و اسلامی")
-app.mount("/images", StaticFiles(directory="images"), name="images")
+# در بالای فایل، مطمئن شو که import os وجود دارد
+import os
+
+# خط mount را به این شکل تغییر بده
+app.mount("/images", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "images")), name="images")
 from fastapi.responses import FileResponse
 
 
@@ -709,7 +713,11 @@ def admin_page():
 
 @app.get("/")
 def root():
-    return RedirectResponse(url="/chat")
+    try:
+        with open("index.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return RedirectResponse(url="/chat")
 
 
 @app.get("/health")
