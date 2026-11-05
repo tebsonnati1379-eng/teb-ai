@@ -6,7 +6,14 @@
     <title>دکتر حکیم | نسل جدید سلامت با هوش مصنوعی</title>
     <meta name="description" content="با ربات هوش مصنوعی دکتر حکیم، با ۸۸ سوال تخصصی مزاج خود را کشف کنید و نسخه اختصاصی گیاهی و معنوی دریافت کنید.">
     
+    <!-- Preconnect for faster loading -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    
+    <!-- Tailwind MUST be in the head to prevent broken layout (FOUC) -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
         body { 
@@ -103,7 +110,8 @@
                 <!-- تصویر ربات -->
                 <div class="md:w-1/2 flex justify-center relative">
                     <div class="absolute inset-0 bg-green-500 rounded-full blur-3xl opacity-20"></div>
-                    <img src="https://assets.drhakimai.ir/cover.png" alt="ربات دکتر حکیم" class="floating-img relative z-10 w-80 md:w-[28rem] object-contain drop-shadow-[0_20px_50px_rgba(212,175,55,0.3)]">
+                    <!-- ابعاد عکس برای جلوگیری از پرش (CLS) تنظیم شد -->
+                    <img src="https://assets.drhakimai.ir/cover.png" width="450" height="450" alt="ربات دکتر حکیم" class="floating-img relative z-10 w-80 md:w-[28rem] object-contain drop-shadow-[0_20px_50px_rgba(212,175,55,0.3)]">
                 </div>
             </div>
         </section>
@@ -199,7 +207,5 @@
         </div>
     </footer>
 
-    <!-- اسکریپت Tailwind در انتهای صفحه -->
-    <script src="https://cdn.tailwindcss.com"></script>
 </body>
 </html>
