@@ -64,7 +64,6 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
 .btn-cancel { background: #f0f0f0; color: #555; }
 .btn-submit { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
 
-/* ===== استایل جدول‌های زیبا ===== */
 .report table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 20px 0; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); font-size: 13px; direction: rtl; }
 .report table thead { background: linear-gradient(135deg, #2e7d32, #1b5e20); }
 .report table th { background: linear-gradient(135deg, #2e7d32, #1b5e20); color: #ffffff; padding: 14px 10px; text-align: center; font-weight: 700; font-size: 13px; border: none; border-bottom: 3px solid #4ade80; }
@@ -80,7 +79,6 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
 .report strong { color: #1b5e20; font-weight: 700; }
 .report .dr-signature { background: linear-gradient(135deg, #f0f9f4, #e8f5e9); border-right: 4px solid #1a6b52; padding: 14px; border-radius: 10px; text-align: center; margin: 16px 0; font-weight: 700; color: #0f4c3a; }
 
-/* ===== استایل چاپ (فقط موقع پرینت) ===== */
 @media print {
     @page { size: A4; margin: 15mm 10mm; }
     body { background: #fff !important; padding: 0 !important; margin: 0 !important; display: block !important; font-size: 12px !important; }
@@ -103,764 +101,684 @@ body { background: linear-gradient(135deg, #0f4c3a 0%, #1a6b52 50%, #0f4c3a 100%
     .report p { orphans: 3; widows: 3; }
     .dr-signature, .report .dr-signature { display: block !important; page-break-inside: avoid !important; margin-top: 30px !important; background: #f5f5f5 !important; border: 1px solid #999 !important; padding: 15px !important; text-align: center !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }
-/* ===== گالری تصاویر باشگاه (ساده و عمودی) ===== */
-.gallery-section {
-    padding: 0 24px 24px 24px; /* هماهنگ با padding بدنه اصلی */
-    background: #fff;
-    border-radius: 0 0 24px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* فاصله بین عکس‌ها */
-}
-.gallery-image {
-    width: 100%;
-    height: auto;
-    border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    display: block;
-    border: 1px solid #e0e0e0;
-}
-.highlights-title {
-    font-size: 15px;
-    font-weight: 800;
-    color: #0f4c3a;
-    margin-bottom: 15px;
-    text-align: right;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-.highlights-scroll {
-    display: flex;
-    overflow-x: auto;
-    gap: 15px;
-    padding-bottom: 10px;
-    scrollbar-width: none;
-}
-.highlights-scroll::-webkit-scrollbar { display: none; }
-.highlight-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    min-width: 75px;
-}
-.highlight-circle:hover { transform: scale(1.05); }
-.highlight-inner {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: #fff;
-    border: 2px solid #fff;
-    overflow: hidden;
-}
-.highlight-inner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.highlight-name {
-    font-size: 11px;
-    color: #333;
-    font-weight: 600;
-    text-align: center;
-    line-height: 1.3;
-}
+.gallery-section { padding: 0 24px 24px 24px; background: #fff; border-radius: 0 0 24px 24px; display: flex; flex-direction: column; gap: 15px; }
+.gallery-image { width: 100%; height: auto; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: block; border: 1px solid #e0e0e0; }
 </style>
 </head>
 <body>
 
-<main>
-    <div class="container">
-    <div class="header">
-        <h1>🌿 دکتر حکیم</h1>
-        <p>دستیار هوشمند طب سنتی و اسلامی</p>
-    </div>
-<main>
+    <main>
+        <div class="container">
+            <div class="header">
+                <h1>🌿 دکتر حکیم</h1>
+                <p>دستیار هوشمند طب سنتی و اسلامی</p>
+            </div>
 
-    <div class="body">
-        <!-- صفحه ثبت‌نام -->
-        <div id="screen-register">
-            <div class="error" id="reg-error"></div>
-            <div class="field">
-                <label>👤 نام و نام خانوادگی</label>
-                <input type="text" id="reg-name" placeholder="مثال: علی محمدی">
-            </div>
-            <div class="field">
-                <label>📱 شماره موبایل</label>
-                <input type="tel" id="reg-phone" placeholder="09xxxxxxxxx" maxlength="11">
-            </div>
-            <div class="field">
-                <label>🎁 کد معرفی (اختیاری)</label>
-                <input type="text" id="reg-ref" placeholder="اگر کسی شما را معرفی کرده">
-            </div>
-            <div style="text-align:center; margin: 20px 0 10px; padding-top: 15px; border-top: 1px dashed #e0e0e0;">
-                <p style="font-size:11px; color:#888; margin-bottom:8px;">🔒 این سایت دارای نماد اعتماد الکترونیکی (اینماد) است</p>
-                <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=8003734&Code=JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl' style="display:inline-block;">
-                    <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=8003734&Code=JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl' alt='اینماد' style='cursor:pointer; height:80px; width:auto;' code='JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl'>
-                </a>
-            </div>
-            <button class="btn" id="btn-register">🚀 شروع مشاوره</button>
-            <p style="text-align:center;font-size:13px;color:#1a6b52;margin-top:16px;font-weight:600;">🌿 سلامتی شما برای ما ارزشمند است.</p>
-            
-            <!-- گالری تصاویر باشگاه (ساده) -->
-            <div class="gallery-section">
-                            <!-- تیتر لاکچری باشگاه -->
-            <div style="text-align: center; margin-top: 60px; margin-bottom: 30px;">
-                <div style="display: inline-block; background: linear-gradient(135deg, #0f4c3a, #1a6b52); border: 2px solid #d4af37; border-radius: 16px; padding: 16px 32px; box-shadow: 0 10px 25px rgba(15,76,58,0.5), 0 0 15px rgba(212, 175, 55, 0.3); position: relative; overflow: hidden; max-width: 90%;">
-                    <!-- افکت نور بالای کادر -->
-                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 50%; background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent); pointer-events: none;"></div>
+            <div class="body">
+                <!-- صفحه ثبت‌نام -->
+                <div id="screen-register">
+                    <div class="error" id="reg-error"></div>
+                    <div class="field">
+                        <label>👤 نام و نام خانوادگی</label>
+                        <input type="text" id="reg-name" placeholder="مثال: علی محمدی">
+                    </div>
+                    <div class="field">
+                        <label>📱 شماره موبایل</label>
+                        <input type="tel" id="reg-phone" placeholder="09xxxxxxxxx" maxlength="11">
+                    </div>
+                    <div class="field">
+                        <label>🎁 کد معرفی (اختیاری)</label>
+                        <input type="text" id="reg-ref" placeholder="اگر کسی شما را معرفی کرده">
+                    </div>
+                    <div style="text-align:center; margin: 20px 0 10px; padding-top: 15px; border-top: 1px dashed #e0e0e0;">
+                        <p style="font-size:11px; color:#888; margin-bottom:8px;">🔒 این سایت دارای نماد اعتماد الکترونیکی (اینماد) است</p>
+                        <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=8003734&Code=JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl' style="display:inline-block;">
+                            <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=8003734&Code=JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl' alt='اینماد' style='cursor:pointer; height:80px; width:auto;' code='JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl'>
+                        </a>
+                    </div>
+                    <button class="btn" id="btn-register">🚀 شروع مشاوره</button>
+                    <p style="text-align:center;font-size:13px;color:#1a6b52;margin-top:16px;font-weight:600;">🌿 سلامتی شما برای ما ارزشمند است.</p>
                     
-                    <h2 style="margin: 0; color: #d4af37; font-size: 20px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.6); letter-spacing: 1px;">
-                        👑 باشگاه مافیای حکیمان 👑
-                    </h2>
-                </div>
-            </div>
-                
-                <img src="https://assets.drhakimai.ir/cover.png" class="gallery-image" alt="قوانین باشگاه">
-                <img src="https://assets.drhakimai.ir/tier1.png" class="gallery-image" alt="سطح ۱: تازه‌وارد">
-                <img src="https://assets.drhakimai.ir/tier2.png" class="gallery-image" alt="سطح ۲: گیاه‌شناس">
-                <img src="https://assets.drhakimai.ir/tier3.png" class="gallery-image" alt="سطح ۳: حکیم جوان">
-                <img src="https://assets.drhakimai.ir/tier4.png" class="gallery-image" alt="سطح ۴: حکیم ماهر">
-                <img src="https://assets.drhakimai.ir/tier5.png" class="gallery-image" alt="سطح ۵: حکیم بزرگ">
-                <img src="https://assets.drhakimai.ir/tier6.png" class="gallery-image" alt="سطح ۶: استاد حکیم">
-            </div>
-        </div> <!-- بسته شدن screen-register -->
-        </div>
+                    <!-- گالری تصاویر باشگاه (ساده) -->
+                    <div class="gallery-section">
+                        <div style="text-align: center; margin-top: 60px; margin-bottom: 30px;">
+                            <div style="display: inline-block; background: linear-gradient(135deg, #0f4c3a, #1a6b52); border: 2px solid #d4af37; border-radius: 16px; padding: 16px 32px; box-shadow: 0 10px 25px rgba(15,76,58,0.5), 0 0 15px rgba(212, 175, 55, 0.3); position: relative; overflow: hidden; max-width: 90%;">
+                                <div style="position: absolute; top: 0; left: 0; right: 0; height: 50%; background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent); pointer-events: none;"></div>
+                                <h2 style="margin: 0; color: #d4af37; font-size: 20px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.6); letter-spacing: 1px;">
+                                    👑 باشگاه مافیای حکیمان 👑
+                                </h2>
+                            </div>
+                        </div>
+                        
+                        <!-- عکس‌ها از باکت لیارا لود می‌شوند -->
+                        <img src="https://assets.drhakimai.ir/cover.png" class="gallery-image" alt="قوانین باشگاه">
+                        <img src="https://assets.drhakimai.ir/tier1.png" class="gallery-image" alt="سطح ۱: تازه‌وارد">
+                        <img src="https://assets.drhakimai.ir/tier2.png" class="gallery-image" alt="سطح ۲: گیاه‌شناس">
+                        <img src="https://assets.drhakimai.ir/tier3.png" class="gallery-image" alt="سطح ۳: حکیم جوان">
+                        <img src="https://assets.drhakimai.ir/tier4.png" class="gallery-image" alt="سطح ۴: حکیم ماهر">
+                        <img src="https://assets.drhakimai.ir/tier5.png" class="gallery-image" alt="سطح ۵: حکیم بزرگ">
+                        <img src="https://assets.drhakimai.ir/tier6.png" class="gallery-image" alt="سطح ۶: استاد حکیم">
+                    </div>
+                </div> <!-- بسته شدن screen-register -->
 
-        <!-- صفحه پرداخت -->
-        <div id="screen-payment" class="hidden">
-            <div style="text-align:center;padding:10px 0;">
-                <div style="font-size:56px;margin-bottom:12px;">💎</div>
-                <h2 style="color:#0f4c3a;margin-bottom:8px;font-size:22px;">مشاوره تخصصی با دکتر حکیم</h2>
-                <p id="pay-name" style="color:#666;margin-bottom:20px;font-size:14px;"></p>
-            </div>
-            <div style="background:linear-gradient(135deg,#f0f9f4,#e8f5e9);border-radius:16px;padding:20px;margin-bottom:20px;border:2px solid #4ade80;">
-                <div style="font-size:15px;font-weight:900;color:#0f4c3a;margin-bottom:14px;text-align:center;">✨ چه چیزی دریافت می‌کنید؟</div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>تحلیل ۸۸ سوالی تخصصی</span></div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>تشخیص مزاج دقیق</span></div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>گیاهان دارویی اختصاصی</span></div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>برنامه هفتگی مادی</span></div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>برنامه معنوی روزانه</span></div>
-                    <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>PDF قابل دانلود</span></div>
+                <!-- بقیه صفحات -->
+                <div id="screen-payment" class="hidden">
+                    <div style="text-align:center;padding:10px 0;">
+                        <div style="font-size:56px;margin-bottom:12px;">💎</div>
+                        <h2 style="color:#0f4c3a;margin-bottom:8px;font-size:22px;">مشاوره تخصصی با دکتر حکیم</h2>
+                        <p id="pay-name" style="color:#666;margin-bottom:20px;font-size:14px;"></p>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#f0f9f4,#e8f5e9);border-radius:16px;padding:20px;margin-bottom:20px;border:2px solid #4ade80;">
+                        <div style="font-size:15px;font-weight:900;color:#0f4c3a;margin-bottom:14px;text-align:center;">✨ چه چیزی دریافت می‌کنید؟</div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>تحلیل ۸۸ سوالی تخصصی</span></div>
+                            <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>تشخیص مزاج دقیق</span></div>
+                            <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>گیاهان دارویی اختصاصی</span></div>
+                            <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>برنامه هفتگی مادی</span></div>
+                            <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>برنامه معنوی روزانه</span></div>
+                            <div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#333;line-height:1.6;"><span style="font-size:18px;">✅</span><span>PDF قابل دانلود</span></div>
+                        </div>
+                    </div>
+                    <div style="background:#fff;border:2px solid #e0e0e0;border-radius:16px;padding:20px;margin-bottom:16px;text-align:center;position:relative;">
+                        <div style="position:absolute;top:-14px;right:20px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;">🎁 قیمت معرفی</div>
+                        <div style="font-size:15px;color:#888;margin-bottom:6px;"><span style="text-decoration:line-through;">۲۰۰,۰۰۰ تومان</span></div>
+                        <div style="font-size:44px;font-weight:900;color:#0f4c3a;line-height:1;">۱۰۰,۰۰۰</div>
+                        <div style="font-size:14px;color:#666;margin-top:4px;">تومان</div>
+                        <div style="margin-top:12px;font-size:13px;color:#059669;font-weight:700;">💰 ۵۰٪ تخفیف ویژه کاربران اولیه</div>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:14px;padding:16px;margin-bottom:20px;border-right:4px solid #0284c7;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="font-size:36px;">🛡️</div>
+                            <div style="flex:1;">
+                                <div style="font-size:15px;font-weight:900;color:#075985;margin-bottom:4px;">گارانتی بازگشت وجه</div>
+                                <div style="font-size:12px;color:#0c4a6e;line-height:1.7;">اگر از تحلیل راضی نبودید، <strong>۱۰۰٪ پول شما</strong> بدون سوال برگشت داده می‌شود.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn" id="btn-pay" style="background:linear-gradient(135deg,#1a6b52,#0f4c3a); font-size:17px; padding:18px;">💳 پرداخت و شروع مشاوره</button>
+                    <p style="font-size:11px;color:#888;margin-top:12px;text-align:center;line-height:1.8;">با کلیک روی این دکمه، شرایط استفاده را می‌پذیرید.<br>🔒 اطلاعات شما نزد ما محرمانه است.</p>
                 </div>
-            </div>
-            <div style="background:#fff;border:2px solid #e0e0e0;border-radius:16px;padding:20px;margin-bottom:16px;text-align:center;position:relative;">
-                <div style="position:absolute;top:-14px;right:20px;background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;">🎁 قیمت معرفی</div>
-                <div style="font-size:15px;color:#888;margin-bottom:6px;"><span style="text-decoration:line-through;">۲۰۰,۰۰۰ تومان</span></div>
-                <div style="font-size:44px;font-weight:900;color:#0f4c3a;line-height:1;">۱۰۰,۰۰۰</div>
-                <div style="font-size:14px;color:#666;margin-top:4px;">تومان</div>
-                <div style="margin-top:12px;font-size:13px;color:#059669;font-weight:700;">💰 ۵۰٪ تخفیف ویژه کاربران اولیه</div>
-            </div>
-            <div style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-radius:14px;padding:16px;margin-bottom:20px;border-right:4px solid #0284c7;">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <div style="font-size:36px;">🛡️</div>
-                    <div style="flex:1;">
-                        <div style="font-size:15px;font-weight:900;color:#075985;margin-bottom:4px;">گارانتی بازگشت وجه</div>
-                        <div style="font-size:12px;color:#0c4a6e;line-height:1.7;">اگر از تحلیل راضی نبودید، <strong>۱۰۰٪ پول شما</strong> بدون سوال برگشت داده می‌شود.</div>
+
+                <div id="screen-questions" class="hidden">
+                    <div class="badge-row" id="visit-badges"></div>
+                    <div class="time-notice">
+                        <div class="icon">⏰</div>
+                        <div class="text">این مشاوره حدود <strong>۱۵ دقیقه</strong> زمان می‌برد.<br>لطفاً با حوصله پاسخ دهید تا تشخیص دقیق‌تری دریافت کنید.</div>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+                    <div style="text-align:center;font-size:13px;color:#888;margin-bottom:16px;" id="progress-text"></div>
+                    <div class="question" id="question-text"></div>
+                    <div id="answer-area"></div>
+                    <div class="btn-row">
+                        <button class="btn btn-prev" id="btn-prev">→ سوال قبلی</button>
+                        <button class="btn" id="btn-next">تأیید و ادامه ←</button>
+                    </div>
+                    <button class="support-btn" id="btn-support">💬 ارتباط با پشتیبان</button>
+                </div>
+
+                <div id="screen-loading" class="hidden">
+                    <div class="status">
+                        <div class="spinner"></div>
+                        <p style="color:#0f4c3a;font-weight:700;">در حال تحلیل پاسخ‌های شما...</p>
+                        <p style="color:#888;font-size:13px;margin-top:8px;">لطفاً چند لحظه صبر کنید</p>
                     </div>
                 </div>
-            </div>
-            <button class="btn" id="btn-pay" style="background:linear-gradient(135deg,#1a6b52,#0f4c3a); font-size:17px; padding:18px;">💳 پرداخت و شروع مشاوره</button>
-            <p style="font-size:11px;color:#888;margin-top:12px;text-align:center;line-height:1.8;">با کلیک روی این دکمه، شرایط استفاده را می‌پذیرید.<br>🔒 اطلاعات شما نزد ما محرمانه است.</p>
-        </div>
 
-        <!-- صفحه سوالات -->
-        <div id="screen-questions" class="hidden">
-            <div class="badge-row" id="visit-badges"></div>
-            <div class="time-notice">
-                <div class="icon">⏰</div>
-                <div class="text">این مشاوره حدود <strong>۱۵ دقیقه</strong> زمان می‌برد.<br>لطفاً با حوصله پاسخ دهید تا تشخیص دقیق‌تری دریافت کنید.</div>
-            </div>
-            <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
-            <div style="text-align:center;font-size:13px;color:#888;margin-bottom:16px;" id="progress-text"></div>
-            <div class="question" id="question-text"></div>
-            <div id="answer-area"></div>
-            <div class="btn-row">
-                <button class="btn btn-prev" id="btn-prev">→ سوال قبلی</button>
-                <button class="btn" id="btn-next">تأیید و ادامه ←</button>
-            </div>
-            <button class="support-btn" id="btn-support">💬 ارتباط با پشتیبان</button>
+                <div id="screen-result" class="hidden">
+                    <div style="text-align:center;margin-bottom:20px;">
+                        <div style="font-size:48px;">✅</div>
+                        <h2 style="color:#0f4c3a;">نسخه شما آماده شد</h2>
+                    </div>
+                    <div class="report" id="report-text"></div>
+                    <button class="btn" id="btn-pdf" style="background:linear-gradient(135deg, #dc2626, #b91c1c); margin-top:20px;">📥 دانلود نسخه (PDF)</button>
+                    <button class="feedback-btn" id="btn-feedback">💬 ارسال نظرات، انتقادات و پیشنهادات</button>
+                    <button class="btn btn-prev" id="btn-restart" style="margin-top:10px;">🔄 مشاوره جدید</button>
+                </div>
+            </div> 
         </div>
+    </main>
 
-        <!-- صفحه لودینگ -->
-        <div id="screen-loading" class="hidden">
-            <div class="status">
-                <div class="spinner"></div>
-                <p style="color:#0f4c3a;font-weight:700;">در حال تحلیل پاسخ‌های شما...</p>
-                <p style="color:#888;font-size:13px;margin-top:8px;">لطفاً چند لحظه صبر کنید</p>
+    <!-- Modal نظرات -->
+    <div class="modal-overlay" id="feedback-modal">
+        <div class="modal">
+            <h3>💬 نظرات و پیشنهادات شما</h3>
+            <p>نظر شما برای بهبود کیفیت ربات دکتر حکیم بسیار ارزشمند است.</p>
+            <label>نوع پیام:</label>
+            <select id="feedback-type">
+                <option value="پیشنهاد">💡 پیشنهاد</option>
+                <option value="انتقاد">⚠️ انتقاد</option>
+                <option value="شکایت">😞 شکایت</option>
+                <option value="تعریف">👏 تعریف و تشکر</option>
+            </select>
+            <label>متن پیام:</label>
+            <textarea id="feedback-text" rows="5" placeholder="نظر خود را اینجا بنویسید..."></textarea>
+            <div class="error" id="feedback-error"></div>
+            <div class="modal-buttons">
+                <button class="btn btn-cancel" id="feedback-cancel">انصراف</button>
+                <button class="btn btn-submit" id="feedback-submit">📤 ارسال</button>
             </div>
-        </div>
-
-        <!-- صفحه نتیجه -->
-        <div id="screen-result" class="hidden">
-            <div style="text-align:center;margin-bottom:20px;">
-                <div style="font-size:48px;">✅</div>
-                <h2 style="color:#0f4c3a;">نسخه شما آماده شد</h2>
-            </div>
-            <div class="report" id="report-text"></div>
-            <button class="btn" id="btn-pdf" style="background:linear-gradient(135deg, #dc2626, #b91c1c); margin-top:20px;">📥 دانلود نسخه (PDF)</button>
-            <button class="feedback-btn" id="btn-feedback">💬 ارسال نظرات، انتقادات و پیشنهادات</button>
-            <button class="btn btn-prev" id="btn-restart" style="margin-top:10px;">🔄 مشاوره جدید</button>
-        </div>
-    </div> 
-</div>
-
-<!-- Modal نظرات -->
-<div class="modal-overlay" id="feedback-modal">
-    <div class="modal">
-        <h3>💬 نظرات و پیشنهادات شما</h3>
-        <p>نظر شما برای بهبود کیفیت ربات دکتر حکیم بسیار ارزشمند است.</p>
-        <label>نوع پیام:</label>
-        <select id="feedback-type">
-            <option value="پیشنهاد">💡 پیشنهاد</option>
-            <option value="انتقاد">⚠️ انتقاد</option>
-            <option value="شکایت">😞 شکایت</option>
-            <option value="تعریف">👏 تعریف و تشکر</option>
-        </select>
-        <label>متن پیام:</label>
-        <textarea id="feedback-text" rows="5" placeholder="نظر خود را اینجا بنویسید..."></textarea>
-        <div class="error" id="feedback-error"></div>
-        <div class="modal-buttons">
-            <button class="btn btn-cancel" id="feedback-cancel">انصراف</button>
-            <button class="btn btn-submit" id="feedback-submit">📤 ارسال</button>
         </div>
     </div>
-</div>
 
-<!-- Modal پروفایل کاربر -->
-<div class="modal-overlay" id="profile-modal">
-    <div class="modal">
-        <h3>👤 پروفایل شما در باشگاه حکیمان</h3>
-        <div id="profile-content" style="text-align: center; line-height: 2;">
-            در حال بارگذاری...
-        </div>
-        <div class="modal-buttons" style="margin-top:20px;">
-            <button class="btn btn-cancel" id="profile-close">بستن</button>
+    <!-- Modal پروفایل کاربر -->
+    <div class="modal-overlay" id="profile-modal">
+        <div class="modal">
+            <h3>👤 پروفایل شما در باشگاه حکیمان</h3>
+            <div id="profile-content" style="text-align: center; line-height: 2;">
+                در حال بارگذاری...
+            </div>
+            <div class="modal-buttons" style="margin-top:20px;">
+                <button class="btn btn-cancel" id="profile-close">بستن</button>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- فوتر لینک‌ها -->
-<div style="position:fixed !important;bottom:0 !important;left:0 !important;right:0 !important;text-align:center !important;font-size:13px !important;padding:12px !important;background:#ffffff !important;box-shadow:0 -2px 10px rgba(0,0,0,0.1) !important;z-index:2147483647 !important;display:block !important;visibility:visible !important;">
-  <button onclick="openProfileModal()" style="background:none; border:none; color:#0f4c3a !important; margin:0 8px !important; font-weight:bold !important; font-family:inherit; font-size:13px; cursor:pointer; padding:0;">👤 پروفایل شما در باشگاه حکیمان</button>
-  <span style="color:#aaa !important;">|</span>
-  <a href="/terms" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">📜 قوانین و مقررات</a>
-  <span style="color:#aaa !important;">|</span>
-  <a href="/contact" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">📞 تماس با ما</a>
-  <span style="color:#aaa !important;">|</span>
-  <a href="/about" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">🌿 درباره ما</a>
-  <span style="color:#aaa !important;">|</span>
-  <a href="/faq" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">❓ سوالات متداول</a>
-</div>
+    <!-- فوتر لینک‌ها -->
+    <div style="position:fixed !important;bottom:0 !important;left:0 !important;right:0 !important;text-align:center !important;font-size:13px !important;padding:12px !important;background:#ffffff !important;box-shadow:0 -2px 10px rgba(0,0,0,0.1) !important;z-index:2147483647 !important;display:block !important;visibility:visible !important;">
+      <button onclick="openProfileModal()" style="background:none; border:none; color:#0f4c3a !important; margin:0 8px !important; font-weight:bold !important; font-family:inherit; font-size:13px; cursor:pointer; padding:0;">👤 پروفایل شما در باشگاه حکیمان</button>
+      <span style="color:#aaa !important;">|</span>
+      <a href="/terms" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">📜 قوانین و مقررات</a>
+      <span style="color:#aaa !important;">|</span>
+      <a href="/contact" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">📞 تماس با ما</a>
+      <span style="color:#aaa !important;">|</span>
+      <a href="/about" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">🌿 درباره ما</a>
+      <span style="color:#aaa !important;">|</span>
+      <a href="/faq" style="color:#2e7d32 !important;text-decoration:none !important;margin:0 8px !important;font-weight:bold !important;">❓ سوالات متداول</a>
+    </div>
 
-<!-- اسکریپت‌ها (باید در انتهای فایل باشد) -->
-<script>
-var SUPPORT_BOT = "TebAI_Help_bot";
-var API = window.location.origin;
-let state = { 
-    userId: null,
-    visitId: null,
-    questions: [],
-    currentIndex: 0,
-    answers: {},
-    referralCode: null
-};
+    <!-- اسکریپت‌ها -->
+    <script>
+    var SUPPORT_BOT = "TebAI_Help_bot";
+    var API = window.location.origin;
+    let state = { 
+        userId: null,
+        visitId: null,
+        questions: [],
+        currentIndex: 0,
+        answers: {},
+        referralCode: null
+    };
 
-// ============================================================
-// هدایت خودکار کاربر بعد از پرداخت (رفع مشکل فرم ثبت‌نام)
-// ============================================================
-document.addEventListener("DOMContentLoaded", function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlVisitId = urlParams.get('visit_id');
-    
-    if (urlVisitId) {
-        console.log("✅ کاربر از درگاه برگشته است. انتقال مستقیم به سوالات...");
-        state.visitId = urlVisitId;
-        sessionStorage.setItem('visitId', urlVisitId);
+    document.addEventListener("DOMContentLoaded", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlVisitId = urlParams.get('visit_id');
         
-        const regScreen = document.getElementById('screen-register');
-        if (regScreen) regScreen.classList.add('hidden');
-        
-        if (typeof loadQuestions === 'function') {
-            loadQuestions();
-        }
-    }
-});
-
-function show(screenId) {
-    var screens = ['screen-register', 'screen-payment', 'screen-questions', 'screen-loading', 'screen-result'];
-    for (var i = 0; i < screens.length; i++) {
-        document.getElementById(screens[i]).classList.add('hidden');
-    }
-    document.getElementById(screenId).classList.remove('hidden');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function showError(elId, msg) {
-    var el = document.getElementById(elId);
-    el.textContent = msg;
-    el.classList.add('show');
-    setTimeout(function() { el.classList.remove('show'); }, 6000);
-}
-
-function toPersianNum(n) {
-    return String(n).replace(/\d/g, function(d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; });
-}
-
-// ===== تبدیل Markdown به HTML =====
-function markdownToHtml(md) {
-    let html = md;
-    html = html.replace(/((?:^\|.*\|\s*$\n?)+)/gm, function(tableBlock) {
-        const lines = tableBlock.trim().split('\n').filter(l => l.trim());
-        if (lines.length < 2) return tableBlock;
-        const headers = lines[0].split('|').map(h => h.trim()).filter(h => h);
-        const dataLines = lines.slice(2);
-        let tableHtml = '<table><thead><tr>';
-        headers.forEach(h => tableHtml += '<th>' + h + '</th>');
-        tableHtml += '</tr></thead><tbody>';
-        dataLines.forEach(line => {
-            const cells = line.split('|').map(c => c.trim()).filter((c, i, arr) => !(i === 0 && c === '') && !(i === arr.length - 1 && c === ''));
-            if (cells.length > 0) {
-                tableHtml += '<tr>';
-                cells.forEach(c => tableHtml += '<td>' + c + '</td>');
-                tableHtml += '</tr>';
+        if (urlVisitId) {
+            console.log("✅ کاربر از درگاه برگشته است. انتقال مستقیم به سوالات...");
+            state.visitId = urlVisitId;
+            sessionStorage.setItem('visitId', urlVisitId);
+            
+            const regScreen = document.getElementById('screen-register');
+            if (regScreen) regScreen.classList.add('hidden');
+            
+            if (typeof loadQuestions === 'function') {
+                loadQuestions();
             }
-        });
-        tableHtml += '</tbody></table>';
-        return tableHtml;
-    });
-    html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-    html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-    html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    html = html.replace(/^---$/gm, '<hr>');
-    html = html.replace(/\n/g, '<br>');
-    
-    const signatureHtml = `
-<div class="dr-signature">
-    <svg viewBox="0 0 400 140" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
-        <defs>
-            <linearGradient id="sigGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:#0f4c3a;stop-opacity:1" />
-                <stop offset="100%" style="stop-color:#4ade80;stop-opacity:1" />
-            </linearGradient>
-        </defs>
-        <path d="M 40,30 Q 120,5 200,20 Q 280,5 360,30" stroke="url(#sigGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <circle cx="40" cy="30" r="4" fill="#4ade80"/>
-        <circle cx="360" cy="30" r="4" fill="#0f4c3a"/>
-        <text x="200" y="85" font-family="'Vazirmatn', 'Tahoma', sans-serif" font-size="38" fill="#0f4c3a" text-anchor="middle" font-weight="900">دکتر حکیم</text>
-        <path d="M 100,100 Q 200,112 300,100" stroke="url(#sigGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <circle cx="200" cy="100" r="3" fill="#4ade80"/>
-        <circle cx="140" cy="103" r="2" fill="#4ade80"/>
-        <circle cx="260" cy="103" r="2" fill="#4ade80"/>
-        <text x="200" y="130" font-family="'Tahoma', sans-serif" font-size="11" fill="#666" text-anchor="middle">✦ دستیار هوشمند طب سنتی و اسلامی ✦</text>
-    </svg>
-    <div style="margin-top:10px;font-size:12px;color:#666;font-weight:600;">📞 پشتیبانی: bale.ir/TebAI_Help_bot</div>
-</div>`;
-
-    const reportLines = html.split(/<br\s*\/?>/i);
-    const cleanedLines = reportLines.filter(function(line) {
-        const plainText = line.replace(/<[^>]*>/g, '').trim();
-        if (plainText.indexOf('امضای دکتر حکیم') !== -1) return false;
-        if (plainText.indexOf('دستیار هوشمند طب سنتی') !== -1) return false;
-        if (plainText.indexOf('TebAI_Help_bot') !== -1) return false;
-        if (plainText.indexOf('پشتیبانی:') !== -1) return false;
-        if (plainText.indexOf('bale.ir/') !== -1) return false;
-        return true;
-    });
-    html = cleanedLines.join('<br>');
-    html = html + signatureHtml;
-    html = html.replace(/<\/(table|h1|h2|h3|hr)><br>/g, '</$1>');
-    html = html.replace(/<hr><br>/g, '<hr>');
-    return html;
-}
-
-// ثبت‌نام
-document.getElementById('btn-register').addEventListener('click', function() {
-    var name = document.getElementById('reg-name').value.trim();
-    var phone = document.getElementById('reg-phone').value.trim();
-    var ref = document.getElementById('reg-ref').value.trim();
-
-    if (!name || name.length < 3) { showError('reg-error', 'لطفاً نام معتبر وارد کنید'); return; }
-    if (!/^09\d{9}$/.test(phone)) { showError('reg-error', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود'); return; }
-
-    var btn = document.getElementById('btn-register');
-    btn.disabled = true;
-    btn.textContent = 'در حال ثبت...';
-
-    fetch(API + '/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name, phone: phone, referral_code: ref, review_code: "" })
-    })
-    .then(function(res) {
-        if (!res.ok) throw new Error('خطا در ارتباط با سرور');
-        return res.json();
-    })
-    .then(function(data) {
-        state.userId = data.user_id;
-        state.visitId = data.visit_id;
-        state.referralCode = data.referral_code;
-        sessionStorage.setItem('visitId', data.visit_id);
-        sessionStorage.setItem('userId', data.user_id);
-        
-        console.log('✅ Visit ID ذخیره شد:', data.visit_id);
-
-        if (data.must_pay && data.payment_status !== 'paid') {
-            document.getElementById('pay-name').textContent = '👋 ' + data.name + ' عزیز، خوش آمدید';
-            show('screen-payment');
-        } else {
-            loadQuestions();
         }
-    })
-    .catch(function(e) {
-        showError('reg-error', e.message || 'خطای ناشناخته');
-        btn.disabled = false;
-        btn.textContent = '🚀 شروع مشاوره';
     });
-});
 
-document.getElementById('btn-pay').addEventListener('click', async function() {
-    var btn = document.getElementById('btn-pay');
-    btn.disabled = true;
-    btn.textContent = 'در حال اتصال به درگاه...';
-    
-    try {
-        var res = await fetch(API + '/payment/request', {
+    function show(screenId) {
+        var screens = ['screen-register', 'screen-payment', 'screen-questions', 'screen-loading', 'screen-result'];
+        for (var i = 0; i < screens.length; i++) {
+            document.getElementById(screens[i]).classList.add('hidden');
+        }
+        document.getElementById(screenId).classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showError(elId, msg) {
+        var el = document.getElementById(elId);
+        el.textContent = msg;
+        el.classList.add('show');
+        setTimeout(function() { el.classList.remove('show'); }, 6000);
+    }
+
+    function toPersianNum(n) {
+        return String(n).replace(/\d/g, function(d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; });
+    }
+
+    function markdownToHtml(md) {
+        let html = md;
+        html = html.replace(/((?:^\|.*\|\s*$\n?)+)/gm, function(tableBlock) {
+            const lines = tableBlock.trim().split('\n').filter(l => l.trim());
+            if (lines.length < 2) return tableBlock;
+            const headers = lines[0].split('|').map(h => h.trim()).filter(h => h);
+            const dataLines = lines.slice(2);
+            let tableHtml = '<table><thead><tr>';
+            headers.forEach(h => tableHtml += '<th>' + h + '</th>');
+            tableHtml += '</tr></thead><tbody>';
+            dataLines.forEach(line => {
+                const cells = line.split('|').map(c => c.trim()).filter((c, i, arr) => !(i === 0 && c === '') && !(i === arr.length - 1 && c === ''));
+                if (cells.length > 0) {
+                    tableHtml += '<tr>';
+                    cells.forEach(c => tableHtml += '<td>' + c + '</td>');
+                    tableHtml += '</tr>';
+                }
+            });
+            tableHtml += '</tbody></table>';
+            return tableHtml;
+        });
+        html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+        html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+        html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/^---$/gm, '<hr>');
+        html = html.replace(/\n/g, '<br>');
+        
+        const signatureHtml = `
+    <div class="dr-signature">
+        <svg viewBox="0 0 400 140" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+            <defs>
+                <linearGradient id="sigGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#0f4c3a;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#4ade80;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <path d="M 40,30 Q 120,5 200,20 Q 280,5 360,30" stroke="url(#sigGrad)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <circle cx="40" cy="30" r="4" fill="#4ade80"/>
+            <circle cx="360" cy="30" r="4" fill="#0f4c3a"/>
+            <text x="200" y="85" font-family="'Vazirmatn', 'Tahoma', sans-serif" font-size="38" fill="#0f4c3a" text-anchor="middle" font-weight="900">دکتر حکیم</text>
+            <path d="M 100,100 Q 200,112 300,100" stroke="url(#sigGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <circle cx="200" cy="100" r="3" fill="#4ade80"/>
+            <circle cx="140" cy="103" r="2" fill="#4ade80"/>
+            <circle cx="260" cy="103" r="2" fill="#4ade80"/>
+            <text x="200" y="130" font-family="'Tahoma', sans-serif" font-size="11" fill="#666" text-anchor="middle">✦ دستیار هوشمند طب سنتی و اسلامی ✦</text>
+        </svg>
+        <div style="margin-top:10px;font-size:12px;color:#666;font-weight:600;">📞 پشتیبانی: bale.ir/TebAI_Help_bot</div>
+    </div>`;
+
+        const reportLines = html.split(/<br\s*\/?>/i);
+        const cleanedLines = reportLines.filter(function(line) {
+            const plainText = line.replace(/<[^>]*>/g, '').trim();
+            if (plainText.indexOf('امضای دکتر حکیم') !== -1) return false;
+            if (plainText.indexOf('دستیار هوشمند طب سنتی') !== -1) return false;
+            if (plainText.indexOf('TebAI_Help_bot') !== -1) return false;
+            if (plainText.indexOf('پشتیبانی:') !== -1) return false;
+            if (plainText.indexOf('bale.ir/') !== -1) return false;
+            return true;
+        });
+        html = cleanedLines.join('<br>');
+        html = html + signatureHtml;
+        html = html.replace(/<\/(table|h1|h2|h3|hr)><br>/g, '</$1>');
+        html = html.replace(/<hr><br>/g, '<hr>');
+        return html;
+    }
+
+    document.getElementById('btn-register').addEventListener('click', function() {
+        var name = document.getElementById('reg-name').value.trim();
+        var phone = document.getElementById('reg-phone').value.trim();
+        var ref = document.getElementById('reg-ref').value.trim();
+
+        if (!name || name.length < 3) { showError('reg-error', 'لطفاً نام معتبر وارد کنید'); return; }
+        if (!/^09\d{9}$/.test(phone)) { showError('reg-error', 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود'); return; }
+
+        var btn = document.getElementById('btn-register');
+        btn.disabled = true;
+        btn.textContent = 'در حال ثبت...';
+
+        fetch(API + '/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                visit_id: state.visitId,
-                amount: 100000,
-                description: 'ویزیت دکتر حکیم - تحلیل مزاج'
-            })
+            body: JSON.stringify({ name: name, phone: phone, referral_code: ref, review_code: "" })
+        })
+        .then(function(res) {
+            if (!res.ok) throw new Error('خطا در ارتباط با سرور');
+            return res.json();
+        })
+        .then(function(data) {
+            state.userId = data.user_id;
+            state.visitId = data.visit_id;
+            state.referralCode = data.referral_code;
+            sessionStorage.setItem('visitId', data.visit_id);
+            sessionStorage.setItem('userId', data.user_id);
+            
+            console.log('✅ Visit ID ذخیره شد:', data.visit_id);
+
+            if (data.must_pay && data.payment_status !== 'paid') {
+                document.getElementById('pay-name').textContent = '👋 ' + data.name + ' عزیز، خوش آمدید';
+                show('screen-payment');
+            } else {
+                loadQuestions();
+            }
+        })
+        .catch(function(e) {
+            showError('reg-error', e.message || 'خطای ناشناخته');
+            btn.disabled = false;
+            btn.textContent = '🚀 شروع مشاوره';
         });
-        var data = await res.json();
+    });
+
+    document.getElementById('btn-pay').addEventListener('click', async function() {
+        var btn = document.getElementById('btn-pay');
+        btn.disabled = true;
+        btn.textContent = 'در حال اتصال به درگاه...';
         
-        if (data.success && data.payment_url) {
-            window.location.href = data.payment_url;
-        } else {
-            alert('خطا در ایجاد پرداخت: ' + (data.error || 'خطای ناشناخته'));
+        try {
+            var res = await fetch(API + '/payment/request', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    visit_id: state.visitId,
+                    amount: 100000,
+                    description: 'ویزیت دکتر حکیم - تحلیل مزاج'
+                })
+            });
+            var data = await res.json();
+            
+            if (data.success && data.payment_url) {
+                window.location.href = data.payment_url;
+            } else {
+                alert('خطا در ایجاد پرداخت: ' + (data.error || 'خطای ناشناخته'));
+                btn.disabled = false;
+                btn.textContent = '💳 پرداخت و شروع مشاوره';
+            }
+        } catch (e) {
+            alert('خطا در ارتباط با سرور: ' + e.message);
             btn.disabled = false;
             btn.textContent = '💳 پرداخت و شروع مشاوره';
         }
-    } catch (e) {
-        alert('خطا در ارتباط با سرور: ' + e.message);
-        btn.disabled = false;
-        btn.textContent = '💳 پرداخت و شروع مشاوره';
-    }
-});
-
-document.getElementById('btn-support').addEventListener('click', function() {
-    window.open('https://ble.ir/' + SUPPORT_BOT, '_blank');
-});
-
-function loadQuestions() {
-    const visitId = state.visitId || sessionStorage.getItem('visitId');
-    if (!visitId || visitId === 'undefined' || visitId === 'null') {
-        alert('⚠️ خطا: شناسه ویزیت یافت نشد. لطفاً صفحه را رفرش کنید.');
-        return;
-    }
-    state.visitId = visitId;
-
-    fetch(API + '/visits/' + visitId + '/questions')
-    .then(function(res) { return res.json(); })
-    .then(function(data) {
-        state.questions = data.questions;
-        state.currentIndex = 0;
-        state.answers = {};
-        var badges = document.getElementById('visit-badges');
-        badges.innerHTML = '<span class="info-badge">📍 ویزیت شماره ۱</span><span class="info-badge free-badge">🌿 تحلیل رایگان</span>';
-        renderQuestion();
-        show('screen-questions');
-    })
-    .catch(function(e) { alert('خطا در دریافت سوالات: ' + e.message); });
-}
-
-function renderQuestion() {
-    if (!state.questions || state.questions.length === 0) {
-        console.error('❌ سوالات لود نشده!');
-        alert('⚠️ خطا: سوالات لود نشدند. لطفاً صفحه را رفرش کنید.');
-        return;
-    }
-
-    var q = state.questions[state.currentIndex];
-    var total = state.questions.length;
-    var idx = state.currentIndex;
-
-    document.getElementById('progress').style.width = ((idx / total) * 100) + '%';
-    document.getElementById('progress-text').textContent = 'سوال ' + toPersianNum(idx + 1) + ' از ' + toPersianNum(total);
-    document.getElementById('question-text').textContent = '❓ ' + q.text;
-
-    var btnPrev = document.getElementById('btn-prev');
-    btnPrev.style.display = (idx === 0) ? 'none' : 'block';
-
-    var area = document.getElementById('answer-area');
-    area.innerHTML = '';
-
-    if (q.type === 'text') {
-        var input = document.createElement('textarea');
-        input.rows = 4;
-        input.placeholder = '👈 پاسخ خود را اینجا بنویسید...';
-        input.id = 'q-input';
-        if (state.answers[q.id]) input.value = state.answers[q.id];
-        area.appendChild(input);
-        if (q.id === 'complaint') {
-            var hint = document.createElement('div');
-            hint.className = 'hint-text';
-            hint.innerHTML = '💡 <b>راهنما:</b> لطفاً همه مشکلات خود را با کلمات کلیدی بنویسید.<br>مثال: «یبوست دارم، ریزش مو، موی چرب، سردرد و اضطراب».';
-            area.appendChild(hint);
-        }
-    } else if (q.type === 'number') {
-        var numInput = document.createElement('input');
-        numInput.type = 'number';
-        numInput.placeholder = '👈 عدد را وارد کنید';
-        numInput.id = 'q-input';
-        numInput.min = '0';
-        if (state.answers[q.id]) numInput.value = state.answers[q.id];
-        area.appendChild(numInput);
-        var numHint = document.createElement('div');
-        numHint.className = 'hint-text';
-        if (q.id === 'weight') numHint.innerHTML = '💡 مثال: اگر وزن شما ۸۵ کیلوگرم است، عدد <b>85</b> را وارد کنید.';
-        else if (q.id === 'height') numHint.innerHTML = '💡 مثال: اگر قد شما ۱۶۵ سانتی‌متر است، عدد <b>165</b> را وارد کنید.';
-        else if (q.id === 'age') numHint.innerHTML = '💡 مثال: اگر ۳۵ سال دارید، عدد <b>35</b> را وارد کنید.';
-        else numHint.innerHTML = '💡 لطفاً یک عدد معتبر وارد کنید.';
-        area.appendChild(numHint);
-    } else if (q.type === 'choice') {
-        var div = document.createElement('div');
-        div.className = 'options';
-        q.options.forEach(function(opt) {
-            var btn = document.createElement('button');
-            btn.className = 'option';
-            btn.textContent = opt;
-            btn.type = 'button';
-            if (state.answers[q.id] === opt) btn.classList.add('selected');
-            btn.onclick = function() {
-                var allOpts = div.querySelectorAll('.option');
-                for (var i = 0; i < allOpts.length; i++) allOpts[i].classList.remove('selected');
-                btn.classList.add('selected');
-                state.answers[q.id] = opt;
-            };
-            div.appendChild(btn);
-        });
-        area.appendChild(div);
-    }
-    setTimeout(function() {
-        var inp = document.getElementById('q-input');
-        if (inp) inp.focus();
-    }, 300);
-}
-
-document.getElementById('btn-next').addEventListener('click', async function() {
-    var q = state.questions[state.currentIndex];
-    var answer = null;
-
-    if (q.type === 'choice') {
-        answer = state.answers[q.id];
-    } else {
-        var input = document.getElementById('q-input');
-        answer = input ? input.value.trim() : '';
-    }
-
-    if (!answer && answer !== 0) { alert('⚠️ لطفاً به این سوال پاسخ دهید.'); return; }
-
-    if (q.type === 'number') {
-        var num = parseFloat(answer);
-        if (isNaN(num) || num < 0) { alert('⚠️ لطفاً یک عدد معتبر وارد کنید.'); return; }
-        if (q.id === 'children_count' && num < 0) { alert('⚠️ تعداد فرزندان نمی‌تواند منفی باشد.'); return; }
-        if (q.id !== 'children_count' && num <= 0) { alert('⚠️ لطفاً یک عدد معتبر وارد کنید (بزرگ‌تر از صفر).'); return; }
-        if (q.id === 'age' && (num < 1 || num > 120)) { alert('⚠️ سن باید بین ۱ تا ۱۲۰ باشد.'); return; }
-        if (q.id === 'weight' && (num < 20 || num > 300)) { alert('⚠️ وزن باید بین ۲۰ تا ۳۰۰ کیلوگرم باشد.'); return; }
-        if (q.id === 'height' && (num < 80 || num > 220)) { alert('⚠️ قد باید بین ۸۰ تا ۲۲۰ سانتی‌متر باشد.'); return; }
-    }
-
-    state.answers[q.id] = answer;
-
-    const visitId = state.visitId || sessionStorage.getItem('visitId');
-    if (!visitId || visitId === 'undefined' || visitId === 'null') {
-        alert('⚠️ شناسه ویزیت یافت نشد. لطفاً صفحه را رفرش کنید و دوباره از ابتدا شروع کنید.');
-        return;
-    }
-
-    try {
-        var res = await fetch(API + '/visits/' + visitId + '/answer', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question_id: q.id, answer: String(answer) })
-        });
-        
-        if (!res.ok) throw new Error('خطا در ذخیره پاسخ');
-    } catch (e) {
-        console.error('❌ خطا در ذخیره پاسخ:', e.message, '| visitId:', visitId);
-        alert('خطا در ذخیره پاسخ. لطفاً دوباره تلاش کنید.');
-        return;
-    }
-
-    state.currentIndex++;
-
-    if (state.currentIndex >= state.questions.length) {
-        completeVisit();
-    } else {
-        renderQuestion();
-    }
-});
-
-document.getElementById('btn-prev').addEventListener('click', function() {
-    if (state.currentIndex > 0) {
-        state.currentIndex--;
-        renderQuestion();
-    }
-});
-
-function completeVisit() {
-    show('screen-loading');
-    const visitId = state.visitId || sessionStorage.getItem('visitId');
-    if (!visitId || visitId === 'undefined' || visitId === 'null') {
-        alert('⚠️ خطا: شناسه ویزیت یافت نشد.');
-        show('screen-questions');
-        return;
-    }
-
-    fetch(API + '/visits/' + visitId + '/complete', { method: 'POST' })
-    .then(function(res) {
-        if (!res.ok) throw new Error('خطا در تحلیل');
-        return res.json();
-    })
-    .then(function(data) {
-        document.getElementById('report-text').innerHTML = markdownToHtml(data.report);
-        show('screen-result');
-    })
-    .catch(function(e) {
-        alert('خطا در تحلیل: ' + e.message);
-        show('screen-questions');
     });
-}
 
-document.getElementById('btn-pdf').addEventListener('click', function() {
-    window.print();
-});
+    document.getElementById('btn-support').addEventListener('click', function() {
+        window.open('https://ble.ir/' + SUPPORT_BOT, '_blank');
+    });
 
-document.getElementById('btn-restart').addEventListener('click', function() {
-    sessionStorage.clear();
-    location.reload();
-});
-
-// ============================================================
-// نظرات
-// ============================================================
-var feedbackModal = document.getElementById('feedback-modal');
-document.getElementById('btn-feedback').addEventListener('click', function() {
-    feedbackModal.classList.add('show');
-});
-document.getElementById('feedback-cancel').addEventListener('click', function() {
-    feedbackModal.classList.remove('show');
-    document.getElementById('feedback-text').value = '';
-});
-document.getElementById('feedback-submit').addEventListener('click', async function() {
-    var type = document.getElementById('feedback-type').value;
-    var text = document.getElementById('feedback-text').value.trim();
-
-    if (!text || text.length < 5) {
-        showError('feedback-error', 'لطفاً متن نظر خود را بنویسید (حداقل ۵ کاراکتر).');
-        return;
-    }
-
-    var btn = document.getElementById('feedback-submit');
-    btn.disabled = true;
-    btn.textContent = 'در حال ارسال...';
-
-    try {
-        var res = await fetch(API + '/feedback', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                user_id: state.userId || sessionStorage.getItem('userId') || 'anonymous',
-                visit_id: state.visitId || sessionStorage.getItem('visitId') || 'anonymous',
-                feedback_type: type,
-                feedback_text: text
-            })
-        });
-
-        if (res.ok) {
-            feedbackModal.classList.remove('show');
-            document.getElementById('feedback-text').value = '';
-            alert('✅ نظر شما با موفقیت ارسال شد. از شما سپاسگزاریم!');
-        } else {
-            throw new Error('خطا در ارسال');
+    function loadQuestions() {
+        const visitId = state.visitId || sessionStorage.getItem('visitId');
+        if (!visitId || visitId === 'undefined' || visitId === 'null') {
+            alert('⚠️ خطا: شناسه ویزیت یافت نشد. لطفاً صفحه را رفرش کنید.');
+            return;
         }
-    } catch (e) {
-        showError('feedback-error', 'خطا در ارسال نظر. لطفاً دوباره تلاش کنید.');
-    } finally {
-        btn.disabled = false;
-        btn.textContent = '📤 ارسال';
+        state.visitId = visitId;
+
+        fetch(API + '/visits/' + visitId + '/questions')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            state.questions = data.questions;
+            state.currentIndex = 0;
+            state.answers = {};
+            var badges = document.getElementById('visit-badges');
+            badges.innerHTML = '<span class="info-badge">📍 ویزیت شماره ۱</span><span class="info-badge free-badge">🌿 تحلیل رایگان</span>';
+            renderQuestion();
+            show('screen-questions');
+        })
+        .catch(function(e) { alert('خطا در دریافت سوالات: ' + e.message); });
     }
-});
-feedbackModal.addEventListener('click', function(e) {
-    if (e.target === feedbackModal) {
+
+    function renderQuestion() {
+        if (!state.questions || state.questions.length === 0) {
+            console.error('❌ سوالات لود نشده!');
+            alert('⚠️ خطا: سوالات لود نشدند. لطفاً صفحه را رفرش کنید.');
+            return;
+        }
+
+        var q = state.questions[state.currentIndex];
+        var total = state.questions.length;
+        var idx = state.currentIndex;
+
+        document.getElementById('progress').style.width = ((idx / total) * 100) + '%';
+        document.getElementById('progress-text').textContent = 'سوال ' + toPersianNum(idx + 1) + ' از ' + toPersianNum(total);
+        document.getElementById('question-text').textContent = '❓ ' + q.text;
+
+        var btnPrev = document.getElementById('btn-prev');
+        btnPrev.style.display = (idx === 0) ? 'none' : 'block';
+
+        var area = document.getElementById('answer-area');
+        area.innerHTML = '';
+
+        if (q.type === 'text') {
+            var input = document.createElement('textarea');
+            input.rows = 4;
+            input.placeholder = '👈 پاسخ خود را اینجا بنویسید...';
+            input.id = 'q-input';
+            if (state.answers[q.id]) input.value = state.answers[q.id];
+            area.appendChild(input);
+            if (q.id === 'complaint') {
+                var hint = document.createElement('div');
+                hint.className = 'hint-text';
+                hint.innerHTML = '💡 <b>راهنما:</b> لطفاً همه مشکلات خود را با کلمات کلیدی بنویسید.<br>مثال: «یبوست دارم، ریزش مو، موی چرب، سردرد و اضطراب».';
+                area.appendChild(hint);
+            }
+        } else if (q.type === 'number') {
+            var numInput = document.createElement('input');
+            numInput.type = 'number';
+            numInput.placeholder = '👈 عدد را وارد کنید';
+            numInput.id = 'q-input';
+            numInput.min = '0';
+            if (state.answers[q.id]) numInput.value = state.answers[q.id];
+            area.appendChild(numInput);
+            var numHint = document.createElement('div');
+            numHint.className = 'hint-text';
+            if (q.id === 'weight') numHint.innerHTML = '💡 مثال: اگر وزن شما ۸۵ کیلوگرم است، عدد <b>85</b> را وارد کنید.';
+            else if (q.id === 'height') numHint.innerHTML = '💡 مثال: اگر قد شما ۱۶۵ سانتی‌متر است، عدد <b>165</b> را وارد کنید.';
+            else if (q.id === 'age') numHint.innerHTML = '💡 مثال: اگر ۳۵ سال دارید، عدد <b>35</b> را وارد کنید.';
+            else numHint.innerHTML = '💡 لطفاً یک عدد معتبر وارد کنید.';
+            area.appendChild(numHint);
+        } else if (q.type === 'choice') {
+            var div = document.createElement('div');
+            div.className = 'options';
+            q.options.forEach(function(opt) {
+                var btn = document.createElement('button');
+                btn.className = 'option';
+                btn.textContent = opt;
+                btn.type = 'button';
+                if (state.answers[q.id] === opt) btn.classList.add('selected');
+                btn.onclick = function() {
+                    var allOpts = div.querySelectorAll('.option');
+                    for (var i = 0; i < allOpts.length; i++) allOpts[i].classList.remove('selected');
+                    btn.classList.add('selected');
+                    state.answers[q.id] = opt;
+                };
+                div.appendChild(btn);
+            });
+            area.appendChild(div);
+        }
+        setTimeout(function() {
+            var inp = document.getElementById('q-input');
+            if (inp) inp.focus();
+        }, 300);
+    }
+
+    document.getElementById('btn-next').addEventListener('click', async function() {
+        var q = state.questions[state.currentIndex];
+        var answer = null;
+
+        if (q.type === 'choice') {
+            answer = state.answers[q.id];
+        } else {
+            var input = document.getElementById('q-input');
+            answer = input ? input.value.trim() : '';
+        }
+
+        if (!answer && answer !== 0) { alert('⚠️ لطفاً به این سوال پاسخ دهید.'); return; }
+
+        if (q.type === 'number') {
+            var num = parseFloat(answer);
+            if (isNaN(num) || num < 0) { alert('⚠️ لطفاً یک عدد معتبر وارد کنید.'); return; }
+            if (q.id === 'children_count' && num < 0) { alert('⚠️ تعداد فرزندان نمی‌تواند منفی باشد.'); return; }
+            if (q.id !== 'children_count' && num <= 0) { alert('⚠️ لطفاً یک عدد معتبر وارد کنید (بزرگ‌تر از صفر).'); return; }
+            if (q.id === 'age' && (num < 1 || num > 120)) { alert('⚠️ سن باید بین ۱ تا ۱۲۰ باشد.'); return; }
+            if (q.id === 'weight' && (num < 20 || num > 300)) { alert('⚠️ وزن باید بین ۲۰ تا ۳۰۰ کیلوگرم باشد.'); return; }
+            if (q.id === 'height' && (num < 80 || num > 220)) { alert('⚠️ قد باید بین ۸۰ تا ۲۲۰ سانتی‌متر باشد.'); return; }
+        }
+
+        state.answers[q.id] = answer;
+
+        const visitId = state.visitId || sessionStorage.getItem('visitId');
+        if (!visitId || visitId === 'undefined' || visitId === 'null') {
+            alert('⚠️ شناسه ویزیت یافت نشد. لطفاً صفحه را رفرش کنید و دوباره از ابتدا شروع کنید.');
+            return;
+        }
+
+        try {
+            var res = await fetch(API + '/visits/' + visitId + '/answer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question_id: q.id, answer: String(answer) })
+            });
+            
+            if (!res.ok) throw new Error('خطا در ذخیره پاسخ');
+        } catch (e) {
+            console.error('❌ خطا در ذخیره پاسخ:', e.message, '| visitId:', visitId);
+            alert('خطا در ذخیره پاسخ. لطفاً دوباره تلاش کنید.');
+            return;
+        }
+
+        state.currentIndex++;
+
+        if (state.currentIndex >= state.questions.length) {
+            completeVisit();
+        } else {
+            renderQuestion();
+        }
+    });
+
+    document.getElementById('btn-prev').addEventListener('click', function() {
+        if (state.currentIndex > 0) {
+            state.currentIndex--;
+            renderQuestion();
+        }
+    });
+
+    function completeVisit() {
+        show('screen-loading');
+        const visitId = state.visitId || sessionStorage.getItem('visitId');
+        if (!visitId || visitId === 'undefined' || visitId === 'null') {
+            alert('⚠️ خطا: شناسه ویزیت یافت نشد.');
+            show('screen-questions');
+            return;
+        }
+
+        fetch(API + '/visits/' + visitId + '/complete', { method: 'POST' })
+        .then(function(res) {
+            if (!res.ok) throw new Error('خطا در تحلیل');
+            return res.json();
+        })
+        .then(function(data) {
+            document.getElementById('report-text').innerHTML = markdownToHtml(data.report);
+            show('screen-result');
+        })
+        .catch(function(e) {
+            alert('خطا در تحلیل: ' + e.message);
+            show('screen-questions');
+        });
+    }
+
+    document.getElementById('btn-pdf').addEventListener('click', function() {
+        window.print();
+    });
+
+    document.getElementById('btn-restart').addEventListener('click', function() {
+        sessionStorage.clear();
+        location.reload();
+    });
+
+    var feedbackModal = document.getElementById('feedback-modal');
+    document.getElementById('btn-feedback').addEventListener('click', function() {
+        feedbackModal.classList.add('show');
+    });
+    document.getElementById('feedback-cancel').addEventListener('click', function() {
         feedbackModal.classList.remove('show');
+        document.getElementById('feedback-text').value = '';
+    });
+    document.getElementById('feedback-submit').addEventListener('click', async function() {
+        var type = document.getElementById('feedback-type').value;
+        var text = document.getElementById('feedback-text').value.trim();
+
+        if (!text || text.length < 5) {
+            showError('feedback-error', 'لطفاً متن نظر خود را بنویسید (حداقل ۵ کاراکتر).');
+            return;
+        }
+
+        var btn = document.getElementById('feedback-submit');
+        btn.disabled = true;
+        btn.textContent = 'در حال ارسال...';
+
+        try {
+            var res = await fetch(API + '/feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: state.userId || sessionStorage.getItem('userId') || 'anonymous',
+                    visit_id: state.visitId || sessionStorage.getItem('visitId') || 'anonymous',
+                    feedback_type: type,
+                    feedback_text: text
+                })
+            });
+
+            if (res.ok) {
+                feedbackModal.classList.remove('show');
+                document.getElementById('feedback-text').value = '';
+                alert('✅ نظر شما با موفقیت ارسال شد. از شما سپاسگزاریم!');
+            } else {
+                throw new Error('خطا در ارسال');
+            }
+        } catch (e) {
+            showError('feedback-error', 'خطا در ارسال نظر. لطفاً دوباره تلاش کنید.');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '📤 ارسال';
+        }
+    });
+    feedbackModal.addEventListener('click', function(e) {
+        if (e.target === feedbackModal) {
+            feedbackModal.classList.remove('show');
+        }
+    });
+
+    async function openProfileModal() {
+        const userId = state.userId || sessionStorage.getItem('userId');
+        const profileModal = document.getElementById('profile-modal');
+        const profileContent = document.getElementById('profile-content');
+
+        if (!profileModal || !profileContent) {
+            console.error("Modal elements not found!");
+            return;
+        }
+
+        if (!userId || userId === 'undefined') {
+            alert('👋 برای مشاهده پروفایل، لطفاً ابتدا فرم ثبت‌نام را تکمیل کنید و یک ویزیت را شروع کنید.');
+            return;
+        }
+        
+        profileModal.classList.add('show');
+        profileContent.innerHTML = 'در حال دریافت اطلاعات...';
+
+        try {
+            const resLoyalty = await fetch(API + '/users/' + userId + '/loyalty');
+            const dataLoyalty = await resLoyalty.json();
+
+            const resRef = await fetch(API + '/users/' + userId + '/referrals');
+            const dataRef = await resRef.json();
+
+            profileContent.innerHTML = `
+                <div style="background:#f0f9f4; padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid #4ade80;">
+                    <p style="margin:0; font-size:14px; color:#666;">کد معرف اختصاصی شما:</p>
+                    <h2 style="margin:5px 0; color:#0f4c3a; letter-spacing:2px;">${dataRef.referral_code}</h2>
+                    <p style="font-size:12px; color:#888;">این کد را به دوستان خود بدهید تا با اولین خرید آن‌ها، به شما پاداش تعلق بگیرد.</p>
+                </div>
+                
+                <div style="background:#fef3c7; padding:15px; border-radius:10px; border:1px solid #f59e0b;">
+                    <p style="margin:0; font-size:14px; color:#666;">سطح فعلی شما:</p>
+                    <h2 style="margin:5px 0; color:#92400e;">${dataLoyalty.icon} ${dataLoyalty.name}</h2>
+                    <p style="margin:0; font-size:13px; color:#78350f;">تخفیف دائمی شما: ${dataLoyalty.discount}٪</p>
+                    <p style="margin:5px 0 0 0; font-size:12px; color:#666;">ویزیت‌های موفق: ${dataLoyalty.completed_visits}</p>
+                </div>
+                
+                ${dataLoyalty.next_tier ? `
+                <div style="margin-top:15px; font-size:13px; color:#0ea5e9;">
+                    🎯 برای رسیدن به سطح <b>${dataLoyalty.next_tier.name}</b> فقط <b>${dataLoyalty.next_tier.visits_needed}</b> ویزیت دیگر نیاز دارید!
+                </div>` : `<div style="margin-top:15px; color:#10b981; font-weight:bold;">شما در بالاترین سطح (استاد حکیم) هستید! 🎉</div>`}
+            `;
+        } catch (e) {
+            profileContent.innerHTML = '<p style="color:red;">خطا در دریافت اطلاعات. لطفاً دوباره تلاش کنید.</p>';
+            console.error(e);
+        }
     }
-});
 
-// ============================================================
-// پروفایل کاربر (دکمه فوتر)
-// ============================================================
-async function openProfileModal() {
-    const userId = state.userId || sessionStorage.getItem('userId');
-    const profileModal = document.getElementById('profile-modal');
-    const profileContent = document.getElementById('profile-content');
-
-    if (!profileModal || !profileContent) {
-        console.error("Modal elements not found!");
-        return;
-    }
-
-    // اگر کاربر هنوز ثبت‌نام نکرده باشد
-    if (!userId || userId === 'undefined') {
-        alert('👋 برای مشاهده پروفایل، لطفاً ابتدا فرم ثبت‌نام را تکمیل کنید و یک ویزیت را شروع کنید.');
-        return;
-    }
-    
-    profileModal.classList.add('show');
-    profileContent.innerHTML = 'در حال دریافت اطلاعات...';
-
-    try {
-        const resLoyalty = await fetch(API + '/users/' + userId + '/loyalty');
-        const dataLoyalty = await resLoyalty.json();
-
-        const resRef = await fetch(API + '/users/' + userId + '/referrals');
-        const dataRef = await resRef.json();
-
-        profileContent.innerHTML = `
-            <div style="background:#f0f9f4; padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid #4ade80;">
-                <p style="margin:0; font-size:14px; color:#666;">کد معرف اختصاصی شما:</p>
-                <h2 style="margin:5px 0; color:#0f4c3a; letter-spacing:2px;">${dataRef.referral_code}</h2>
-                <p style="font-size:12px; color:#888;">این کد را به دوستان خود بدهید تا با اولین خرید آن‌ها، به شما پاداش تعلق بگیرد.</p>
-            </div>
-            
-            <div style="background:#fef3c7; padding:15px; border-radius:10px; border:1px solid #f59e0b;">
-                <p style="margin:0; font-size:14px; color:#666;">سطح فعلی شما:</p>
-                <h2 style="margin:5px 0; color:#92400e;">${dataLoyalty.icon} ${dataLoyalty.name}</h2>
-                <p style="margin:0; font-size:13px; color:#78350f;">تخفیف دائمی شما: ${dataLoyalty.discount}٪</p>
-                <p style="margin:5px 0 0 0; font-size:12px; color:#666;">ویزیت‌های موفق: ${dataLoyalty.completed_visits}</p>
-            </div>
-            
-            ${dataLoyalty.next_tier ? `
-            <div style="margin-top:15px; font-size:13px; color:#0ea5e9;">
-                🎯 برای رسیدن به سطح <b>${dataLoyalty.next_tier.name}</b> فقط <b>${dataLoyalty.next_tier.visits_needed}</b> ویزیت دیگر نیاز دارید!
-            </div>` : `<div style="margin-top:15px; color:#10b981; font-weight:bold;">شما در بالاترین سطح (استاد حکیم) هستید! 🎉</div>`}
-        `;
-    } catch (e) {
-        profileContent.innerHTML = '<p style="color:red;">خطا در دریافت اطلاعات. لطفاً دوباره تلاش کنید.</p>';
-        console.error(e);
-    }
-}
-
-// بستن مدال پروفایل
-document.getElementById('profile-close').addEventListener('click', function() {
-    document.getElementById('profile-modal').classList.remove('show');
-});
-</script>
+    document.getElementById('profile-close').addEventListener('click', function() {
+        document.getElementById('profile-modal').classList.remove('show');
+    });
+    </script>
 </body>
 </html>

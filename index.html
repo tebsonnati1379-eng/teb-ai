@@ -7,24 +7,21 @@
     <meta name="description" content="با ربات هوش مصنوعی دکتر حکیم، با ۸۸ سوال تخصصی مزاج خود را کشف کنید و نسخه اختصاصی گیاهی و معنوی دریافت کنید.">
     
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
         body { 
             font-family: 'Vazirmatn', sans-serif; 
-            /* اعمال اجباری رنگ سبز زمردی */
             background-color: #0f4c3a !important; 
+            background-image: radial-gradient(circle at center, #1a6b52 0%, #0f4c3a 100%) !important;
             color: #f8fafc; 
             overflow-x: hidden;
         }
         
-        /* رنگ‌های برند */
         .brand-green { color: #0f4c3a; }
         .brand-bg-green { background-color: #0f4c3a; }
         .brand-gold { color: #d4af37; }
         .brand-bg-gold { background-color: #d4af37; }
 
-        /* افکت شیشه‌ای */
         .glass-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(16px);
@@ -33,12 +30,6 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
 
-        /* پس‌زمینه گرادیانت سبز زمردی (اجباری) */
-        .bg-stars {
-            background-image: radial-gradient(circle at center, #1a6b52 0%, #0f4c3a 100%) !important;
-        }
-
-        /* افکت درخشش دکمه */
         @keyframes pulse-gold {
             0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
             70% { box-shadow: 0 0 0 20px rgba(212, 175, 55, 0); }
@@ -46,7 +37,6 @@
         }
         .btn-glow { animation: pulse-gold 2s infinite; }
 
-        /* انیمیشن شناور بودن ربات */
         @keyframes float {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
@@ -55,21 +45,21 @@
         .floating-img { animation: float 6s ease-in-out infinite; }
     </style>
     <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "دکتر حکیم",
-  "url": "https://drhakimai.ir",
-  "logo": "https://drhakimai.ir/images/cover.png",
-  "description": "ربات هوش مصنوعی طب سنتی و اسلامی برای تشخیص مزاج و درمان ریشه‌ای بیماری‌ها",
-  "sameAs": [
-    "https://www.instagram.com/drhakimai",
-    "https://eitaa.com/drhakimai"
-  ]
-}
-</script>
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "دکتر حکیم",
+      "url": "https://drhakimai.ir",
+      "logo": "https://assets.drhakimai.ir/cover.png",
+      "description": "ربات هوش مصنوعی طب سنتی و اسلامی برای تشخیص مزاج و درمان ریشه‌ای بیماری‌ها",
+      "sameAs": [
+        "https://www.instagram.com/drhakimai",
+        "https://eitaa.com/drhakimai"
+      ]
+    }
+    </script>
 </head>
-<body class="antialiased bg-stars min-h-screen relative">
+<body class="antialiased min-h-screen relative">
 
     <!-- هدر -->
     <header class="fixed w-full top-0 z-50 glass-card">
@@ -82,118 +72,113 @@
         </div>
     </header>
 
-<main>
-    <!-- بخش قهرمان (Hero) -->
-    <section class="pt-32 pb-20 relative z-10">
-        <div class="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
-            
-            <!-- متن -->
-            <div class="md:w-1/2 text-center md:text-right mb-12 md:mb-0">
-                <div class="inline-block bg-green-900 bg-opacity-50 text-green-300 px-4 py-2 rounded-full text-xs font-bold mb-6 border border-green-700">
-                    🚀 نسل جدید سلامت با قدرت هوش مصنوعی
+    <main>
+        <!-- بخش قهرمان (Hero) -->
+        <section class="pt-32 pb-20 relative z-10">
+            <div class="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
+                
+                <!-- متن -->
+                <div class="md:w-1/2 text-center md:text-right mb-12 md:mb-0">
+                    <div class="inline-block bg-green-900 bg-opacity-50 text-green-300 px-4 py-2 rounded-full text-xs font-bold mb-6 border border-green-700">
+                        🚀 نسل جدید سلامت با قدرت هوش مصنوعی
+                    </div>
+                    <h1 class="text-5xl md:text-6xl font-extrabold text-white leading-tight mb-6">
+                        راز دردهای جسم و روحت را <br> 
+                        <span class="brand-gold">ریشه‌ای درمان کن!</span>
+                    </h1>
+                    <p class="text-lg text-gray-300 mb-10 leading-relaxed md:pl-10">
+                        دیگر برای هر درد کوچکی سراغ قرص‌های شیمیایی نرو. ربات هوش مصنوعی دکتر حکیم با <strong class="text-white">۸۸ سوال تخصصی</strong>، مزاج دقیق تو را کشف کرده و نسخه‌ای کاملاً اختصاصی از دل طب ابن‌سینا برایت می‌پیچد.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                        <a href="/chat" class="btn-glow brand-bg-gold text-gray-900 text-center px-8 py-4 rounded-xl font-black text-lg hover:bg-yellow-400 transition-all duration-300 transform hover:scale-105">
+                            دریافت تحلیل تخصصی (۵۰٪ تخفیف)
+                        </a>
+                    </div>
+                    <div class="mt-8 flex items-center justify-center md:justify-start gap-6 text-sm text-gray-300">
+                        <span class="flex items-center gap-2"><span class="text-xl">🛡️</span> ضمانت ۱۰۰٪ بازگشت وجه</span>
+                        <span class="flex items-center gap-2"><span class="text-xl">⚡</span> فعال‌سازی آنی</span>
+                    </div>
                 </div>
-                <h1 class="text-5xl md:text-6xl font-extrabold text-white leading-tight mb-6">
-                    راز دردهای جسم و روحت را <br> 
-                    <span class="brand-gold">ریشه‌ای درمان کن!</span>
-                </h1>
-                <p class="text-lg text-gray-300 mb-10 leading-relaxed md:pl-10">
-                    دیگر برای هر درد کوچکی سراغ قرص‌های شیمیایی نرو. ربات هوش مصنوعی دکتر حکیم با <strong class="text-white">۸۸ سوال تخصصی</strong>، مزاج دقیق تو را کشف کرده و نسخه‌ای کاملاً اختصاصی از دل طب ابن‌سینا برایت می‌پیچد.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                    <a href="/chat" class="btn-glow brand-bg-gold text-gray-900 text-center px-8 py-4 rounded-xl font-black text-lg hover:bg-yellow-400 transition-all duration-300 transform hover:scale-105">
-                        دریافت تحلیل تخصصی (۵۰٪ تخفیف)
-                    </a>
-                </div>
-                <div class="mt-8 flex items-center justify-center md:justify-start gap-6 text-sm text-gray-300">
-                    <span class="flex items-center gap-2"><span class="text-xl">🛡️</span> ضمانت ۱۰۰٪ بازگشت وجه</span>
-                    <span class="flex items-center gap-2"><span class="text-xl">⚡</span> فعال‌سازی آنی</span>
+                
+                <!-- تصویر ربات -->
+                <div class="md:w-1/2 flex justify-center relative">
+                    <div class="absolute inset-0 bg-green-500 rounded-full blur-3xl opacity-20"></div>
+                    <img src="https://assets.drhakimai.ir/cover.png" alt="ربات دکتر حکیم" class="floating-img relative z-10 w-80 md:w-[28rem] object-contain drop-shadow-[0_20px_50px_rgba(212,175,55,0.3)]">
                 </div>
             </div>
-            
-            <!-- تصویر ربات -->
-            <div class="md:w-1/2 flex justify-center relative">
-                <div class="absolute inset-0 bg-green-500 rounded-full blur-3xl opacity-20"></div>
-                <img src="https://assets.drhakimai.ir/cover.png" alt="ربات دکتر حکیم" class="floating-img relative z-10 w-80 md:w-[28rem] object-contain drop-shadow-[0_20px_50px_rgba(212,175,55,0.3)]">
-                <img src="https://assets.drhakimai.ir/cover.png" width="400" height="400" alt="ربات دکتر حکیم" class="...">
-            </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- بخش اعتمادسازی -->
-    <section class="py-20 relative z-10">
-        <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center text-white mb-12">چرا کاربران عاشق دکتر حکیم هستند؟</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="glass-card p-8 rounded-2xl text-center hover:-translate-y-2 transition duration-300">
-                    <div class="text-5xl mb-4">🧠</div>
-                    <h3 class="text-xl font-bold brand-gold mb-3">تشخیص دقیق با هوش مصنوعی</h3>
-                    <p class="text-gray-300 text-sm leading-relaxed">با ۸۸ سوال استاندارد، ریشه مزاجی بیماری‌هایت را دقیقاً پیدا می‌کند.</p>
-                </div>
-                <div class="glass-card p-8 rounded-2xl text-center hover:-translate-y-2 transition duration-300">
-                    <div class="text-5xl mb-4">🌿</div>
-                    <h3 class="text-xl font-bold brand-gold mb-3">نسخه کاملاً منحصر به فرد</h3>
-                    <p class="text-gray-300 text-sm leading-relaxed">برنامه غذایی، گیاهان دارویی و اذکار معنوی دقیقاً برای خودت طراحی می‌شود.</p>
-                </div>
-                <div class="glass-card p-8 rounded-2xl text-center hover:-translate-y-2 transition duration-300">
-                    <div class="text-5xl mb-4">👑</div>
-                    <h3 class="text-xl font-bold brand-gold mb-3">باشگاه حکیمان (VIP)</h3>
-                    <p class="text-gray-300 text-sm leading-relaxed">با هر ویزیت سطحت ارتقا پیدا می‌کند و تا ۵۰٪ تخفیف دائمی می‌گیری!</p>
+        <!-- بخش اعتمادسازی -->
+        <section class="py-20 relative z-10">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center text-white mb-12">چرا کاربران عاشق دکتر حکیم هستند؟</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass-card p-8 rounded-2xl text-center hover:-translate-y-2 transition duration-300">
+                        <div class="text-5xl mb-4">🧠</div>
+                        <h3 class="text-xl font-bold brand-gold mb-3">تشخیص دقیق با هوش مصنوعی</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">با ۸۸ سوال استاندارد، ریشه مزاجی بیماری‌هایت را دقیقاً پیدا می‌کند.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-2xl text-center hover:-translate-y-2 transition duration-300">
+                        <div class="text-5xl mb-4">🌿</div>
+                        <h3 class="text-xl font-bold brand-gold mb-3">نسخه کاملاً منحصر به فرد</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">برنامه غذایی، گیاهان دارویی و اذکار معنوی دقیقاً برای خودت طراحی می‌شود.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-2xl text-center hover:-translate-y-2 transition duration-300">
+                        <div class="text-5xl mb-4">👑</div>
+                        <h3 class="text-xl font-bold brand-gold mb-3">باشگاه حکیمان (VIP)</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">با هر ویزیت سطحت ارتقا پیدا می‌کند و تا ۵۰٪ تخفیف دائمی می‌گیری!</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
         <!-- بخش مقالات تخصصی -->
-    <section class="py-20 relative z-10 border-t border-green-800">
-        <div class="container mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center text-white mb-12">جدیدترین مقالات علمی</h2>
-            
-            <!-- کارت مقاله نمونه -->
-            <div class="max-w-3xl mx-auto glass-card p-8 rounded-2xl flex flex-col md:flex-row items-center gap-6 hover:-translate-y-1 transition duration-300">
-                <div class="text-6xl">🍂</div>
-                <div class="flex-1 text-center md:text-right">
-                    <h3 class="text-2xl font-bold brand-gold mb-2">راز علمی ریزش مو و استرس پنهان</h3>
-                    <p class="text-gray-300 text-sm leading-relaxed mb-4">آیا می‌دانستید ریزش مو می‌تواند نشانه ترس و استرس پنهان باشد؟ در این مقاله، ارتباط هورمون کورتیزول و طب سنتی را کشف کنید.</p>
-                    <!-- آدرس این لینک اصلاح شد -->
-                    <a href="/article/hair-loss-fear" class="inline-block brand-bg-gold text-gray-900 font-bold px-6 py-2 rounded-lg hover:bg-yellow-400 transition">
-                        مطالعه مقاله کامل ←
+        <section class="py-20 relative z-10 border-t border-green-800">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center text-white mb-12">جدیدترین مقالات علمی</h2>
+                
+                <div class="max-w-3xl mx-auto glass-card p-8 rounded-2xl flex flex-col md:flex-row items-center gap-6 hover:-translate-y-1 transition duration-300">
+                    <div class="text-6xl">🍂</div>
+                    <div class="flex-1 text-center md:text-right">
+                        <h3 class="text-2xl font-bold brand-gold mb-2">راز علمی ریزش مو و استرس پنهان</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed mb-4">آیا می‌دانستید ریزش مو می‌تواند نشانه ترس و استرس پنهان باشد؟ در این مقاله، ارتباط هورمون کورتیزول و طب سنتی را کشف کنید.</p>
+                        <a href="/article/hair-loss-fear" class="inline-block brand-bg-gold text-gray-900 font-bold px-6 py-2 rounded-lg hover:bg-yellow-400 transition">
+                            مطالعه مقاله کامل ←
+                        </a>
+                    </div>
+                </div>
+
+                <div class="text-center mt-10">
+                    <a href="/blog.html" class="inline-block bg-transparent border-2 border-[#d4af37] text-[#d4af37] font-bold px-8 py-3 rounded-xl hover:bg-[#d4af37] hover:text-gray-900 transition">
+                       مشاهده تمام مقالات سریال بیماری‌های خاموش ←
                     </a>
                 </div>
             </div>
+        </section>
 
-            <!-- دکمه مشاهده همه مقالات (به پایین منتقل شد) -->
-            <div class="text-center mt-10">
-                <a href="/blog.html" class="inline-block bg-transparent border-2 border-[#d4af37] text-[#d4af37] font-bold px-8 py-3 rounded-xl hover:bg-[#d4af37] hover:text-gray-900 transition">
-                   مشاهده تمام مقالات سریال بیماری‌های خاموش ←
-                </a>
+        <!-- بخش قیمت -->
+        <section class="py-20 relative z-10">
+            <div class="container mx-auto px-6 text-center">
+                <div class="max-w-md mx-auto glass-card p-10 rounded-3xl relative overflow-hidden border-t-4 border-yellow-500">
+                    <div class="absolute top-0 right-0 bg-red-600 text-white px-4 py-1 rounded-bl-lg font-bold text-xs">تخفیف افتتاحیه</div>
+                    <p class="text-gray-400 line-through text-lg mt-4">۲۰۰,۰۰۰ تومان</p>
+                    <div class="text-6xl font-black text-white my-2">۱۰۰,۰۰۰ <span class="text-lg text-gray-400 font-normal">تومان</span></div>
+                    <p class="text-sm text-green-400 font-bold mb-8">شامل تحلیل ۸۸ سوالی و خروجی PDF</p>
+                    
+                    <ul class="text-right space-y-4 mb-8 text-gray-300 text-sm">
+                        <li class="flex items-center gap-3"><span class="text-green-500 text-lg">✔</span> تشخیص مزاج صفراوی، دموی، بلغمی، سوداوی</li>
+                        <li class="flex items-center gap-3"><span class="text-green-500 text-lg">✔</span> برنامه هفتگی غذایی و دارویی</li>
+                        <li class="flex items-center gap-3"><span class="text-green-500 text-lg">✔</span> توصیه‌های معنوی و اذکار</li>
+                        <li class="flex items-center gap-3"><span class="text-green-500 text-lg">✔</span> گارانتی بدون قید و شرط بازگشت وجه</li>
+                    </ul>
+
+                    <a href="/chat" class="block w-full brand-bg-green text-white font-bold py-4 rounded-xl text-lg hover:bg-green-700 transition shadow-[0_0_20px_rgba(15,76,58,0.5)]">
+                        همین حالا شروع کن
+                    </a>
+                </div>
             </div>
-
-        </div>
-    </section>
-
-    <!-- بخش قیمت -->
-    <section class="py-20 relative z-10">
-        <div class="container mx-auto px-6 text-center">
-            <div class="max-w-md mx-auto glass-card p-10 rounded-3xl relative overflow-hidden border-t-4 border-yellow-500">
-                <div class="absolute top-0 right-0 bg-red-600 text-white px-4 py-1 rounded-bl-lg font-bold text-xs">تخفیف افتتاحیه</div>
-                <p class="text-gray-400 line-through text-lg mt-4">۲۰۰,۰۰۰ تومان</p>
-                <div class="text-6xl font-black text-white my-2">۱۰۰,۰۰۰ <span class="text-lg text-gray-400 font-normal">تومان</span></div>
-                <p class="text-sm text-green-400 font-bold mb-8">شامل تحلیل ۸۸ سوالی و خروجی PDF</p>
-                
-                <ul class="text-right space-y-4 mb-8 text-gray-300 text-sm">
-                    <li class="flex items-center gap-3"><span class="text-green-500 text-lg">✔</span> تشخیص مزاج صفراوی، دموی، بلغمی، سوداوی</li>
-                    <li class="flex items-center gap-3"><span class="text-green-500 text-lg">✔</span> برنامه هفتگی غذایی و دارویی</li>
-                    <li class="flex items-center gap-3"><span class="text-green-500 text-lg">✔</span> توصیه‌های معنوی و اذکار</li>
-                    <li class="flex items-center gap-3"><span class="text-green-500 text-lg">✔</span> گارانتی بدون قید و شرط بازگشت وجه</li>
-                </ul>
-
-                <a href="/chat" class="block w-full brand-bg-green text-white font-bold py-4 rounded-xl text-lg hover:bg-green-700 transition shadow-[0_0_20px_rgba(15,76,58,0.5)]">
-                    همین حالا شروع کن
-                </a>
-            </div>
-        </div>
-    </section>
-<main>
+        </section>
+    </main>
 
     <!-- فوتر -->
     <footer class="border-t border-green-800 py-10 text-center relative z-10">
@@ -214,5 +199,7 @@
         </div>
     </footer>
 
+    <!-- اسکریپت Tailwind در انتهای صفحه -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </body>
 </html>
