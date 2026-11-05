@@ -1,0 +1,27 @@
+{
+  "name": "teb-ai",
+  "version": "1.0.0",
+  "description": "ربات هوش مصنوعی طب سنتی و اسلامی",
+  "main": "index.js",
+    "scripts": {
+    "build": "tailwindcss -i ./input.css -o ./style.css --minify",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tebsonnati1379-eng/teb-ai.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/tebsonnati1379-eng/teb-ai/issues"
+  },
+  "homepage": "https://github.com/tebsonnati1379-eng/teb-ai#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.6.2",
+    "postcss": "^8.5.32",
+    "tailwindcss": "^3.4.19"
+  }
+}
