@@ -18,7 +18,7 @@ load_dotenv()
 
 from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Request
-from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, FileResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy import (
@@ -602,13 +602,15 @@ def check_admin_session(token):
 # FastAPI App
 # ============================================================
 app = FastAPI(title="Teb AI - ربات طب سنتی و اسلامی")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 # در بالای فایل، مطمئن شو که import os وجود دارد
 import os
 
 # خط mount را به این شکل تغییر بده
 app.mount("/images", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "images")), name="images")
-from fastapi.responses import FileResponse
 
+from fastapi.responses import FileResponse
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/terms")
 def terms_page():
@@ -1619,7 +1621,6 @@ async def complete_visit(visit_id: str):
         stool_shape = answers.get('stool_shape', 'موردی ذکر نشده')
         headache = answers.get('headache', 'موردی ذکر نشده')
         bloating = answers.get('bloating', 'موردی ذکر نشده')
-        today_shamsi = jdatetime.date.today().strftime("%Y/%m/%d")
                 # ✅ تاریخ شمسی امروز
         today_shamsi = jdatetime.date.today().strftime("%Y/%m/%d")
 
