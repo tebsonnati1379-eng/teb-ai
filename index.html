@@ -6,13 +6,17 @@
     <title>دکتر حکیم | نسل جدید سلامت با هوش مصنوعی</title>
     <meta name="description" content="با ربات هوش مصنوعی دکتر حکیم، با ۸۸ سوال تخصصی مزاج خود را کشف کنید و نسخه اختصاصی گیاهی و معنوی دریافت کنید.">
     
-    <!-- Preconnect for faster loading -->
+    <!-- Favicon برای رفع خطای کنسول (Best Practices) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
+
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://assets.drhakimai.ir">
     
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <!-- Preload Font for Performance -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css"></noscript>
     
-    <!-- Tailwind MUST be in the head to prevent broken layout -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
@@ -57,7 +61,7 @@
       "@type": "Organization",
       "name": "دکتر حکیم",
       "url": "https://drhakimai.ir",
-      "logo": "https://assets.drhakimai.ir/cover.png",
+      "logo": "https://assets.drhakimai.ir/cover.webp",
       "description": "ربات هوش مصنوعی طب سنتی و اسلامی برای تشخیص مزاج و درمان ریشه‌ای بیماری‌ها",
       "sameAs": [
         "https://www.instagram.com/drhakimai",
@@ -68,7 +72,6 @@
 </head>
 <body class="antialiased min-h-screen relative">
 
-    <!-- هدر -->
     <header class="fixed w-full top-0 z-50 glass-card">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-2">
@@ -80,11 +83,9 @@
     </header>
 
     <main>
-        <!-- بخش قهرمان (Hero) -->
         <section class="pt-32 pb-20 relative z-10">
             <div class="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
                 
-                <!-- متن -->
                 <div class="md:w-1/2 text-center md:text-right mb-12 md:mb-0">
                     <div class="inline-block bg-green-900 bg-opacity-50 text-green-300 px-4 py-2 rounded-full text-xs font-bold mb-6 border border-green-700">
                         🚀 نسل جدید سلامت با قدرت هوش مصنوعی
@@ -107,16 +108,14 @@
                     </div>
                 </div>
                 
-                <!-- تصویر ربات -->
                 <div class="md:w-1/2 flex justify-center relative">
                     <div class="absolute inset-0 bg-green-500 rounded-full blur-3xl opacity-20"></div>
-                    <!-- ابعاد عکس برای جلوگیری از پرش تنظیم شد -->
+                    <!-- آدرس عکس به cover.webp تغییر کرد -->
                     <img src="https://assets.drhakimai.ir/cover.webp" width="450" height="450" alt="ربات دکتر حکیم" class="floating-img relative z-10 w-80 md:w-[28rem] object-contain drop-shadow-[0_20px_50px_rgba(212,175,55,0.3)]">
                 </div>
             </div>
         </section>
 
-        <!-- بخش اعتمادسازی -->
         <section class="py-20 relative z-10">
             <div class="container mx-auto px-6">
                 <h2 class="text-3xl font-bold text-center text-white mb-12">چرا کاربران عاشق دکتر حکیم هستند؟</h2>
@@ -140,7 +139,6 @@
             </div>
         </section>
 
-        <!-- بخش مقالات تخصصی -->
         <section class="py-20 relative z-10 border-t border-green-800">
             <div class="container mx-auto px-6">
                 <h2 class="text-3xl font-bold text-center text-white mb-12">جدیدترین مقالات علمی</h2>
@@ -164,7 +162,6 @@
             </div>
         </section>
 
-        <!-- بخش قیمت -->
         <section class="py-20 relative z-10">
             <div class="container mx-auto px-6 text-center">
                 <div class="max-w-md mx-auto glass-card p-10 rounded-3xl relative overflow-hidden border-t-4 border-yellow-500">
@@ -188,7 +185,6 @@
         </section>
     </main>
 
-    <!-- فوتر -->
     <footer class="border-t border-green-800 py-10 text-center relative z-10">
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -206,6 +202,5 @@
             <p class="text-xs text-gray-400">© ۱۴۰۵ دکتر حکیم. تمامی حقوق محفوظ است. | پشتیبانی: bale.ir/TebAI_Help_bot</p>
         </div>
     </footer>
-
 </body>
 </html>
