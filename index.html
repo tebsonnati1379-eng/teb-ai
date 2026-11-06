@@ -10,7 +10,6 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
 
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
     
     <link rel="preload" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css"></noscript>
@@ -22,7 +21,7 @@
             background-image: radial-gradient(circle at center, #1a6b52 0%, #0f4c3a 100%) !important;
             color: #f8fafc; 
             overflow-x: hidden;
-            padding-bottom: 100px; /* فاصله برای دکمه شناور موبایل */
+            padding-bottom: 100px; 
         }
         @media (min-width: 768px) { body { padding-bottom: 0; } }
         
@@ -30,7 +29,6 @@
         .brand-bg-gold { background-color: #d4af37; }
         .brand-bg-green { background-color: #0f4c3a; }
 
-        /* افکت شیشه‌ای استاندارد */
         .glass-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(16px);
@@ -39,7 +37,6 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
 
-        /* کادر درخشان برای تیترها */
         .glowing-title-box {
             background: linear-gradient(135deg, rgba(15,76,58,0.9), rgba(26,107,82,0.9));
             border: 2px solid #d4af37;
@@ -64,7 +61,6 @@
         }
         .floating-img { animation: float 6s ease-in-out infinite; }
 
-        /* اسکرول‌بار نظرات */
         .reviews-scroll::-webkit-scrollbar { width: 8px; }
         .reviews-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 10px; }
         .reviews-scroll::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 10px; }
@@ -127,12 +123,15 @@
                             </div>
                         </div>
 
+                        <!-- 🌟 اصلاح قیمت در کادر پیشنهاد ویژه با استایل مستقیم -->
                         <div class="bg-black/60 p-5 md:p-6 rounded-xl border border-green-700/60 shadow-lg">
-                            <div class="flex items-center justify-between mb-4">
+                            <div class="flex flex-col sm:flex-row items-center justify-between mb-4 gap-4">
                                 <span class="text-white text-base md:text-lg font-bold">🍕 هزینه یک پیتزا، برای سلامتی!</span>
-                                <div class="text-left">
-                                    <span class="text-gray-400 line-through text-sm block mb-1">۲۰۰,۰۰۰</span>
-                                    <span class="text-[#d4af37] font-black text-3xl md:text-4xl">۱۰۰,۰۰۰ <span class="text-sm font-normal text-gray-300">تومان</span></span>
+                                <div class="text-center sm:text-left mt-2 sm:mt-0 bg-black/40 px-4 py-2 rounded-lg border border-white/10">
+                                    <span class="text-gray-400 line-through block mb-1" style="font-size: 20px; font-weight: bold;">۲۰۰,۰۰۰ تومان</span>
+                                    <span class="text-[#d4af37] font-black block" style="font-size: 42px; line-height: 1.1; text-shadow: 0 0 15px rgba(212,175,55,0.4);">
+                                        ۱۰۰,۰۰۰ <span class="text-sm font-normal text-gray-300">تومان</span>
+                                    </span>
                                 </div>
                             </div>
                             <div class="flex items-start gap-3 text-green-300 font-bold text-sm md:text-base bg-green-900/60 p-4 rounded-lg mt-4">
@@ -201,7 +200,6 @@
                     <div class="glass-card p-5 rounded-xl text-right"><div class="flex text-yellow-400 text-sm mb-3">⭐⭐⭐⭐⭐</div><p class="text-sm text-gray-300 leading-relaxed mb-4">«من ۳۲ سالمه و همیشه فکر می‌کردم گرمم. ولی این ربات فهموند که سوداوی هستم! همه چیز درباره‌ی من درست بود.»</p><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-yellow-700 flex items-center justify-center text-sm text-white">م</div><span class="text-xs text-gray-400">محمد - زنجان</span></div></div>
                 </div>
 
-                <!-- فرم ثبت نظر جدید -->
                 <div class="max-w-2xl mx-auto glass-card p-8 rounded-2xl border-2 border-[#d4af37]/40 mt-12 bg-[#0f4c3a]/80 shadow-xl">
                     <h3 class="text-white font-bold mb-5 text-base md:text-lg">تجربه خودت رو با دکتر حکیم بنویس:</h3>
                     <form id="review-form" class="flex flex-col gap-4">
@@ -266,8 +264,8 @@
                     </div>
                 </div>
 
-                <!-- 🌟 اصلاح فاصله دکمه مقالات (فاصله بسیار زیاد از بالا و پایین) -->
-                <div class="text-center mt-32 mb-32 md:mt-40 md:mb-40">
+                <!-- 🌟 اصلاح قطعی فاصله دکمه مقالات با استایل مستقیم (بدون نیاز به تیلویند) -->
+                <div class="text-center" style="margin-top: 120px; margin-bottom: 120px;">
                     <a href="/blog.html" class="inline-block bg-transparent border-2 border-[#d4af37] text-[#d4af37] font-bold px-12 py-5 rounded-2xl hover:bg-[#d4af37] hover:text-gray-900 transition shadow-xl text-xl">
                        مشاهده تمام مقالات سریال بیماری‌های خاموش ←
                     </a>
@@ -275,7 +273,7 @@
             </div>
         </section>
 
-        <!-- 🌟 بخش قیمت و CTA نهایی (بازطراحی شده با اعداد درشت و کادر خیره‌کننده) -->
+        <!-- 🌟 بخش قیمت و CTA نهایی (بازطراحی شده با استایل مستقیم برای فونت‌های غول‌پیکر) -->
         <section class="pt-16 pb-32 relative z-10">
             <div class="container mx-auto px-6 text-center">
                 <div class="max-w-2xl mx-auto glass-card p-8 md:p-14 rounded-[2.5rem] relative overflow-hidden border-4 border-[#d4af37] shadow-[0_0_80px_rgba(212,175,55,0.25)] bg-gradient-to-b from-[#0f4c3a] to-[#0a3327]">
@@ -284,17 +282,17 @@
 
                     <h2 class="text-3xl md:text-4xl font-bold text-white mt-8 mb-10 drop-shadow-md">همین حالا نسخه اختصاصی خودت رو بگیر!</h2>
 
-                    <!-- کادر قیمت فوق‌العاده درشت و خوانا -->
-                    <div class="bg-black/50 p-8 md:p-12 rounded-3xl border-2 border-[#d4af37]/50 mb-10 shadow-inner relative">
-                        <p class="text-red-400 line-through text-2xl md:text-3xl mb-4 font-bold decoration-white/50 decoration-2">۲۰۰,۰۰۰ تومان</p>
-                        <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6">
-                            <span class="text-7xl md:text-[8rem] font-black text-[#d4af37] drop-shadow-[0_0_30px_rgba(212,175,55,0.6)] leading-none">۱۰۰,۰۰۰</span>
-                            <span class="text-3xl md:text-4xl text-gray-200 font-bold">تومان</span>
+                    <!-- کادر قیمت فوق‌العاده درشت و خوانا (با استایل مستقیم) -->
+                    <div class="bg-black/50 rounded-3xl border-2 border-[#d4af37]/50 mb-10 shadow-inner relative flex flex-col items-center justify-center" style="padding: 40px 20px; box-shadow: 0 0 30px rgba(212,175,55,0.2);">
+                        <p class="text-red-400 line-through font-bold decoration-white/50 decoration-2" style="font-size: 32px; margin-bottom: 15px;">۲۰۰,۰۰۰ تومان</p>
+                        
+                        <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                            <span class="font-black text-[#d4af37]" style="font-size: 100px; line-height: 1; text-shadow: 0 0 30px rgba(212,175,55,0.8);">۱۰۰,۰۰۰</span>
+                            <span class="text-gray-200 font-bold" style="font-size: 36px; margin-top: 15px;">تومان</span>
                         </div>
-                        <p class="text-lg md:text-xl text-green-400 font-bold mt-6">شامل تحلیل کامل ۸۸ سوالی و خروجی PDF لوکس</p>
+                        <p class="text-green-400 font-bold mt-6" style="font-size: 20px;">شامل تحلیل کامل ۸۸ سوالی و خروجی PDF لوکس</p>
                     </div>
                     
-                    <!-- لیست مزایا -->
                     <ul class="text-right space-y-5 mb-12 text-gray-100 text-base md:text-lg inline-block text-right mx-auto">
                         <li class="flex items-center gap-4"><span class="text-green-500 text-2xl">✔</span> تشخیص مزاج صفراوی، دموی، بلغمی، سوداوی</li>
                         <li class="flex items-center gap-4"><span class="text-green-500 text-2xl">✔</span> برنامه هفتگی غذایی و دارویی</li>
@@ -302,7 +300,6 @@
                         <li class="flex items-center gap-4"><span class="text-green-500 text-2xl">✔</span> گارانتی بدون قید و شرط بازگشت وجه</li>
                     </ul>
 
-                    <!-- دکمه نهایی -->
                     <a href="/chat" class="block w-full brand-bg-gold text-gray-900 font-black py-6 rounded-2xl text-2xl hover:bg-yellow-400 transition shadow-[0_0_40px_rgba(212,175,55,0.6)] transform hover:scale-105">
                         همین حالا شروع کن
                     </a>
@@ -371,7 +368,6 @@
 
     <!-- اسکریپت‌ها -->
     <script>
-        // تایمر معکوس
         function startTimer(duration, display) {
             var timer = duration, minutes, seconds;
             setInterval(function () {
@@ -388,7 +384,6 @@
             startTimer(fifteenMinutes, display);
         };
 
-        // ثبت نظر
         document.getElementById('review-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const name = document.getElementById('rev-name').value;
