@@ -7,17 +7,15 @@
     <link rel="stylesheet" href="/static/style.css">
     <meta name="description" content="با ربات هوش مصنوعی دکتر حکیم، با ۸۸ سوال تخصصی مزاج خود را کشف کنید و نسخه اختصاصی گیاهی و معنوی دریافت کنید.">
     
-    <!-- Favicon برای رفع خطای کنسول (Best Practices) -->
+    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
 
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    <link rel="preconnect" href="https://assets.drhakimai.ir">
     
-    <!-- Preload Font for Performance -->
+    <!-- Preload Font -->
     <link rel="preload" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css"></noscript>
-    
     
     <style>
         body { 
@@ -26,6 +24,10 @@
             background-image: radial-gradient(circle at center, #1a6b52 0%, #0f4c3a 100%) !important;
             color: #f8fafc; 
             overflow-x: hidden;
+            padding-bottom: 80px; /* جلوگیری از پنهان شدن فوتر توسط دکمه شناور موبایل */
+        }
+        @media (min-width: 768px) {
+            body { padding-bottom: 0; }
         }
         
         .brand-green { color: #0f4c3a; }
@@ -61,11 +63,12 @@
       "@type": "Organization",
       "name": "دکتر حکیم",
       "url": "https://drhakimai.ir",
-      "logo": "https://assets.drhakimai.ir/cover.webp",
+      "logo": "https://drhakimai.ir/static/cover.webp",
       "description": "ربات هوش مصنوعی طب سنتی و اسلامی برای تشخیص مزاج و درمان ریشه‌ای بیماری‌ها",
       "sameAs": [
         "https://www.instagram.com/drhakimai",
-        "https://eitaa.com/drhakimai"
+        "https://eitaa.com/drhakimai",
+        "https://ble.ir/TebAI_Help_bot"
       ]
     }
     </script>
@@ -74,16 +77,17 @@
 
     <header class="fixed w-full top-0 z-50 glass-card">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-2">
+            <a href="/" class="flex items-center gap-2 hover:opacity-80 transition">
                 <span class="text-2xl">🌿</span>
                 <h1 class="text-xl font-bold text-white tracking-wider">دکتر حکیم</h1>
-            </div>
+            </a>
             <a href="/chat" class="brand-bg-gold text-gray-900 px-6 py-2 rounded-full text-sm font-bold hover:bg-yellow-400 transition-all duration-300">ورود به باشگاه</a>
         </div>
     </header>
 
     <main>
-        <section class="pt-32 pb-20 relative z-10">
+        <!-- بخش هدر و متن اصلی -->
+        <section class="pt-32 pb-12 relative z-10">
             <div class="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
                 
                 <div class="md:w-1/2 text-center md:text-right mb-12 md:mb-0">
@@ -94,29 +98,121 @@
                         راز دردهای جسم و روحت را <br> 
                         <span class="brand-gold">ریشه‌ای درمان کن!</span>
                     </h1>
-                    <p class="text-lg text-gray-300 mb-10 leading-relaxed md:pl-10">
+                    <p class="text-lg text-gray-300 mb-8 leading-relaxed md:pl-10">
                         دیگر برای هر درد کوچکی سراغ قرص‌های شیمیایی نرو. ربات هوش مصنوعی دکتر حکیم با <strong class="text-white">۸۸ سوال تخصصی</strong>، مزاج دقیق تو را کشف کرده و نسخه‌ای کاملاً اختصاصی از دل طب ابن‌سینا برایت می‌پیچد.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+
+                    <!-- متن روانشناختی فروش (Golden Copywriting) -->
+                    <div class="mb-8 p-5 rounded-2xl bg-gradient-to-br from-[#0f4c3a] to-[#1a6b52] border border-[#d4af37]/50 shadow-[0_0_20px_rgba(212,175,55,0.15)] relative overflow-hidden md:ml-10">
+                        
+                        <div class="absolute top-0 right-0 bg-red-600 text-white px-3 py-1 rounded-bl-lg font-bold text-[10px] animate-pulse">پیشنهاد ویژه و محدود</div>
+
+                        <!-- تایمر معکوس -->
+                        <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-3 mt-2">
+                            <span class="text-xs text-red-300 font-bold">⏳ تخفیف ۵۰٪ تا پایان:</span>
+                            <div id="countdown" class="text-white font-black text-lg font-mono bg-black/30 px-3 py-1 rounded">۱۵:۰۰</div>
+                        </div>
+
+                        <h3 class="text-[#d4af37] font-black text-lg md:text-xl mb-3 drop-shadow-md leading-snug">
+                            چقدر بابت درمان‌های بی‌نتیجه هزینه کردی؟ <br>
+                            <span class="text-white text-sm font-bold">وقتِ آن رسیده که به این بازی خاتمه بدی!</span>
+                        </h3>
+                        
+                        <p class="text-gray-200 text-sm leading-relaxed mb-4 text-justify">
+                            شامپوهای گران‌قیمت، قرص‌های شیمیایی و دکترهایی که در ۵ دقیقه فقط مسکن تجویز می‌کنند، هیچ‌کدام ریشه بیماری تو را درمان نکرده‌اند. <strong class="text-[#d4af37]">«دکتر حکیم»</strong> با ترکیب هوش مصنوعی و دانش ابن‌سینا، در <strong class="text-white">۸۸ سوال (فقط ۱۵ دقیقه)</strong> به اعماق جسم و روح تو نفوذ می‌کند تا دشمن اصلی را پیدا کند.
+                        </p>
+
+                        <!-- تیک‌های اعتماد -->
+                        <div class="grid grid-cols-1 gap-2 mb-4">
+                            <div class="flex items-center gap-2 text-xs text-gray-200 bg-black/20 p-2 rounded-lg">
+                                <span class="text-[#d4af37]">🎯</span> نسخه ۷ بخشی اختصاصی (مادی و معنوی)
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-gray-200 bg-black/20 p-2 rounded-lg">
+                                <span class="text-[#d4af37]">📄</span> خروجی PDF لوکس + برنامه هفتگی غذا و دارو
+                            </div>
+                        </div>
+
+                        <!-- باکس قیمت و گارانتی -->
+                        <div class="bg-black/40 p-3 rounded-xl border border-green-700/50">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-white text-xs font-bold">🍕 هزینه یک پیتزا، برای سلامتی!</span>
+                                <div class="text-left">
+                                    <span class="text-gray-500 line-through text-[10px] block">۲۰۰,۰۰۰</span>
+                                    <span class="text-[#d4af37] font-black text-base">۱۰۰,۰۰۰ تومان</span>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2 text-green-300 font-bold text-[11px] bg-green-900/50 p-2 rounded-lg mt-2">
+                                <span class="text-lg">🛡️</span>
+                                <span>گارانتی طلایی: اگر راضی نبودی، ۱۰۰٪ پولت برمی‌گردد و PDF هم برایت می‌ماند! (ریسک صفر)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- دکمه اصلی دسکتاپ -->
+                    <div class="hidden md:flex flex-col sm:flex-row gap-4 justify-start md:pl-10">
                         <a href="/chat" class="btn-glow brand-bg-gold text-gray-900 text-center px-8 py-4 rounded-xl font-black text-lg hover:bg-yellow-400 transition-all duration-300 transform hover:scale-105">
                             دریافت تحلیل تخصصی (۵۰٪ تخفیف)
                         </a>
                     </div>
-                    <div class="mt-8 flex items-center justify-center md:justify-start gap-6 text-sm text-gray-300">
-                        <span class="flex items-center gap-2"><span class="text-xl">🛡️</span> ضمانت ۱۰۰٪ بازگشت وجه</span>
-                        <span class="flex items-center gap-2"><span class="text-xl">⚡</span> فعال‌سازی آنی</span>
+                    
+                    <!-- نشان‌های اعتماد -->
+                    <div class="mt-6 hidden md:flex flex-wrap justify-start items-center gap-3 text-[11px] text-gray-400 md:pl-10">
+                        <span class="flex items-center gap-1 bg-white/5 px-2 py-1 rounded border border-white/10">
+                            🔒 پرداخت امن با زرین‌پال
+                        </span>
+                        <span class="flex items-center gap-1 bg-white/5 px-2 py-1 rounded border border-white/10">
+                            ⚡ فعال‌سازی آنی
+                        </span>
+                        <span class="flex items-center gap-1 bg-white/5 px-2 py-1 rounded border border-white/10">
+                            🛡️ حریم خصوصی ۱۰۰٪
+                        </span>
+                    </div>
+                    
+                    <div class="mt-4 hidden md:block text-right md:pl-10">
+                        <a href="https://ble.ir/TebAI_Help_bot" target="_blank" class="inline-flex items-center gap-1 text-[11px] text-gray-500 hover:text-green-400 transition">
+                            <span>❓ هنوز شک داری؟ قبل از پرداخت با پشتیبانی ما در بله چت کن</span>
+                            <span>↩</span>
+                        </a>
                     </div>
                 </div>
                 
+                <!-- تصویر ربات (آدرس به static تغییر یافت) -->
                 <div class="md:w-1/2 flex justify-center relative">
                     <div class="absolute inset-0 bg-green-500 rounded-full blur-3xl opacity-20"></div>
-                    <!-- آدرس عکس به cover.webp تغییر کرد -->
-                    <img src="https://assets.drhakimai.ir/cover.webp" width="450" height="450" alt="ربات دکتر حکیم" class="floating-img relative z-10 w-80 md:w-[28rem] object-contain drop-shadow-[0_20px_50px_rgba(212,175,55,0.3)]">
+                    <img src="/static/cover.webp" width="450" height="450" alt="ربات دکتر حکیم" class="floating-img relative z-10 w-80 md:w-[28rem] object-contain drop-shadow-[0_20px_50px_rgba(212,175,55,0.3)]">
                 </div>
             </div>
         </section>
 
-        <section class="py-20 relative z-10">
+        <!-- بخش نظرات کاربران (اعتمادسازی) -->
+        <section class="py-10 relative z-10 border-t border-green-800/50">
+            <div class="container mx-auto px-6 max-w-5xl">
+                <p class="text-center text-sm font-bold text-gray-300 mb-6">نتیجه‌ی اعتمادِ کسانی که ریسک کردند:</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- نظر ۱ -->
+                    <div class="glass-card p-4 rounded-xl text-right">
+                        <div class="flex text-yellow-400 text-xs mb-2">⭐⭐⭐⭐⭐</div>
+                        <p class="text-xs text-gray-300 leading-relaxed mb-3">«با اینکه به هوش مصنوعی شک داشتم، ولی گزارشش درباره‌ی کبد چربم دقیقاً همون چیزی بود که دکترم بعد از ۲ سال نگفت!»</p>
+                        <div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-green-700 flex items-center justify-center text-xs text-white">م</div><span class="text-[10px] text-gray-400">مهدی - تهران</span></div>
+                    </div>
+                    <!-- نظر ۲ -->
+                    <div class="glass-card p-4 rounded-xl text-right">
+                        <div class="flex text-yellow-400 text-xs mb-2">⭐⭐⭐⭐⭐</div>
+                        <p class="text-xs text-gray-300 leading-relaxed mb-3">«بخش معنوی و اذکارش برام خیلی جالب بود. مشکل بی‌خوابی داشتم که واقعاً ریشه‌ش تو استرس‌های پنهانم بود.»</p>
+                        <div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-[#d4af37] flex items-center justify-center text-xs text-black font-bold">س</div><span class="text-[10px] text-gray-400">سارا - شیراز</span></div>
+                    </div>
+                    <!-- نظر ۳ -->
+                    <div class="glass-card p-4 rounded-xl text-right">
+                        <div class="flex text-yellow-400 text-xs mb-2">⭐⭐⭐⭐⭐</div>
+                        <p class="text-xs text-gray-300 leading-relaxed mb-3">«۸۸ سوال رو با گوشی توی ۱۰ دقیقه جواب دادم. خروجی PDF رو چاپ کردم دادم به مادرم. واقعاً ارزش داشت.»</p>
+                        <div class="flex items-center gap-2"><div class="w-6 h-6 rounded-full bg-green-700 flex items-center justify-center text-xs text-white">ع</div><span class="text-[10px] text-gray-400">علی - اصفهان</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش ویژگی‌ها -->
+        <section class="py-16 relative z-10">
             <div class="container mx-auto px-6">
                 <h2 class="text-3xl font-bold text-center text-white mb-12">چرا کاربران عاشق دکتر حکیم هستند؟</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -139,7 +235,8 @@
             </div>
         </section>
 
-        <section class="py-20 relative z-10 border-t border-green-800">
+        <!-- بخش مقالات -->
+        <section class="py-16 relative z-10 border-t border-green-800">
             <div class="container mx-auto px-6">
                 <h2 class="text-3xl font-bold text-center text-white mb-12">جدیدترین مقالات علمی</h2>
                 
@@ -162,7 +259,8 @@
             </div>
         </section>
 
-        <section class="py-20 relative z-10">
+        <!-- بخش قیمت و CTA نهایی -->
+        <section class="py-16 relative z-10">
             <div class="container mx-auto px-6 text-center">
                 <div class="max-w-md mx-auto glass-card p-10 rounded-3xl relative overflow-hidden border-t-4 border-yellow-500">
                     <div class="absolute top-0 right-0 bg-red-600 text-white px-4 py-1 rounded-bl-lg font-bold text-xs">تخفیف افتتاحیه</div>
@@ -185,7 +283,16 @@
         </section>
     </main>
 
-                            <footer class="border-t border-green-800 py-10 text-center relative z-10">
+    <!-- ⭐ دکمه شناور پایین صفحه برای موبایل (Sticky Mobile CTA) ⭐ -->
+    <div class="fixed bottom-0 left-0 w-full p-4 bg-[#0f4c3a]/95 backdrop-blur-md border-t border-[#d4af37]/30 z-[100] md:hidden shadow-[0_-10px_20px_rgba(0,0,0,0.3)]">
+        <a href="/chat" class="block w-full text-center brand-bg-gold text-gray-900 font-black py-3 rounded-xl text-lg shadow-[0_0_15px_rgba(212,175,55,0.5)]">
+            دریافت تحلیل تخصصی (۱۰۰,۰۰۰ تومان)
+        </a>
+        <p class="text-center text-[10px] text-green-300 mt-1">🛡️ با گارانتی ۱۰۰٪ بازگشت وجه</p>
+    </div>
+
+    <!-- فوتر نهایی (همان فوتری که طراحی کردیم) -->
+    <footer class="border-t border-green-800 py-10 text-center relative z-10">
         <div class="container mx-auto px-6 flex flex-col items-center">
             
             <!-- اینماد -->
@@ -258,5 +365,30 @@
             <p class="text-[10px] text-gray-500">© ۱۴۰۵ دکتر حکیم (Dr. Hakim). تمامی حقوق محفوظ است. | پشتیبانی: bale.ir/TebAI_Help_bot</p>
         </div>
     </footer>
+
+    <!-- اسکریپت تایمر معکوس -->
+    <script>
+        function startTimer(duration, display) {
+            var timer = duration, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    timer = duration; // ریست شدن تایمر برای حس فوریت همیشگی
+                }
+            }, 1000);
+        }
+        window.onload = function () {
+            var fifteenMinutes = 60 * 15,
+                display = document.querySelector('#countdown');
+            startTimer(fifteenMinutes, display);
+        };
+    </script>
 </body>
 </html>
