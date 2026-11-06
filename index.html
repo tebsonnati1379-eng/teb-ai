@@ -185,73 +185,80 @@
         </section>
     </main>
 
-                <footer class="border-t border-green-800 py-12 text-center relative z-10">
+                    <footer class="border-t border-green-800 py-12 text-center relative z-10">
         <div class="container mx-auto px-6">
             
-            <!-- بخش شبکه‌های اجتماعی و اینماد -->
+            <!-- بخش اینماد و شبکه‌های اجتماعی -->
             <div class="flex flex-col items-center justify-center gap-10 mb-10">
                 
                 <!-- اینماد بسیار بزرگ و درخشان -->
-                <div class="glass-card p-4 rounded-2xl border-2 border-[#d4af37] shadow-[0_0_30px_rgba(212,175,55,0.3)] hover:scale-105 transition-transform duration-300">
+                <div class="glass-card p-4 rounded-2xl border-2 border-[#d4af37] shadow-[0_0_30px_rgba(212,175,55,0.3)] hover:scale-105 transition-transform duration-300 mb-6">
                     <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=8003734&Code=JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl'>
                         <img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=8003734&Code=JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl' alt='اینماد' style='cursor:pointer; height:140px; width:auto;' code='JKwm29txUmgxvERcdfTu2Z9hBJP7nWSl'>
                     </a>
                 </div>
 
-                <!-- لوگوهای اصلی شبکه‌های اجتماعی -->
-                <div class="flex flex-wrap justify-center gap-10">
+                <!-- لوگوهای اصلی شبکه‌های اجتماعی (مرتب و هم‌اندازه) -->
+                <div class="flex flex-wrap justify-center items-start gap-12">
                     
-                    <!-- Instagram -->
-                    <a href="https://www.instagram.com/drhakimai" target="_blank" class="flex flex-col items-center gap-3 group">
-                        <svg class="w-12 h-12 group-hover:scale-110 transition-transform" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                                <radialGradient id="ig-grad" cx="30%" cy="100%" r="130%" fx="30%" fy="100%">
-                                    <stop offset="0%" stop-color="#fdf497" />
-                                    <stop offset="5%" stop-color="#fdf497" />
-                                    <stop offset="45%" stop-color="#fd5949" />
-                                    <stop offset="60%" stop-color="#d6249f" />
-                                    <stop offset="90%" stop-color="#285AEB" />
-                                </radialGradient>
-                            </defs>
-                            <rect width="48" height="48" rx="12" fill="url(#ig-grad)"/>
-                            <rect x="11" y="11" width="26" height="26" rx="7" stroke="white" stroke-width="3" fill="none"/>
-                            <circle cx="24" cy="24" r="6" stroke="white" stroke-width="3" fill="none"/>
-                            <circle cx="33" cy="15" r="2" fill="white"/>
-                        </svg>
-                        <span class="text-sm text-gray-300 font-bold group-hover:text-white transition">Instagram</span>
-                    </a>
-
                     <!-- Eitaa (ایتا) -->
-                    <a href="https://eitaa.com/drhakimai" target="_blank" class="flex flex-col items-center gap-3 group">
-                        <svg class="w-12 h-12 group-hover:scale-110 transition-transform" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="48" height="48" rx="10" fill="#f57c00"/>
-                            <path d="M 36 10 C 22 6, 10 16, 10 28 C 10 36, 14 40, 22 40 C 36 40, 42 30, 42 20 C 42 14, 40 12, 36 10 Z" fill="white"/>
-                            <path d="M 26 16 C 18 16, 14 20, 14 26 C 14 30, 18 34, 22 34 C 30 34, 34 28, 34 22 C 34 18, 30 16, 26 16 Z" fill="#f57c00"/>
-                            <path d="M 16 34 C 20 38, 30 40, 38 32 C 44 26, 42 18, 40 16 C 40 16, 38 28, 28 34 C 24 36, 20 34, 16 34 Z" fill="white"/>
-                        </svg>
-                        <span class="text-sm text-gray-300 font-bold group-hover:text-white transition">Eitaa</span>
+                    <a href="https://eitaa.com/drhakimai" target="_blank" class="flex flex-col items-center gap-3 group w-20">
+                        <div class="w-16 h-16 group-hover:scale-110 transition-transform">
+                            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-lg rounded-2xl">
+                                <rect width="100" height="100" rx="20" fill="#F58220"/>
+                                <path d="M 50 20 C 30 20, 15 35, 15 55 C 15 75, 30 85, 50 85 C 70 85, 85 75, 85 55 C 85 35, 70 20, 50 20 Z" fill="white"/>
+                                <path d="M 50 30 C 38 30, 28 40, 28 52 C 28 64, 38 74, 50 74 C 62 74, 72 64, 72 52 C 72 40, 62 30, 50 30 Z" fill="#F58220"/>
+                                <path d="M 30 65 C 40 80, 60 80, 75 60 C 80 50, 78 35, 70 28 C 70 28, 68 55, 50 68 C 40 75, 35 70, 30 65 Z" fill="white"/>
+                            </svg>
+                        </div>
+                        <span class="text-sm text-gray-300 font-bold group-hover:text-white transition mt-1">Eitaa</span>
                     </a>
 
                     <!-- Bale (بله) -->
-                    <a href="https://ble.ir/TebAI_Help_bot" target="_blank" class="flex flex-col items-center gap-3 group">
-                        <svg class="w-12 h-12 group-hover:scale-110 transition-transform" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                                <linearGradient id="bale-grad" x1="0%" y1="100%" x2="100%" y2="0%">
-                                    <stop offset="0%" stop-color="#1d3149" />
-                                    <stop offset="50%" stop-color="#238577" />
-                                    <stop offset="100%" stop-color="#58e4b0" />
-                                </linearGradient>
-                            </defs>
-                            <path d="M 4 14 C 4 4, 14 2, 24 2 C 36 2, 44 12, 44 24 C 44 36, 34 44, 24 44 C 12 44, 4 34, 4 24 L 4 6 Z" fill="url(#bale-grad)"/>
-                            <path d="M 14 23 L 20 29 L 32 16" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                        </svg>
-                        <span class="text-sm text-gray-300 font-bold group-hover:text-white transition">Bale</span>
+                    <a href="https://ble.ir/TebAI_Help_bot" target="_blank" class="flex flex-col items-center gap-3 group w-20">
+                        <div class="w-16 h-16 group-hover:scale-110 transition-transform">
+                            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-lg">
+                                <defs>
+                                    <linearGradient id="bale-grad-footer" x1="0%" y1="100%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#1d3149" />
+                                        <stop offset="50%" stop-color="#238577" />
+                                        <stop offset="100%" stop-color="#58e4b0" />
+                                    </linearGradient>
+                                </defs>
+                                <path d="M 10 30 C 10 10, 30 5, 50 5 C 75 5, 95 25, 95 50 C 95 75, 75 95, 50 95 C 25 95, 5 75, 5 50 L 5 15 Z" fill="url(#bale-grad-footer)"/>
+                                <path d="M 30 50 L 45 65 L 75 35" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            </svg>
+                        </div>
+                        <span class="text-sm text-gray-300 font-bold group-hover:text-white transition mt-1">Bale</span>
                     </a>
+
+                    <!-- Instagram -->
+                    <a href="https://www.instagram.com/drhakimai" target="_blank" class="flex flex-col items-center gap-3 group w-20">
+                        <div class="w-16 h-16 group-hover:scale-110 transition-transform">
+                            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-lg rounded-2xl">
+                                <defs>
+                                    <radialGradient id="ig-grad-footer" cx="30%" cy="100%" r="130%" fx="30%" fy="100%">
+                                        <stop offset="0%" stop-color="#fdf497" />
+                                        <stop offset="5%" stop-color="#fdf497" />
+                                        <stop offset="45%" stop-color="#fd5949" />
+                                        <stop offset="60%" stop-color="#d6249f" />
+                                        <stop offset="90%" stop-color="#285AEB" />
+                                    </radialGradient>
+                                </defs>
+                                <rect width="100" height="100" rx="22" fill="url(#ig-grad-footer)"/>
+                                <rect x="25" y="25" width="50" height="50" rx="12" stroke="white" stroke-width="6" fill="none"/>
+                                <circle cx="50" cy="50" r="12" stroke="white" stroke-width="6" fill="none"/>
+                                <circle cx="70" cy="30" r="4" fill="white"/>
+                            </svg>
+                        </div>
+                        <span class="text-sm text-gray-300 font-bold group-hover:text-white transition mt-1">Instagram</span>
+                    </a>
+
                 </div>
             </div>
 
             <!-- لینک‌های دسترسی سریع -->
-            <div class="flex flex-wrap justify-center gap-6 text-sm text-gray-300 mb-8">
+            <div class="flex flex-wrap justify-center gap-6 text-sm text-gray-300 mb-8 border-t border-green-900/50 pt-8">
                 <a href="/chat" class="hover:text-yellow-400 transition">شروع مشاوره</a>
                 <a href="/about" class="hover:text-yellow-400 transition">درباره ما</a>
                 <a href="/contact" class="hover:text-yellow-400 transition">تماس با ما</a>
@@ -260,7 +267,7 @@
             </div>
 
             <!-- کپی‌رایت -->
-            <div class="border-t border-green-900/50 pt-6">
+            <div class="pt-2">
                 <p class="text-xs text-gray-400">© ۱۴۰۵ دکتر حکیم (Dr. Hakim). تمامی حقوق محفوظ است. | پشتیبانی: bale.ir/TebAI_Help_bot</p>
             </div>
         </div>
